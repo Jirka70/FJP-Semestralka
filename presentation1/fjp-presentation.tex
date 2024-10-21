@@ -13,6 +13,9 @@
 \usepackage{listings}
 \usepackage{xcolor}
 
+\usepackage[czech]{babel}
+\usepackage[IL2]{fontenc}
+
 % Nastavení syntaxe pro zvýraznění "latinských" klíčových slov
 \lstdefinelanguage{LatinJava}{
     keywords={classis, publicus, staticus, vacuum, principalis, si, aliter, pro, int},
@@ -43,7 +46,7 @@
 \title{Překladač latinské Javy do instrukcí PL/0}
 \setbeamercovered{transparent} 
 \setbeamertemplate{navigation symbols}{} 
-\institute{Fakulta aplikovaných věd} 
+\institute[FAV]{Fakulta aplikovaných věd} 
 
 
 \begin{document}
@@ -63,20 +66,21 @@
 \end{itemize}
 
 \begin{lstlisting}
+// Exemplum linguae programmandi Iava
 classis ClassisSalve {
-    publicus staticus vacuum principalis(String[] argumenta) {
-        System.out.println("Salve, mundi!");
+    publicus staticus vacuum principalis(Filum[] argumenta) {
+        Systema.e.scribeln("Salve, mundi!");
         
         int numerus = 10;
         
         si (numerus > 5) {
-            System.out.println("Numerus est maior quam quinque.");
+            Systema.e.scribeln("Numerus est maior quam quinque.");
         } aliter {
-            System.out.println("Numerus non est maior quam quinque.");
+            Systema.e.scribeln("Numerus non est maior quam quinque.");
         }
         
         pro (int i = 0; i < numerus; i++) {
-            System.out.println("Iteratio: " + i);
+            Systema.e.scribeln("Iteratio: " + i);
         }
     }
 }
@@ -85,8 +89,8 @@ classis ClassisSalve {
 
 \begin{frame}{Práce s celými čísly}
 \begin{itemize}
-	\item Budeme volit znaménkový \texttt{int} (32-bitový)
-	\item Zvažujeme i práci s jinými typy (\texttt{long, short, byte})
+	\item Budeme volit znaménkový \texttt{int} (32bitový)
+	\item Zvažujeme i práci s jinými typy (\texttt{longus, brevis, bytus})
 	\item Číselné literály mohou být definovány v násl. soustavách:
 	\begin{itemize}
 		\item Desítková -- \texttt{42}
@@ -100,7 +104,7 @@ classis ClassisSalve {
 \end{frame}
 \begin{frame}{Práce s reál. čísly}
 \begin{itemize}
-	\item Pro reálná čísla využijeme typ \texttt{float} -- 32-bitový single-precision formát IEEE 754
+	\item Pro reálná čísla využijeme typ \texttt{float} -- 32bitový single-precision formát IEEE 754
 	\item Literály pro reálná čísla se zapisují:
 	\begin{itemize}
 		\item S desetinou tečkou -- \texttt{3.14159}
@@ -116,16 +120,16 @@ classis ClassisSalve {
 \begin{frame}{Reprezentace logic. typů}
 \begin{itemize}
 	\item Pro logické hodnoty použijeme datový typ \texttt{boolean}
-	\item Tento datový typ může nabývat jen hodnot \texttt{true} nebo \texttt{false}
+	\item Může nabývat jen hodnot \texttt{verus} nebo \texttt{falsus}
 \end{itemize}
 \end{frame}
 \begin{frame}{Reprezentace znaků}
 \begin{itemize}
-	\item Pro znakové typy použijeme dat. typ \texttt{char} -- 16-bitový
+	\item Pro znakové typy použijeme dat. typ \texttt{char} -- 16bitový
 	\item Literály se zapisují jako
 	\begin{itemize}
-		\item Jednotlivé znaky v uvozovkách (\texttt{'a'})
-		\item Unicode sekvence 
+		\item Jednotlivé znaky v uvozovkách (\texttt{\textsc{\char13}a\textsc{\char13}})
+		\item Unicode sekvence (\texttt{\textsc{\char13}\textbackslash u0061\textsc{\char13}}) 
 	\end{itemize}
 	\item Ve výrazech s typem \texttt{int} bude implicitně přetypován na \texttt{int}
 \end{itemize}
@@ -134,7 +138,7 @@ classis ClassisSalve {
 \begin{itemize}
         \item Pole budeme vytvářet stejně jako v Javě:
         \begin{itemize}
-            \item \texttt{typ[] p = new typ[velikost];} pro vytvoření pole určité velikosti.
+            \item \texttt{typ[] p = novus typ[velikost];} pro vytvoření pole určité velikosti.
             \item \texttt{typ[] p = \{výčet prvků\};} pro inicializaci pole při deklaraci.
         \end{itemize}
         \item Pole budou implementována pomocí referenční proměnné, tedy stejně jako v Javě.
@@ -142,14 +146,14 @@ classis ClassisSalve {
         \item Implementujeme operátory:
         \begin{itemize}
             \item \texttt{[]} pro přístup k prvkům pole.
-            \item \texttt{.length} pro zjištění délky pole.
+            \item \texttt{.longitudo} pro zjištění délky pole.
         \end{itemize}
     \end{itemize}
 \end{frame}
 \begin{frame}{Reprezentace řetězců}
 \begin{itemize}
-        \item Řetězce můžeme implementovat jako \texttt{Filum r = "retezec";}.
-        \item V paměti budou uloženy jako \texttt{null-terminated} pole znaků.
+        \item Řetězce můžeme deklarovat jako \texttt{Filum r = "retezec";}.
+        \item V paměti jako pole znaků, ne \texttt{null-terminated}.
         \item K dispozici budou následující operátory:
         \begin{itemize}
             \item \texttt{[]} pro přístup k jednotlivým znakům,
@@ -168,11 +172,11 @@ classis ClassisSalve {
         \end{itemize}
         \item \textbf{Relační operátory:}
         \begin{itemize}
-            \item \texttt{<}, \texttt{<=}, \texttt{==}, \texttt{>}, \texttt{>=}
+            \item \texttt{<}, \texttt{<=}, \texttt{==}, \texttt{!=}, \texttt{>}, \texttt{>=}
         \end{itemize}
         \item \textbf{Logické operátory:}
         \begin{itemize}
-            \item \texttt{\&}, \texttt{\&\&}, \texttt{|}, \texttt{||}
+            \item \texttt{!}, \texttt{\&}, \texttt{\&\&}, \texttt{|}, \texttt{||}
         \end{itemize}
         \item \textbf{Řídicí struktury:}
         \begin{itemize}
@@ -184,7 +188,7 @@ classis ClassisSalve {
 \begin{frame}[fragile]
 \frametitle{Gramatika našeho jazyka}
 \begin{itemize}
-	\item Pravidla pro gramatiku našeho jazyka budeme brát z AntLR z lexeru a parseru
+	\item Pravidla pro gramatiku našeho jazyka budeme brát z ANTLR z lexeru a parseru
 	\item Téměř totožná s pravidly klasické Javy
 \end{itemize}
 \vspace{.5cm}
@@ -223,14 +227,15 @@ forUpdate
     ;
 \end{lstlisting}
 \begin{lstlisting}
-ifStatement
-    : 'num' (' expression ')' statement ('else' statement)?
+ifThenElseStatement
+    : 'si' '(' expression ')' statement 'aliter' statement)?
     ;
 \end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]
 \frametitle{Deklarace metod}
+\vspace{-.26cm}
 \begin{lstlisting}
 methodDeclaration
     : type Identifier '(' parameterList? ')' block
@@ -253,18 +258,23 @@ blockStatement
     | statement
     ;
 statement
-    : ifStatement
+    : block
+    | ifStatement
+    | ifThenElseStatement
     | forStatement
     | expressionStatement
     | returnStatement
     ;
 \end{lstlisting}
 \end{frame}
+\begin{frame}{GitHub repozitář}
+    \item \url{https://github.com/Jirka70/FJP-Semestralka}
+\end{frame}
 \begin{frame}{Zdroje (APA citation)}
 \begin{itemize}
-	\item \texttt{Lexer}: Antlr. (n.d.). grammars-v4/java/java9/Java9Lexer.g4 at master · antlr/grammars-v4. GitHub. https://github.com/antlr/grammars-v4/blob/master/java/java9/Java9Lexer.g4
+	\item \texttt{Lexer}: Antlr. (n.d.). grammars-v4/java/java9/Java9Lexer.g4 at master · antlr/grammars-v4. GitHub. \url{https://github.com/antlr/grammars-v4/blob/master/java/java9/Java9Lexer.g4}
 	\item \texttt{Parser}:
-	Antlr. (n.d.). grammars-v4/java/java9/Java9Lexer.g4 at master · antlr/grammars-v4. GitHub. https://github.com/antlr/grammars-v4/blob/master/java/java9/Java9Parser.g4
+	Antlr. (n.d.). grammars-v4/java/java9/Java9Lexer.g4 at master · antlr/grammars-v4. GitHub. \url{https://github.com/antlr/grammars-v4/blob/master/java/java9/Java9Parser.g4}
 \end{itemize}
 \end{frame}
 \end{document}
