@@ -5,13 +5,21 @@ options {
 }
 
 compilationUnit
-    : (typeDeclaration | ';')*
+    : (typeDeclaration | ';')* EOF
     ;
 
 typeDeclaration
     : (
         classDeclaration
     )
+    ;
+
+modifier
+    : classOrInterfaceModifier
+    ;
+
+classOrInterfaceModifier
+    : FINAL
     ;
 
 variableModifier
@@ -29,7 +37,7 @@ classBody
 classBodyDeclaration
     : ';'
     | block
-    | memberDeclaration
+    | modifier* memberDeclaration
     ;
 
 memberDeclaration
