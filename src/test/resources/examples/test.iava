@@ -1,4 +1,17 @@
 class Trida {
+    //int ahoj = 43;
+    float jirka = pepa == 78 ? 23 : 90;
 
+    /*vacuum method() {
+        //int ahoj = this.ahoj + 1;
+        //int promenna = jirka - 3;
 
+        /*si (a == 0) {
+
+        }
+
+        pro (int i = jirka == 0 ? 1 : 100; i < 10; i++) {
+
+        }
+    }*/
 }
