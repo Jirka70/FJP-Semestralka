@@ -8,7 +8,8 @@ public class ForLoopVisitor extends IavaParserBaseVisitor<ForLoop> {
 
     @Override
     public ForLoop visitForInit(IavaParser.ForInitContext ctx) {
-        visit(ctx);
         return super.visitForInit(ctx);
     }
+
+
 }
