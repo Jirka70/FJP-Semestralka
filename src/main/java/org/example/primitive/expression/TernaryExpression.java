@@ -12,4 +12,9 @@ public class TernaryExpression extends AbstractExpression {
         mFirst = trueBranch;
         mSecond = falseBranch;
     }
+
+    @Override
+    public String toString() {
+        return mCondition.toString() + "?" + mFirst.toString() + ":" + mSecond.toString();
+    }
 }
