@@ -1,24 +1,39 @@
 package org.example.visitor;
 
+import org.antlr.v4.runtime.RuleContext;
 import org.example.IavaParser;
 import org.example.IavaParserBaseVisitor;
 import org.example.primitive.clazz.FieldPrimitive;
-import org.example.primitive.variable.Modifier;
+import org.example.primitive.expression.AbstractExpression;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Visitor for fields in classes
  */
-// FIXME modifiers (finalis) are not recognized correctly
-public class FieldVisitor extends IavaParserBaseVisitor<FieldPrimitive> {
+public class FieldVisitor extends IavaParserBaseVisitor<List<FieldPrimitive>> {
 
-    // TODO when it works properly, use this class in ClassVisitor for adding fields to ClassPrimitive
     @Override
-    public FieldPrimitive visitFieldDeclaration(IavaParser.FieldDeclarationContext ctx) {
-        Modifier fieldModifier = new ModifierVisitor().visit(ctx);
+    public List<FieldPrimitive> visitFieldDeclaration(IavaParser.FieldDeclarationContext ctx) {
         String type = ctx.typeType().getText();
-        System.out.println("type: " + type);
-        System.out.println("decls : " + ctx.variableDeclarators().variableDeclarator().get(0).getText());
-        System.out.println("field declaration " + ctx.getText());
-        return super.visitFieldDeclaration(ctx);
+
+        IavaParser.ClassBodyDeclarationContext cbCtx = (IavaParser.ClassBodyDeclarationContext) ctx.getParent().getParent();
+        List<String> modifiers = cbCtx.modifier().stream().map(RuleContext::getText).toList();
+
+        List<FieldPrimitive> fields = new ArrayList<>();
+        for (IavaParser.VariableDeclaratorContext dclCtx : ctx.variableDeclarators().variableDeclarator()) {
+            String name = dclCtx.variableDeclaratorId().getText();
+            AbstractExpression initExpr = null;
+            if (dclCtx.variableInitializer() != null && dclCtx.variableInitializer().expression() != null) {
+                IavaParser.ExpressionContext exprCtx = dclCtx.variableInitializer().expression();
+                initExpr = new ExpressionVisitor().visit(exprCtx);
+            }
+
+            FieldPrimitive field = new FieldPrimitive(modifiers, type, name, initExpr);
+            fields.add(field);
+            System.out.println("Field: " + field);
+        }
+        return fields;
     }
 }

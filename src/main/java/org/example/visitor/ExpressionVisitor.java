@@ -46,7 +46,7 @@ public class ExpressionVisitor extends IavaParserBaseVisitor<AbstractExpression>
         String operatorStr = operator.getText();
 
         BinaryExpression expr = new BinaryExpression(leftExpression, rightExpression, ExpressionType.valueOfByOperator(operatorStr));
-        System.out.println("Boolean: " + expr);
+        System.out.println("Binary: " + expr);
         return new BinaryExpression(leftExpression, rightExpression, ExpressionType.valueOfByOperator(operatorStr));
     }
 

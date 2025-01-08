@@ -3,8 +3,11 @@ package org.example.visitor;
 import org.example.IavaParser;
 import org.example.IavaParserBaseVisitor;
 import org.example.primitive.clazz.ClassPrimitive;
-import org.example.primitive.expression.AbstractExpression;
-import org.example.primitive.variable.Modifier;
+import org.example.primitive.clazz.FieldPrimitive;
+import org.example.primitive.clazz.MethodPrimitive;
+
+import java.util.ArrayList;
+import java.util.List;
 
 // TODO generate ClassPrimitive instance
 // TODO many methods are here just "testing", how ANTLR API works
@@ -12,12 +15,25 @@ public class ClassVisitor extends IavaParserBaseVisitor<ClassPrimitive> {
 
     @Override
     public ClassPrimitive visitClassDeclaration(IavaParser.ClassDeclarationContext ctx) {
-        System.out.println("class declaration " + ctx.getText());
-        System.out.println("class: " + ctx.identifier().getText());
-        for (IavaParser.ClassBodyDeclarationContext decl : ctx.classBody().classBodyDeclaration()) {
-            System.out.println("class body: " + decl.getText());
+        List<FieldPrimitive> fields = new ArrayList<>();
+        List<MethodPrimitive> methods = new ArrayList<>();
+        List<ClassPrimitive> classes = new ArrayList<>();
+
+        for (IavaParser.ClassBodyDeclarationContext cbCtx : ctx.classBody().classBodyDeclaration()) {
+            IavaParser.MemberDeclarationContext memberCtx = cbCtx.memberDeclaration();
+            if (memberCtx != null) {
+                if (memberCtx.methodDeclaration() != null) {
+                    // TODO: methods.add(new MethodVisitor().visit(memberCtx.methodDeclaration()));
+                } else if (memberCtx.fieldDeclaration() != null) {
+                    fields.addAll(new FieldVisitor().visit(memberCtx.fieldDeclaration()));
+                } else if (memberCtx.classDeclaration() != null) {
+                    classes.add(visit(memberCtx.classDeclaration()));
+                }
+            }
         }
-        return super.visitClassDeclaration(ctx);
+
+        System.out.println("Class: " + new ClassPrimitive(fields, methods, classes, ctx.identifier().getText()));
+        return new ClassPrimitive(fields, methods, classes, ctx.identifier().getText());
     }
 
     @Override
@@ -27,14 +43,6 @@ public class ClassVisitor extends IavaParserBaseVisitor<ClassPrimitive> {
 
     @Override
     public ClassPrimitive visitFieldDeclaration(IavaParser.FieldDeclarationContext ctx) {
-        AbstractExpression expression = new ExpressionVisitor().visit(ctx);
-        Modifier modifier = new ModifierVisitor().visit(ctx);
-        String type = ctx.typeType().getText();
-        String name = new VariableNameVisitor().visit(ctx);
-        System.out.println("Modifier: " + (modifier == null ? null : modifier.mModifier));
-        System.out.println("type: " + type);
-        System.out.println("Field name: " + name);
-        System.out.println("expression: " + expression);
         return super.visitFieldDeclaration(ctx);
     }
 

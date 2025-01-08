@@ -4,7 +4,7 @@ import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.example.visitor.ClassVisitor;
+import org.example.visitor.AppVisitor;
 
 public class Main {
     public static void main(String[] args) {
@@ -30,7 +30,7 @@ public class Main {
         CommonTokenStream tokens = new CommonTokenStream(lexer); // vytvoření token streamu
         IavaParser parser = new IavaParser(tokens); // vytvoření parseru
         ParseTree tree = parser.compilationUnit(); // start parsing at the 'compilationUnit' rule and create parse tree
-        ClassVisitor visitor = new ClassVisitor();
+        AppVisitor visitor = new AppVisitor();
 
         visitor.visit(tree);
 
