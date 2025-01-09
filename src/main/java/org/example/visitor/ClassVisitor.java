@@ -23,7 +23,7 @@ public class ClassVisitor extends IavaParserBaseVisitor<ClassPrimitive> {
             IavaParser.MemberDeclarationContext memberCtx = cbCtx.memberDeclaration();
             if (memberCtx != null) {
                 if (memberCtx.methodDeclaration() != null) {
-                    // TODO: methods.add(new MethodVisitor().visit(memberCtx.methodDeclaration()));
+                    methods.add(new MethodVisitor().visit(memberCtx.methodDeclaration()));
                 } else if (memberCtx.fieldDeclaration() != null) {
                     fields.addAll(new FieldVisitor().visit(memberCtx.fieldDeclaration()));
                 } else if (memberCtx.classDeclaration() != null) {
