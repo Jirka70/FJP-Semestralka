@@ -4,7 +4,8 @@ import org.antlr.v4.runtime.RuleContext;
 import org.example.IavaParser;
 import org.example.IavaParserBaseVisitor;
 import org.example.primitive.ParameterPrimitive;
-import org.example.primitive.clazz.MethodPrimitive;
+import org.example.primitive.clazz.method.MethodBody;
+import org.example.primitive.clazz.method.MethodPrimitive;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ public class MethodVisitor extends IavaParserBaseVisitor<MethodPrimitive> {
 
     @Override
     public MethodPrimitive visitMethodDeclaration(IavaParser.MethodDeclarationContext ctx) {
+
         StringBuilder returnType = new StringBuilder(ctx.typeTypeOrVoid().getText());
         returnType.append("[]".repeat(ctx.LBRACK().size()));
         String name = ctx.identifier().getText();
@@ -34,8 +36,12 @@ public class MethodVisitor extends IavaParserBaseVisitor<MethodPrimitive> {
 
         // TODO: create Block representing method body
         // Block has a list of BlockStatements - either LocalVariableDeclarations or Statements
+        //MethodBody methodBody = new MethodBodyVisitor().visit(ctx.methodBody());
+        MethodBody methodBody = new MethodBodyVisitor().visit(ctx);
+        MethodPrimitive methodPrimitive = new MethodPrimitive(returnType.toString(), name, parameters, methodBody);
 
-        System.out.println("Method: " + new MethodPrimitive(returnType.toString(), name, parameters));
-        return new MethodPrimitive(returnType.toString(), name, parameters);
+        System.out.println("Method: " + methodPrimitive);
+        System.out.println("Method body: " + ctx.methodBody().getText());
+        return methodPrimitive;
     }
 }

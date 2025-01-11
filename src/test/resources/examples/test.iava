@@ -1,19 +1,14 @@
 class Trida {
-    //int ahoj = 43;
-    finalis float jirka = pepa == 78 ? 23 : 90;
-    String ahoj = 2;
-
     vacuum method() {
-        //int ahoj = this.ahoj + 1;
-        //int promenna = jirka - 3;
-
         si (a == 0) {
-            int promennaVIfu = 6;
-        }
-
-        pro (int i = jirka == 0 ? 1 : 100; i < 10; i++) {
-            i = i + 0;
-            ahoj = ahoj + 1;
+            finalis int if1 = 3;
+            finalis int if2 = 4;
+            finalis int if3 = 1;
+            finalis int if4 = 5;
+            finalis int if5 = 9;
+        } aliter {
+            int else1 = volamMetoduVElsu();
+            int else2 = jinaMetodaVElsu();
         }
     }
 }

@@ -4,7 +4,7 @@ import org.example.IavaParser;
 import org.example.IavaParserBaseVisitor;
 import org.example.primitive.clazz.ClassPrimitive;
 import org.example.primitive.clazz.FieldPrimitive;
-import org.example.primitive.clazz.MethodPrimitive;
+import org.example.primitive.clazz.method.MethodPrimitive;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,14 +44,6 @@ public class ClassVisitor extends IavaParserBaseVisitor<ClassPrimitive> {
     @Override
     public ClassPrimitive visitFieldDeclaration(IavaParser.FieldDeclarationContext ctx) {
         return super.visitFieldDeclaration(ctx);
-    }
-
-    // TODO make separate class for creating IF, WHILE and SWITCH statements.
-    // TODO Each statement could be recognized thanks to the KEYWORD method (e. g. IF() returns non null value, whether statement is "if statement")
-    @Override
-    public ClassPrimitive visitStatement(IavaParser.StatementContext ctx) {
-        System.out.println("statement: " + ctx.IF());
-        return super.visitStatement(ctx);
     }
 
     @Override

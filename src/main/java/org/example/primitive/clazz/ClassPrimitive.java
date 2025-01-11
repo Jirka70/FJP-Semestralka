@@ -1,5 +1,7 @@
 package org.example.primitive.clazz;
 
+import org.example.primitive.clazz.method.MethodPrimitive;
+
 import java.util.ArrayList;
 import java.util.List;
 

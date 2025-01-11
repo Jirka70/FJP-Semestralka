@@ -2,12 +2,12 @@ package org.example.visitor;
 
 import org.example.IavaParser;
 import org.example.IavaParserBaseVisitor;
-import org.example.primitive.ForLoop;
+import org.example.statement.ForLoopStatement;
 
-public class ForLoopVisitor extends IavaParserBaseVisitor<ForLoop> {
+public class ForLoopVisitor extends IavaParserBaseVisitor<ForLoopStatement> {
 
     @Override
-    public ForLoop visitForInit(IavaParser.ForInitContext ctx) {
+    public ForLoopStatement visitForInit(IavaParser.ForInitContext ctx) {
         return super.visitForInit(ctx);
     }
 
