@@ -1,13 +1,12 @@
 package org.example.statement.ifStatement;
 
-import org.example.statement.Block;
 import org.example.statement.AbstractStatement;
 import org.example.statement.StatementType;
 
 public class ElseStatement extends AbstractStatement {
-    public final Block mBody;
+    public final AbstractStatement mBody;
 
-    public ElseStatement(Block body) {
+    public ElseStatement(AbstractStatement body) {
         super(StatementType.ELSE);
         mBody = body;
     }

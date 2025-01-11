@@ -17,6 +17,8 @@ public class StatementVisitor extends IavaParserBaseVisitor<AbstractStatement> {
             return extractIfStatement(ctx);
         } else if (isForStatement(ctx)) {
             return extractForStatement(ctx);
+        } else if (isBlockStatement(ctx)) {
+            return extractBlockStatement(ctx);
         }
 
 
@@ -35,7 +37,7 @@ public class StatementVisitor extends IavaParserBaseVisitor<AbstractStatement> {
     private IfStatement extractIfStatement(IavaParser.StatementContext ctx) {
         IavaParser.ParExpressionContext parExpressionContext = ctx.parExpression();
         AbstractExpression parExpression = new ExpressionVisitor().visit(parExpressionContext);
-        Block ifBody = extractIfBody(ctx);
+        AbstractStatement ifBody = extractIfBody(ctx);
         ElseStatement elseStatement = isElseStatement(ctx)
                 ? extractElseStatement(ctx)
                 : null;
@@ -49,11 +51,11 @@ public class StatementVisitor extends IavaParserBaseVisitor<AbstractStatement> {
         return super.visitExpression(ctx);
     }
 
-    private Block extractIfBody(IavaParser.StatementContext ctx) {
+    private AbstractStatement extractIfBody(IavaParser.StatementContext ctx) {
         int ifBodyIndex = 0;
 
         IavaParser.StatementContext ifBodyStatementContext = ctx.statement(ifBodyIndex);
-        return new BlockVisitor().visit(ifBodyStatementContext);
+        return visit(ifBodyStatementContext);
     }
 
 
@@ -65,7 +67,7 @@ public class StatementVisitor extends IavaParserBaseVisitor<AbstractStatement> {
         }
 
         IavaParser.StatementContext elseBodyStatement = ctx.statement(elseBodyIndex);
-        Block elseIfBody = new BlockVisitor().visit(elseBodyStatement.blockLabel);
+        AbstractStatement elseIfBody = visit(elseBodyStatement.blockLabel);
         return new ElseStatement(elseIfBody);
     }
 
@@ -75,5 +77,13 @@ public class StatementVisitor extends IavaParserBaseVisitor<AbstractStatement> {
 
     private boolean isElseStatement(IavaParser.StatementContext ctx) {
         return ctx.ELSE() != null;
+    }
+
+    private boolean isBlockStatement(IavaParser.StatementContext ctx) {
+        return ctx.blockLabel != null;
+    }
+
+    private Block extractBlockStatement(IavaParser.StatementContext ctx) {
+        return new BlockVisitor().visit(ctx);
     }
 }
