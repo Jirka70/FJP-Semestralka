@@ -57,17 +57,4 @@ public class LocalVariableDeclarationVisitor extends IavaParserBaseVisitor<Local
     private String extractType(IavaParser.LocalVariableDeclarationContext ctx) {
         return ctx.typeType().getText();
     }
-
-    private String extractName(IavaParser.LocalVariableDeclarationContext ctx) {
-        IavaParser.VariableDeclaratorsContext declaratorsContext = ctx.variableDeclarators();
-
-        List<IavaParser.VariableDeclaratorContext> variableDeclaratorsContextList
-                = declaratorsContext.variableDeclarator();
-
-        for (IavaParser.VariableDeclaratorContext variableDeclaratorCtx : variableDeclaratorsContextList) {
-            return variableDeclaratorCtx.variableDeclaratorId().getText();
-        }
-
-        return null;
-    }
 }
