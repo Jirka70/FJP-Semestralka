@@ -1,5 +1,8 @@
 class Trida {
     vacuum method() {
+        si (g == 2) {
+            finalis int firstIf = 32;
+        }
         si (a == 0) {
             finalis int if1 = 3;
             finalis int if2 = 4;

@@ -28,6 +28,11 @@ public class ExpressionVisitor extends IavaParserBaseVisitor<AbstractExpression>
         throw new IllegalArgumentException("Type of expression " + ctx.getText() + " not recognized");
     }
 
+    @Override
+    public AbstractExpression visitParExpression(IavaParser.ParExpressionContext ctx) {
+        return new ExpressionVisitor().visit(ctx.expression());
+    }
+
     private BinaryExpression extractBinaryExpression(IavaParser.ExpressionContext ctx) {
         int expectedExpressionSize = 2;
         if (ctx.expression().size() != expectedExpressionSize) {

@@ -5,8 +5,6 @@ import org.example.primitive.expression.AbstractExpression;
 import org.example.statement.AbstractStatement;
 import org.example.statement.StatementType;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class IfStatement extends AbstractStatement {
     public final AbstractExpression mExpression;
@@ -30,7 +28,9 @@ public class IfStatement extends AbstractStatement {
 
         builder.append("if (")
                 .append(mExpression)
-                .append(") {");
+                .append(") {")
+                .append(mBody)
+                .append("}");
         if (hasElse()) {
             builder.append("} else {")
                     .append(mElseStatement)

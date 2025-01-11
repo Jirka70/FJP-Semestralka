@@ -14,7 +14,6 @@ public class StatementVisitor extends IavaParserBaseVisitor<AbstractStatement> {
     @Override
     public AbstractStatement visitStatement(IavaParser.StatementContext ctx) {
         if (isIfStatement(ctx)) {
-            System.out.println("extracted if: " + extractIfStatement(ctx));
             return extractIfStatement(ctx);
         }
         return super.visitStatement(ctx);
@@ -28,9 +27,13 @@ public class StatementVisitor extends IavaParserBaseVisitor<AbstractStatement> {
                 ? extractElseStatement(ctx)
                 : null;
 
-        System.out.println("elsest: " + elseStatement);
-
         return new IfStatement(parExpression, ifBody, elseStatement);
+    }
+
+    @Override
+    public AbstractStatement visitExpression(IavaParser.ExpressionContext ctx) {
+        System.out.println("expr: " + ctx.getText());
+        return super.visitExpression(ctx);
     }
 
     private Block extractIfBody(IavaParser.StatementContext ctx) {
