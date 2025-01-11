@@ -6,6 +6,7 @@ import org.example.primitive.block.Block;
 import org.example.primitive.block.EmptyBlock;
 import org.example.primitive.expression.AbstractExpression;
 import org.example.statement.AbstractStatement;
+import org.example.statement.ForLoopStatement;
 import org.example.statement.ifStatement.ElseStatement;
 import org.example.statement.ifStatement.IfStatement;
 
@@ -15,8 +16,21 @@ public class StatementVisitor extends IavaParserBaseVisitor<AbstractStatement> {
     public AbstractStatement visitStatement(IavaParser.StatementContext ctx) {
         if (isIfStatement(ctx)) {
             return extractIfStatement(ctx);
+        } else if (isForStatement(ctx)) {
+            return extractForStatement(ctx);
         }
+
+
         return super.visitStatement(ctx);
+    }
+
+    private ForLoopStatement extractForStatement(IavaParser.StatementContext ctx) {
+        new ForStatementVisitor().visit(ctx);
+        return null;
+    }
+
+    private boolean isForStatement(IavaParser.StatementContext ctx) {
+        return ctx.FOR() != null;
     }
 
     private IfStatement extractIfStatement(IavaParser.StatementContext ctx) {
