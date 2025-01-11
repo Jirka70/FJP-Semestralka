@@ -2,19 +2,15 @@ package org.example.visitor;
 
 import org.example.IavaParser;
 import org.example.IavaParserBaseVisitor;
-import org.example.primitive.block.Block;
-import org.example.primitive.block.EmptyBlock;
-import org.example.primitive.clazz.method.MethodBody;
+import org.example.statement.Block;
 
-public class MethodBodyVisitor extends IavaParserBaseVisitor<MethodBody> {
+public class MethodBodyVisitor extends IavaParserBaseVisitor<Block> {
     @Override
-    public MethodBody visitMethodBody(IavaParser.MethodBodyContext ctx) {
+    public Block visitMethodBody(IavaParser.MethodBodyContext ctx) {
         IavaParser.BlockContext blockContext = ctx.block();
 
-        Block block = blockContext == null
-                ? new EmptyBlock()
+        return blockContext == null
+                ? null
                 : new BlockVisitor().visit(blockContext);
-
-        return new MethodBody(block);
     }
 }

@@ -2,8 +2,7 @@ package org.example.visitor;
 
 import org.example.IavaParser;
 import org.example.IavaParserBaseVisitor;
-import org.example.primitive.block.Block;
-import org.example.primitive.block.EmptyBlock;
+import org.example.statement.Block;
 import org.example.primitive.expression.AbstractExpression;
 import org.example.statement.AbstractStatement;
 import org.example.statement.ForLoopStatement;
@@ -54,18 +53,7 @@ public class StatementVisitor extends IavaParserBaseVisitor<AbstractStatement> {
         int ifBodyIndex = 0;
 
         IavaParser.StatementContext ifBodyStatementContext = ctx.statement(ifBodyIndex);
-        if (ifBodyStatementContext == null || ifBodyStatementContext.isEmpty()) {
-            return new EmptyBlock();
-        }
-
-        for (IavaParser.StatementContext statementContext : ctx.statement()) {
-            return new BlockVisitor().visit(statementContext.blockLabel);
-        }
-
-        throw new IllegalStateException("Expected statement inside if body, got: " + ctx
-                .statement()
-                .get(ifBodyIndex)
-                .getText());
+        return new BlockVisitor().visit(ifBodyStatementContext);
     }
 
 
@@ -73,14 +61,10 @@ public class StatementVisitor extends IavaParserBaseVisitor<AbstractStatement> {
         int elseBodyIndex = 1;
 
         if (ctx.statement().size() < 2) {
-            return new ElseStatement(new EmptyBlock());
+            return null;
         }
 
         IavaParser.StatementContext elseBodyStatement = ctx.statement(elseBodyIndex);
-        if (elseBodyStatement == null || elseBodyStatement.isEmpty()) {
-            return new ElseStatement(new EmptyBlock());
-        }
-
         Block elseIfBody = new BlockVisitor().visit(elseBodyStatement.blockLabel);
         return new ElseStatement(elseIfBody);
     }

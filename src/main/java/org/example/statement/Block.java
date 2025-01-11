@@ -1,15 +1,15 @@
-package org.example.primitive.block;
-
-import org.example.statement.AbstractBlockStatement;
+package org.example.statement;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Block {
+public class Block extends AbstractStatement {
     public final List<AbstractBlockStatement> mBlockStatements = new ArrayList<>();
 
     public Block(List<AbstractBlockStatement> blockStatements) {
-        mBlockStatements.addAll(blockStatements);
+        super(StatementType.BLOCK);
+        if (blockStatements != null)
+            mBlockStatements.addAll(blockStatements);
     }
 
     @Override

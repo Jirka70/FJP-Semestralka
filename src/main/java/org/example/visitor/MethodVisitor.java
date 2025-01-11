@@ -4,8 +4,8 @@ import org.antlr.v4.runtime.RuleContext;
 import org.example.IavaParser;
 import org.example.IavaParserBaseVisitor;
 import org.example.primitive.ParameterPrimitive;
-import org.example.primitive.clazz.method.MethodBody;
 import org.example.primitive.clazz.method.MethodPrimitive;
+import org.example.statement.Block;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +37,7 @@ public class MethodVisitor extends IavaParserBaseVisitor<MethodPrimitive> {
         // TODO: create Block representing method body
         // Block has a list of BlockStatements - either LocalVariableDeclarations or Statements
         //MethodBody methodBody = new MethodBodyVisitor().visit(ctx.methodBody());
-        MethodBody methodBody = new MethodBodyVisitor().visit(ctx);
+        Block methodBody = new MethodBodyVisitor().visit(ctx);
         MethodPrimitive methodPrimitive = new MethodPrimitive(returnType.toString(), name, parameters, methodBody);
 
         System.out.println("Method: " + methodPrimitive);

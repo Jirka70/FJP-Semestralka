@@ -1,6 +1,6 @@
 package org.example.statement.ifStatement;
 
-import org.example.primitive.block.Block;
+import org.example.statement.Block;
 import org.example.primitive.expression.AbstractExpression;
 import org.example.statement.AbstractStatement;
 import org.example.statement.StatementType;
