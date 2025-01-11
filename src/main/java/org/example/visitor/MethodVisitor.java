@@ -14,9 +14,7 @@ public class MethodVisitor extends IavaParserBaseVisitor<MethodPrimitive> {
 
     @Override
     public MethodPrimitive visitMethodDeclaration(IavaParser.MethodDeclarationContext ctx) {
-
-        StringBuilder returnType = new StringBuilder(ctx.typeTypeOrVoid().getText());
-        returnType.append("[]".repeat(ctx.LBRACK().size()));
+        String returnType = ctx.typeTypeOrVoid().getText() + "[]".repeat(ctx.LBRACK().size());
         String name = ctx.identifier().getText();
 
         List<ParameterPrimitive> parameters = new ArrayList<>();
@@ -34,11 +32,8 @@ public class MethodVisitor extends IavaParserBaseVisitor<MethodPrimitive> {
             }
         }
 
-        // TODO: create Block representing method body
-        // Block has a list of BlockStatements - either LocalVariableDeclarations or Statements
-        //MethodBody methodBody = new MethodBodyVisitor().visit(ctx.methodBody());
-        Block methodBody = new MethodBodyVisitor().visit(ctx);
-        MethodPrimitive methodPrimitive = new MethodPrimitive(returnType.toString(), name, parameters, methodBody);
+        Block methodBody = new MethodBodyVisitor().visit(ctx.methodBody());
+        MethodPrimitive methodPrimitive = new MethodPrimitive(returnType, name, parameters, methodBody);
 
         System.out.println("Method: " + methodPrimitive);
         System.out.println("Method body: " + methodBody);

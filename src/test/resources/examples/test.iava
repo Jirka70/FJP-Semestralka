@@ -4,5 +4,11 @@ class Trida {
         pro (;;) {
             z--;
         }
+
+        si (a == 0) {
+
+        } aliter {
+
+        }
     }
 }

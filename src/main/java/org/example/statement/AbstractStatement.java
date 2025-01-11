@@ -8,6 +8,4 @@ public abstract class AbstractStatement extends AbstractBlockStatement {
         mStatementType = statementType;
     }
 
-    @Override
-    public abstract String toString();
 }

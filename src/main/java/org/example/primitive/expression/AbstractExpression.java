@@ -6,4 +6,7 @@ public abstract class AbstractExpression {
     protected AbstractExpression(ExpressionType expressionType) {
         mExpressionType = expressionType;
     }
+
+    @Override
+    public abstract String toString();
 }

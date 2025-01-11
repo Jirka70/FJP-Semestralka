@@ -21,8 +21,7 @@ public class StatementVisitor extends IavaParserBaseVisitor<AbstractStatement> {
             return extractBlockStatement(ctx);
         }
 
-
-        return super.visitStatement(ctx);
+        throw new IllegalArgumentException("Type of statement " + ctx.getText() + " not recognized");
     }
 
     private ForLoopStatement extractForStatement(IavaParser.StatementContext ctx) {
@@ -45,12 +44,6 @@ public class StatementVisitor extends IavaParserBaseVisitor<AbstractStatement> {
         return new IfStatement(parExpression, ifBody, elseStatement);
     }
 
-    @Override
-    public AbstractStatement visitExpression(IavaParser.ExpressionContext ctx) {
-        System.out.println("expr: " + ctx.getText());
-        return super.visitExpression(ctx);
-    }
-
     private AbstractStatement extractIfBody(IavaParser.StatementContext ctx) {
         int ifBodyIndex = 0;
 
@@ -67,7 +60,7 @@ public class StatementVisitor extends IavaParserBaseVisitor<AbstractStatement> {
         }
 
         IavaParser.StatementContext elseBodyStatement = ctx.statement(elseBodyIndex);
-        AbstractStatement elseIfBody = visit(elseBodyStatement.blockLabel);
+        AbstractStatement elseIfBody = visit(elseBodyStatement);
         return new ElseStatement(elseIfBody);
     }
 

@@ -30,7 +30,7 @@ public class ExpressionVisitor extends IavaParserBaseVisitor<AbstractExpression>
 
     @Override
     public AbstractExpression visitParExpression(IavaParser.ParExpressionContext ctx) {
-        return new ExpressionVisitor().visit(ctx.expression());
+        return visit(ctx.expression());
     }
 
     private BinaryExpression extractBinaryExpression(IavaParser.ExpressionContext ctx) {
@@ -171,7 +171,7 @@ public class ExpressionVisitor extends IavaParserBaseVisitor<AbstractExpression>
 
         List<IavaParser.ExpressionContext> argsCtx = argumentsExpression == null // method has no arguments
                 ? new ArrayList<>()
-                : ctx.methodCall().arguments().expressionList().expression();
+                : argumentsExpression.expression();
 
         List<AbstractExpression> args = new ArrayList<>();
         for (IavaParser.ExpressionContext argCtx : argsCtx)
