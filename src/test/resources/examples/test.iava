@@ -1,7 +1,7 @@
 class Trida {
     vacuum method() {
         int z = 0;
-        pro (int i = 0+23*(23-1), p = 0, c = 67; i < 32; i++) {
+        pro (;;) {
             z--;
         }
     }
