@@ -2,10 +2,9 @@ package org.example.visitor;
 
 import org.example.IavaParser;
 import org.example.IavaParserBaseVisitor;
-import org.example.statement.Block;
+import org.example.primitive.expression.EmptyExpression;
+import org.example.statement.*;
 import org.example.primitive.expression.AbstractExpression;
-import org.example.statement.AbstractStatement;
-import org.example.statement.ForLoopStatement;
 import org.example.statement.ifStatement.ElseStatement;
 import org.example.statement.ifStatement.IfStatement;
 
@@ -19,6 +18,14 @@ public class StatementVisitor extends IavaParserBaseVisitor<AbstractStatement> {
             return extractForStatement(ctx);
         } else if (isBlockStatement(ctx)) {
             return extractBlockStatement(ctx);
+        } else if (isExpressionStatement(ctx)) {
+            return extractExpressionStatement(ctx);
+        } else if (isKeywordStatement(ctx)) {
+            return extractKeywordStatement(ctx);
+        } else if (isEmptyStatement(ctx)) {
+            return extractEmptyStatement(ctx);
+        } else if (isReturnStatement(ctx)) {
+            return extractReturnStatement(ctx);
         }
 
         throw new IllegalArgumentException("Type of statement " + ctx.getText() + " not recognized");
@@ -78,5 +85,46 @@ public class StatementVisitor extends IavaParserBaseVisitor<AbstractStatement> {
 
     private Block extractBlockStatement(IavaParser.StatementContext ctx) {
         return new BlockVisitor().visit(ctx);
+    }
+
+    private boolean isExpressionStatement(IavaParser.StatementContext ctx) {
+        return ctx.statementExpression != null;
+    }
+
+    private ExpressionStatement extractExpressionStatement(IavaParser.StatementContext ctx) {
+        AbstractExpression expression = new ExpressionVisitor().visit(ctx.statementExpression);
+        return new ExpressionStatement(expression);
+    }
+
+    private boolean isKeywordStatement(IavaParser.StatementContext ctx) {
+        return ctx.BREAK() != null || ctx.CONTINUE() != null;
+    }
+
+    private KeywordStatement extractKeywordStatement(IavaParser.StatementContext ctx) {
+        KeywordStatement.StatementKeywordType type = null;
+        if (ctx.BREAK() != null) {
+            type = KeywordStatement.StatementKeywordType.BREAK;
+        } else if (ctx.CONTINUE() != null) {
+            type = KeywordStatement.StatementKeywordType.CONTINUE;
+        }
+        return new KeywordStatement(type);
+    }
+
+    private boolean isEmptyStatement(IavaParser.StatementContext ctx) {
+        return ctx.SEMI() != null && ctx.getChildCount() == 1;
+    }
+
+    private AbstractStatement extractEmptyStatement(IavaParser.StatementContext ignoredCtx) {
+       return null;
+    }
+    private boolean isReturnStatement(IavaParser.StatementContext ctx) {
+        return ctx.RETURN() != null;
+    }
+
+    private ReturnStatement extractReturnStatement(IavaParser.StatementContext ctx) {
+        AbstractExpression expression = ctx.expression() == null
+            ? new EmptyExpression()
+            : new ExpressionVisitor().visit(ctx.expression());
+        return new ReturnStatement(expression);
     }
 }
