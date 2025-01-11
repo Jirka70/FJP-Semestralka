@@ -34,7 +34,7 @@ public class ForStatementVisitor extends IavaParserBaseVisitor<ForLoopStatement>
         System.out.println("forStop: " + forStopExpression);
         System.out.println("forUpate: " + forUpdate);
 
-        return super.visitForControl(ctx);
+        return null;
     }
 
     private LocalVariableDeclaration createEmptyLocalVariableDeclaration() {
