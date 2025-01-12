@@ -2,16 +2,16 @@ package org.example.visitor;
 
 import org.example.IavaParser;
 import org.example.IavaParserBaseVisitor;
-import org.example.primitive.AppPrimitive;
-import org.example.primitive.clazz.ClassPrimitive;
+import org.example.ast.AST;
+import org.example.ast.clazz.ClassPrimitive;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AppVisitor extends IavaParserBaseVisitor<AppPrimitive> {
+public class AppVisitor extends IavaParserBaseVisitor<AST> {
 
     @Override
-    public AppPrimitive visitCompilationUnit(IavaParser.CompilationUnitContext ctx) {
+    public AST visitCompilationUnit(IavaParser.CompilationUnitContext ctx) {
         List<ClassPrimitive> classes = new ArrayList<>();
         for (IavaParser.TypeDeclarationContext tdCtx : ctx.typeDeclaration()) {
             ClassPrimitive classPrimitive = new ClassVisitor().visit(tdCtx);
@@ -19,6 +19,6 @@ public class AppVisitor extends IavaParserBaseVisitor<AppPrimitive> {
         }
 
         //System.out.println("App: " + new AppPrimitive(classes));
-        return new AppPrimitive(classes);
+        return new AST(classes);
     }
 }

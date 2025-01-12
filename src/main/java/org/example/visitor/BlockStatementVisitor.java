@@ -2,7 +2,7 @@ package org.example.visitor;
 
 import org.example.IavaParser;
 import org.example.IavaParserBaseVisitor;
-import org.example.statement.AbstractBlockStatement;
+import org.example.ast.statement.AbstractBlockStatement;
 
 public class BlockStatementVisitor extends IavaParserBaseVisitor<AbstractBlockStatement> {
     @Override

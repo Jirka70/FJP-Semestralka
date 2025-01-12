@@ -2,12 +2,12 @@ package org.example.visitor;
 
 import org.example.IavaParser;
 import org.example.IavaParserBaseVisitor;
-import org.example.primitive.expression.AbstractExpression;
-import org.example.primitive.expression.EmptyExpression;
-import org.example.primitive.expression.ExpressionList;
-import org.example.statement.ForInit;
-import org.example.statement.ForLoopControl;
-import org.example.statement.LocalVariableDeclaration;
+import org.example.ast.expression.AbstractExpression;
+import org.example.ast.expression.EmptyExpression;
+import org.example.ast.expression.ExpressionList;
+import org.example.ast.statement.ForInit;
+import org.example.ast.statement.ForLoopControl;
+import org.example.ast.statement.LocalVariableDeclaration;
 
 import java.util.ArrayList;
 import java.util.List;

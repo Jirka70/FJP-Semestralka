@@ -3,7 +3,7 @@ package org.example.visitor;
 import org.antlr.v4.runtime.Token;
 import org.example.IavaParser;
 import org.example.IavaParserBaseVisitor;
-import org.example.primitive.expression.*;
+import org.example.ast.expression.*;
 
 import java.util.ArrayList;
 import java.util.List;

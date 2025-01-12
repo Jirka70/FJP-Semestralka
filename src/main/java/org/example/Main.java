@@ -4,6 +4,7 @@ import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.example.ast.AST;
 import org.example.errorHandle.errorListener.IavaSyntaxErrorListener;
 import org.example.visitor.AppVisitor;
 
@@ -36,6 +37,6 @@ public class Main {
 
         ParseTree tree = parser.compilationUnit();
         AppVisitor visitor = new AppVisitor();
-        visitor.visit(tree);
+        AST ast = visitor.visit(tree); // TODO make semantic analyze
     }
 }

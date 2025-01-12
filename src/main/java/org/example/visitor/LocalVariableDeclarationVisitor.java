@@ -2,9 +2,9 @@ package org.example.visitor;
 
 import org.example.IavaParser;
 import org.example.IavaParserBaseVisitor;
-import org.example.primitive.LocalVariable;
-import org.example.primitive.expression.AbstractExpression;
-import org.example.statement.LocalVariableDeclaration;
+import org.example.ast.LocalVariable;
+import org.example.ast.expression.AbstractExpression;
+import org.example.ast.statement.LocalVariableDeclaration;
 
 import java.util.ArrayList;
 import java.util.List;

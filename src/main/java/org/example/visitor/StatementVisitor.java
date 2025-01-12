@@ -3,12 +3,11 @@ package org.example.visitor;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.example.IavaParser;
 import org.example.IavaParserBaseVisitor;
-import org.example.primitive.expression.EmptyExpression;
-import org.example.statement.*;
-import org.example.primitive.expression.AbstractExpression;
-import org.example.statement.ifStatement.ElseStatement;
-import org.example.statement.ForLoopStatement;
-import org.example.statement.ifStatement.IfStatement;
+import org.example.ast.expression.EmptyExpression;
+import org.example.ast.statement.*;
+import org.example.ast.expression.AbstractExpression;
+import org.example.ast.statement.ifStatement.ElseStatement;
+import org.example.ast.statement.ifStatement.IfStatement;
 
 import java.util.ArrayList;
 import java.util.Collections;

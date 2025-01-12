@@ -3,9 +3,9 @@ package org.example.visitor;
 import org.antlr.v4.runtime.RuleContext;
 import org.example.IavaParser;
 import org.example.IavaParserBaseVisitor;
-import org.example.primitive.clazz.method.ParameterPrimitive;
-import org.example.primitive.clazz.method.MethodPrimitive;
-import org.example.statement.Block;
+import org.example.ast.clazz.method.ParameterPrimitive;
+import org.example.ast.clazz.method.MethodPrimitive;
+import org.example.ast.statement.Block;
 
 import java.util.ArrayList;
 import java.util.List;

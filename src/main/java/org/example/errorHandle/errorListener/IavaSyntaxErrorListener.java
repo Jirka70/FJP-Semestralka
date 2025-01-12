@@ -3,7 +3,6 @@ package org.example.errorHandle.errorListener;
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
-import org.antlr.v4.runtime.Token;
 import org.example.errorHandle.ErrorHandleStrategy;
 import org.example.errorHandle.impl.ExpressionErrorStrategy;
 import org.example.errorHandle.impl.ExtraneousInputErrorStrategy;

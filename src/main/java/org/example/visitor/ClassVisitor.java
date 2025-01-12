@@ -2,9 +2,9 @@ package org.example.visitor;
 
 import org.example.IavaParser;
 import org.example.IavaParserBaseVisitor;
-import org.example.primitive.clazz.ClassPrimitive;
-import org.example.primitive.clazz.FieldPrimitive;
-import org.example.primitive.clazz.method.MethodPrimitive;
+import org.example.ast.clazz.ClassPrimitive;
+import org.example.ast.clazz.FieldPrimitive;
+import org.example.ast.clazz.method.MethodPrimitive;
 
 import java.util.ArrayList;
 import java.util.List;

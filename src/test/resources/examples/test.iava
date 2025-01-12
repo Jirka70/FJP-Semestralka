@@ -3,14 +3,14 @@ class Trida {
         finalis int z, v = 0;
         dum (a < 20 && b > 34) {
             z--;
-            jednuMetoduVolam();
+            jednuMetoduVolam(2);
             druhouMetoduVolam(ahoj, pepa);
             si (z < 34) {
                 udelejTohleVIfu();
             } aliter {
                 udelejTohleVElsu();
-                int p = 2;
-                po (p++; else < 2 && else2 > 23; i++, j++) {
+                int p = 3;
+                pro (int ahoj = 2; else < 2 && else2 > 23; i++, j++) {
                     blockVeForu();
                 }
             }

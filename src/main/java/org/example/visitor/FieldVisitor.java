@@ -3,8 +3,8 @@ package org.example.visitor;
 import org.antlr.v4.runtime.RuleContext;
 import org.example.IavaParser;
 import org.example.IavaParserBaseVisitor;
-import org.example.primitive.clazz.FieldPrimitive;
-import org.example.primitive.expression.AbstractExpression;
+import org.example.ast.clazz.FieldPrimitive;
+import org.example.ast.expression.AbstractExpression;
 
 import java.util.ArrayList;
 import java.util.List;
