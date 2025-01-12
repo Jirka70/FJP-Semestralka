@@ -26,7 +26,7 @@ public enum ExpressionType {
     METHOD_CALL,
     PARENTHESES,
     IDENTIFIER,
-    LITERAL, EMPTY; // TODO: doplnit chybejici typy
+    LITERAL, EMPTY, AND("&&"), OR("||"); // TODO: doplnit chybejici typy
 
     public final String mOperator;
 
