@@ -14,7 +14,7 @@ public class Main {
             return;
         }
         String inputName = args[0];
-        CharStream input = null; // vytvoření character streamu
+        CharStream input = null;
         try {
             input = CharStreams.fromFileName(inputName);
         } catch (Exception e) {
@@ -27,14 +27,15 @@ public class Main {
         }
 
 
-        IavaLexer lexer = new IavaLexer(input); // vytvoření lexeru
-        CommonTokenStream tokens = new CommonTokenStream(lexer); // vytvoření token streamu
-        IavaParser parser = new IavaParser(tokens); // vytvoření parseru
+        IavaLexer lexer = new IavaLexer(input);
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        IavaParser parser = new IavaParser(tokens);
+
+        parser.removeErrorListeners();
         parser.addErrorListener(new IavaSyntaxErrorListener());
-        ParseTree tree = parser.compilationUnit(); // start parsing at the 'compilationUnit' rule and create parse tree
+
+        ParseTree tree = parser.compilationUnit();
         AppVisitor visitor = new AppVisitor();
         visitor.visit(tree);
-
-
     }
 }
