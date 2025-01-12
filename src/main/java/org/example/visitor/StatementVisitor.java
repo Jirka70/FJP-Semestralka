@@ -1,5 +1,6 @@
 package org.example.visitor;
 
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.example.IavaParser;
 import org.example.IavaParserBaseVisitor;
 import org.example.primitive.expression.EmptyExpression;
@@ -43,8 +44,16 @@ public class StatementVisitor extends IavaParserBaseVisitor<AbstractStatement> {
     }
 
     private ForLoopStatement extractForStatement(IavaParser.StatementContext ctx) {
-        new ForLoopControlVisitor().visit(ctx);
-        return null;
+        System.out.println("extracting: " + ctx.getText());
+        int forLoopyBodyStatementIndex = 0;
+        int forLoopControlStatementIndex = 2;
+        IavaParser.StatementContext forLoopBodyStatementCtx = ctx.statement(forLoopyBodyStatementIndex);
+        Block forLoopBody = new BlockVisitor().visit(forLoopBodyStatementCtx);
+
+        ParseTree forLoopControlTree = ctx.children.get(forLoopControlStatementIndex);
+
+        ForLoopControl forLoopControl = new ForLoopControlVisitor().visit(forLoopControlTree);
+        return new ForLoopStatement(forLoopControl, forLoopBody);
     }
 
     private boolean isForStatement(IavaParser.StatementContext ctx) {

@@ -3,6 +3,8 @@ class Trida {
         int z = 0;
         pro (;;) {
             z--;
+            volam();
+
         }
 
         si (a == 0) {
