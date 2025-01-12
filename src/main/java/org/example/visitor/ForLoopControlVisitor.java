@@ -31,7 +31,7 @@ public class ForLoopControlVisitor extends IavaParserBaseVisitor<ForLoopControl>
             ? createEmptyExpressionList()
             : extractExpressions(ctx.forUpdate);
 
-        System.out.println("forInit: " + forInit);
+        //System.out.println("forInit: " + forInit);
 
         return new ForLoopControl(forInit, forStopExpression, forUpdate);
     }

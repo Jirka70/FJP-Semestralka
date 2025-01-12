@@ -18,7 +18,7 @@ public class AppVisitor extends IavaParserBaseVisitor<AppPrimitive> {
             classes.add(classPrimitive);
         }
 
-        System.out.println("App: " + new AppPrimitive(classes));
+        //System.out.println("App: " + new AppPrimitive(classes));
         return new AppPrimitive(classes);
     }
 }

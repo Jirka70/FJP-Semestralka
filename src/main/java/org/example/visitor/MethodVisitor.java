@@ -28,15 +28,14 @@ public class MethodVisitor extends IavaParserBaseVisitor<MethodPrimitive> {
 
                 ParameterPrimitive parameter = new ParameterPrimitive(pModifiers, pType, pName);
                 parameters.add(parameter);
-                System.out.println("Parameter: " + parameter);
+                //System.out.println("Parameter: " + parameter);
             }
         }
 
         Block methodBody = new MethodBodyVisitor().visit(ctx.methodBody());
-        MethodPrimitive methodPrimitive = new MethodPrimitive(returnType, name, parameters, methodBody);
 
-        System.out.println("Method: " + methodPrimitive);
-        System.out.println("Method body: " + methodBody);
-        return methodPrimitive;
+        //System.out.println("Method: " + methodPrimitive);
+        //System.out.println("Method body: " + methodBody);
+        return new MethodPrimitive(returnType, name, parameters, methodBody);
     }
 }

@@ -4,6 +4,7 @@ import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.example.errorHandle.errorListener.IavaSyntaxErrorListener;
 import org.example.visitor.AppVisitor;
 
 public class Main {
@@ -29,15 +30,11 @@ public class Main {
         IavaLexer lexer = new IavaLexer(input); // vytvoření lexeru
         CommonTokenStream tokens = new CommonTokenStream(lexer); // vytvoření token streamu
         IavaParser parser = new IavaParser(tokens); // vytvoření parseru
+        parser.addErrorListener(new IavaSyntaxErrorListener());
         ParseTree tree = parser.compilationUnit(); // start parsing at the 'compilationUnit' rule and create parse tree
         AppVisitor visitor = new AppVisitor();
-
         visitor.visit(tree);
 
-        /* TODO: implementovat Visitory rozšiřující IavaParserBaseVisitor<T> a překrývající vybrané visitxxx metody.
-              Pomocí nich projít tree a vytvořit reprezentaci programu v paměti. Z té pak vygenerovat instrukce */
-
-        //System.out.println(tree.toStringTree(parser));
 
     }
 }

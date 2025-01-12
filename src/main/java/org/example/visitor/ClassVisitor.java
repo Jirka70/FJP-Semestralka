@@ -32,7 +32,7 @@ public class ClassVisitor extends IavaParserBaseVisitor<ClassPrimitive> {
             }
         }
 
-        System.out.println("Class: " + new ClassPrimitive(fields, methods, classes, ctx.identifier().getText()));
+        //System.out.println("Class: " + new ClassPrimitive(fields, methods, classes, ctx.identifier().getText()));
         return new ClassPrimitive(fields, methods, classes, ctx.identifier().getText());
     }
 
