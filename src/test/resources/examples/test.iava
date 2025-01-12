@@ -1,16 +1,19 @@
 class Trida {
     vacuum method() {
-        int z = 0;
-        pro (;;) {
+        finalis int z, v = 0;
+        dum (a < 20 && b > 34) {
             z--;
-            volam();
-
-        }
-
-        si (a == 0) {
-
-        } aliter {
-
+            jednuMetoduVolam();
+            druhouMetoduVolam(ahoj, pepa);
+            si (z < 34) {
+                udelejTohleVIfu();
+            } aliter {
+                udelejTohleVElsu();
+                int p = 2;
+                pro (p++; else < 2 && else2 > 23; i++, j++) {
+                    blockVeForu();
+                }
+            }
         }
     }
 }

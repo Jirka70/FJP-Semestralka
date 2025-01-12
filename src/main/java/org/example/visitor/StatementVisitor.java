@@ -7,7 +7,7 @@ import org.example.primitive.expression.EmptyExpression;
 import org.example.statement.*;
 import org.example.primitive.expression.AbstractExpression;
 import org.example.statement.ifStatement.ElseStatement;
-import org.example.statement.ifStatement.ForLoopStatement;
+import org.example.statement.ForLoopStatement;
 import org.example.statement.ifStatement.IfStatement;
 
 import java.util.ArrayList;

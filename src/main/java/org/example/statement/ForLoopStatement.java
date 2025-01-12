@@ -1,9 +1,4 @@
-package org.example.statement.ifStatement;
-
-import org.example.statement.AbstractStatement;
-import org.example.statement.Block;
-import org.example.statement.ForLoopControl;
-import org.example.statement.StatementType;
+package org.example.statement;
 
 public class ForLoopStatement extends AbstractStatement {
     public final ForLoopControl mForLoopControl;

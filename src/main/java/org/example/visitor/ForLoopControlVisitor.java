@@ -5,6 +5,7 @@ import org.example.IavaParserBaseVisitor;
 import org.example.primitive.expression.AbstractExpression;
 import org.example.primitive.expression.EmptyExpression;
 import org.example.primitive.expression.ExpressionList;
+import org.example.statement.ForInit;
 import org.example.statement.ForLoopControl;
 import org.example.statement.LocalVariableDeclaration;
 
@@ -18,9 +19,9 @@ public class ForLoopControlVisitor extends IavaParserBaseVisitor<ForLoopControl>
     public ForLoopControl visitForControl(IavaParser.ForControlContext ctx) {
         IavaParser.ForInitContext forInitContext = ctx.forInit();
 
-        LocalVariableDeclaration forInit = forInitContext == null
-            ? createEmptyLocalVariableDeclaration()
-            : new LocalVariableDeclarationVisitor().visit(forInitContext.localVariableDeclaration());
+        ForInit forInit = forInitContext == null
+            ? createEmptyForInit()
+            : extractForInit(ctx);
 
         AbstractExpression forStopExpression = ctx.expression() == null
             ? createEmptyExpression()
@@ -30,12 +31,30 @@ public class ForLoopControlVisitor extends IavaParserBaseVisitor<ForLoopControl>
             ? createEmptyExpressionList()
             : extractExpressions(ctx.forUpdate);
 
+        System.out.println("forInit: " + forInit);
+
         return new ForLoopControl(forInit, forStopExpression, forUpdate);
     }
 
-    private LocalVariableDeclaration createEmptyLocalVariableDeclaration() {
+    private ForInit createEmptyForInit() {
         return null;
     }
+
+    private ForInit extractForInit(IavaParser.ForControlContext ctx) {
+        IavaParser.ForInitContext forInitContext = ctx.forInit();
+
+        ExpressionList expressionList = forInitContext.expressionList() == null
+            ? null
+            : extractExpressions(forInitContext.expressionList());
+
+        LocalVariableDeclaration localVariableDeclaration = forInitContext.localVariableDeclaration() == null
+                ? null
+                : new LocalVariableDeclarationVisitor().visit(forInitContext.localVariableDeclaration());
+
+        return new ForInit(expressionList, localVariableDeclaration);
+
+    }
+
 
     private AbstractExpression createEmptyExpression() {
         return new EmptyExpression();
