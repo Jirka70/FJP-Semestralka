@@ -3,7 +3,7 @@ package org.example.visitor;
 import org.antlr.v4.runtime.RuleContext;
 import org.example.IavaParser;
 import org.example.IavaParserBaseVisitor;
-import org.example.primitive.ParameterPrimitive;
+import org.example.primitive.clazz.method.ParameterPrimitive;
 import org.example.primitive.clazz.method.MethodPrimitive;
 import org.example.statement.Block;
 

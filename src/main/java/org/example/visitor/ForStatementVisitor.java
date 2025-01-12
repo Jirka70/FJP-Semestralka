@@ -38,7 +38,7 @@ public class ForStatementVisitor extends IavaParserBaseVisitor<ForLoopStatement>
     }
 
     private LocalVariableDeclaration createEmptyLocalVariableDeclaration() {
-        return new LocalVariableDeclaration(new ArrayList<>(), null, new ArrayList<>());
+        return null;
     }
 
     private AbstractExpression createEmptyExpression() {

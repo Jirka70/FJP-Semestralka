@@ -1,6 +1,5 @@
 package org.example.primitive.clazz.method;
 
-import org.example.primitive.ParameterPrimitive;
 import org.example.statement.Block;
 
 import java.util.ArrayList;

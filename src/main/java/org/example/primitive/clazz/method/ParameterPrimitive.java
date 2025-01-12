@@ -1,4 +1,6 @@
-package org.example.primitive;
+package org.example.primitive.clazz.method;
+
+import org.example.primitive.Variable;
 
 import java.util.List;
 

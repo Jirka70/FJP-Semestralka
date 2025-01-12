@@ -2,8 +2,8 @@ package org.example.visitor;
 
 import org.example.IavaParser;
 import org.example.IavaParserBaseVisitor;
+import org.example.primitive.LocalVariable;
 import org.example.primitive.expression.AbstractExpression;
-import org.example.statement.LocalVariable;
 import org.example.statement.LocalVariableDeclaration;
 
 import java.util.ArrayList;
@@ -14,12 +14,13 @@ public class LocalVariableDeclarationVisitor extends IavaParserBaseVisitor<Local
     public LocalVariableDeclaration visitLocalVariableDeclaration(IavaParser.LocalVariableDeclarationContext ctx) {
         List<String> modifiers = extractModifiers(ctx);
         String type = extractType(ctx);
-        List<LocalVariable> localVariables = extractLocalVariables(ctx);
+        List<LocalVariable> localVariables = extractLocalVariables(modifiers, type, ctx);
 
-        return new LocalVariableDeclaration(modifiers, type, localVariables);
+        return new LocalVariableDeclaration(localVariables);
     }
 
-    private List<LocalVariable> extractLocalVariables(IavaParser.LocalVariableDeclarationContext ctx) {
+    private List<LocalVariable> extractLocalVariables(List<String> modifiers, String type,
+                                                      IavaParser.LocalVariableDeclarationContext ctx) {
         List<LocalVariable> localVariables = new ArrayList<>();
 
         List<IavaParser.VariableDeclaratorContext> variableDeclaratorContextList = ctx
@@ -27,20 +28,25 @@ public class LocalVariableDeclarationVisitor extends IavaParserBaseVisitor<Local
                 .variableDeclarator();
 
         for (IavaParser.VariableDeclaratorContext variableDeclaratorContext : variableDeclaratorContextList) {
-            LocalVariable localVariable = extractLocalVariable(variableDeclaratorContext);
+            LocalVariable localVariable = extractLocalVariable(modifiers, type, variableDeclaratorContext);
             localVariables.add(localVariable);
         }
 
         return localVariables;
     }
 
-    private LocalVariable extractLocalVariable(IavaParser.VariableDeclaratorContext variableDeclaratorContext) {
+    private LocalVariable extractLocalVariable(List<String> modifiers, String type,
+                                               IavaParser.VariableDeclaratorContext variableDeclaratorContext) {
         String name = variableDeclaratorContext.variableDeclaratorId().getText();
 
-        IavaParser.ExpressionContext expressionContext = variableDeclaratorContext.variableInitializer().expression();
-        AbstractExpression expression = new ExpressionVisitor().visit(expressionContext);
+        AbstractExpression expression = null;
+        if (variableDeclaratorContext.variableInitializer() != null &&
+                variableDeclaratorContext.variableInitializer().expression() != null) {
+            IavaParser.ExpressionContext exprCtx = variableDeclaratorContext.variableInitializer().expression();
+            expression = new ExpressionVisitor().visit(exprCtx);
+        }
 
-        return new LocalVariable(name, expression);
+        return new LocalVariable(modifiers, type, name, expression);
     }
 
     private List<String> extractModifiers(IavaParser.LocalVariableDeclarationContext ctx) {

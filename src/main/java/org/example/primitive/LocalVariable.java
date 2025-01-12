@@ -1,6 +1,6 @@
-package org.example.primitive.expression;
+package org.example.primitive;
 
-import org.example.primitive.Variable;
+import org.example.primitive.expression.AbstractExpression;
 
 import java.util.List;
 
