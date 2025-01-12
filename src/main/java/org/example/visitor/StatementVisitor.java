@@ -32,6 +32,10 @@ public class StatementVisitor extends IavaParserBaseVisitor<AbstractStatement> {
             return extractReturnStatement(ctx);
         } else if (isSwitchStatement(ctx)) {
             return extractSwitchStatement(ctx);
+        } else if (isDoWhileStatement(ctx)) {
+            return extractDoWhileStatement(ctx);
+        } else if (isWhileStatement(ctx)) {
+            return extractWhileStatement(ctx);
         }
 
         throw new IllegalArgumentException("Type of statement " + ctx.getText() + " not recognized");
@@ -178,5 +182,25 @@ public class StatementVisitor extends IavaParserBaseVisitor<AbstractStatement> {
             cases.add(swCase);
         }
         return cases;
+    }
+
+    private boolean isDoWhileStatement(IavaParser.StatementContext ctx) {
+        return ctx.DO() != null;
+    }
+
+    private DoWhileStatement extractDoWhileStatement(IavaParser.StatementContext ctx) {
+        AbstractStatement statement = visit(ctx.statement(0));
+        AbstractExpression parExpression = new ExpressionVisitor().visit(ctx.parExpression());
+        return new DoWhileStatement(statement, parExpression);
+    }
+
+    private boolean isWhileStatement(IavaParser.StatementContext ctx) {
+        return ctx.WHILE() == ctx.getChild(0);
+    }
+
+    private WhileStatement extractWhileStatement(IavaParser.StatementContext ctx) {
+        AbstractExpression parExpression = new ExpressionVisitor().visit(ctx.parExpression());
+        AbstractStatement statement = visit(ctx.statement(0));
+        return new WhileStatement(parExpression, statement);
     }
 }
