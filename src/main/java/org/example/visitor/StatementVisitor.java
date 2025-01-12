@@ -8,6 +8,10 @@ import org.example.primitive.expression.AbstractExpression;
 import org.example.statement.ifStatement.ElseStatement;
 import org.example.statement.ifStatement.IfStatement;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class StatementVisitor extends IavaParserBaseVisitor<AbstractStatement> {
 
     @Override
@@ -26,6 +30,8 @@ public class StatementVisitor extends IavaParserBaseVisitor<AbstractStatement> {
             return extractEmptyStatement(ctx);
         } else if (isReturnStatement(ctx)) {
             return extractReturnStatement(ctx);
+        } else if (isSwitchStatement(ctx)) {
+            return extractSwitchStatement(ctx);
         }
 
         throw new IllegalArgumentException("Type of statement " + ctx.getText() + " not recognized");
@@ -126,5 +132,51 @@ public class StatementVisitor extends IavaParserBaseVisitor<AbstractStatement> {
             ? new EmptyExpression()
             : new ExpressionVisitor().visit(ctx.expression());
         return new ReturnStatement(expression);
+    }
+
+    private boolean isSwitchStatement(IavaParser.StatementContext ctx) {
+        return ctx.SWITCH() != null;
+    }
+
+    private SwitchStatement extractSwitchStatement(IavaParser.StatementContext ctx) {
+        AbstractExpression parExpression = new ExpressionVisitor().visit(ctx.parExpression());
+        List<SwitchCase> cases = extractNonEmptySwitchCases(ctx);
+        cases.addAll(extractEmptySwitchCases(ctx));
+
+        return new SwitchStatement(parExpression, cases);
+    }
+
+    private List<SwitchCase> extractNonEmptySwitchCases(IavaParser.StatementContext ctx) {
+        List<SwitchCase> cases = new ArrayList<>();
+
+        for (IavaParser.SwitchBlockStatementGroupContext group : ctx.switchBlockStatementGroup()) {
+            List<AbstractBlockStatement> groupStatements = new ArrayList<>();
+            for (IavaParser.BlockStatementContext blockCtx : group.blockStatement()) {
+                groupStatements.add(visit(blockCtx));
+            }
+
+            for (IavaParser.SwitchLabelContext lbl : group.switchLabel()) {
+                AbstractExpression caseExpression = lbl.constantExpression == null
+                        ? null
+                        : new ExpressionVisitor().visit(lbl.constantExpression);
+
+                SwitchCase swCase = new SwitchCase(caseExpression, groupStatements);
+                cases.add(swCase);
+            }
+        }
+        return cases;
+    }
+
+    private List<SwitchCase> extractEmptySwitchCases(IavaParser.StatementContext ctx) {
+        List<SwitchCase> cases = new ArrayList<>();
+        for (IavaParser.SwitchLabelContext lbl : ctx.switchLabel()) {
+            AbstractExpression caseExpression = lbl.constantExpression == null
+                    ? null
+                    : new ExpressionVisitor().visit(lbl.constantExpression);
+
+            SwitchCase swCase = new SwitchCase(caseExpression, Collections.emptyList());
+            cases.add(swCase);
+        }
+        return cases;
     }
 }
