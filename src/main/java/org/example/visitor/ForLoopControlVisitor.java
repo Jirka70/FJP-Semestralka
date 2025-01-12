@@ -11,7 +11,7 @@ import org.example.statement.LocalVariableDeclaration;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ForStatementVisitor extends IavaParserBaseVisitor<ForLoopControl> {
+public class ForLoopControlVisitor extends IavaParserBaseVisitor<ForLoopControl> {
 
 
     @Override

@@ -43,7 +43,7 @@ public class StatementVisitor extends IavaParserBaseVisitor<AbstractStatement> {
     }
 
     private ForLoopStatement extractForStatement(IavaParser.StatementContext ctx) {
-        new ForStatementVisitor().visit(ctx);
+        new ForLoopControlVisitor().visit(ctx);
         return null;
     }
 
