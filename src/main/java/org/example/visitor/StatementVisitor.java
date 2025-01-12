@@ -44,7 +44,6 @@ public class StatementVisitor extends IavaParserBaseVisitor<AbstractStatement> {
     }
 
     private ForLoopStatement extractForStatement(IavaParser.StatementContext ctx) {
-        System.out.println("extracting: " + ctx.getText());
         int forLoopyBodyStatementIndex = 0;
         int forLoopControlStatementIndex = 2;
         IavaParser.StatementContext forLoopBodyStatementCtx = ctx.statement(forLoopyBodyStatementIndex);
