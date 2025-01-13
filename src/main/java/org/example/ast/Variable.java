@@ -1,11 +1,18 @@
 package org.example.ast;
 
 import org.example.ast.expression.AbstractExpression;
+import org.example.ast.expression.EmptyExpression;
+import org.example.semantic.ISemanticallyAnalyzable;
+import org.example.semantic.symbolTable.Symbol;
+import org.example.semantic.symbolTable.SymbolTable;
+import org.example.semantic.symbolTable.descriptor.AbstractDescriptor;
+import org.example.semantic.symbolTable.descriptor.VariableDescriptor;
+import org.example.semantic.symbolTable.scope.Scope;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Variable {
+public class Variable implements ISemanticallyAnalyzable {
     private static final String FINAL_KEYWORD = "finalis";
 
     public final List<String> mModifiers = new ArrayList<>();
@@ -38,5 +45,22 @@ public class Variable {
     @Override
     public String toString() {
         return  mModifiers + " " + mDeclaredType + " " + mName + (mExpression != null ? " = " + mExpression : "");
+    }
+
+    @Override
+    public void analyze(SymbolTable symbolTable) {
+
+    }
+
+    public boolean isAssigned() {
+        return mExpression != null
+                && !(mExpression instanceof EmptyExpression);
+    }
+
+    @Override
+    public void collectData(Scope currentScope) {
+        AbstractDescriptor variableDescriptor = new VariableDescriptor(mName, mDeclaredType, isAssigned(), isFinal());
+        Symbol symbol = new Symbol(mName);
+        currentScope.addSymbol(symbol, variableDescriptor);
     }
 }

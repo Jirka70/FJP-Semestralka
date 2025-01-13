@@ -1,6 +1,11 @@
 package org.example.ast.expression;
 
+import org.example.semantic.symbolTable.SymbolTable;
+import org.example.semantic.symbolTable.scope.Scope;
+
 public class LiteralExpression extends PrimaryExpression {
+
+
     public enum LiteralType {
         CHAR_LITERAL,
         STRING_LITERAL,
@@ -26,5 +31,15 @@ public class LiteralExpression extends PrimaryExpression {
     @Override
     public String toString() {
         return mLiteral;
+    }
+
+    @Override
+    public void analyze(SymbolTable symbolTable) {
+
+    }
+
+    @Override
+    public void collectData(Scope currentScope) {
+
     }
 }

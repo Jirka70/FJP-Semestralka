@@ -1,6 +1,8 @@
 package org.example.ast.statement;
 
-public abstract class AbstractBlockStatement {
+import org.example.semantic.ISemanticallyAnalyzable;
+
+public abstract class AbstractBlockStatement implements ISemanticallyAnalyzable {
 
     @Override
     public abstract String toString();

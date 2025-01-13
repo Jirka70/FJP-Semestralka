@@ -1,5 +1,8 @@
 package org.example.ast.expression;
 
+import org.example.semantic.symbolTable.SymbolTable;
+import org.example.semantic.symbolTable.scope.Scope;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,5 +23,15 @@ public class MethodCallExpression extends AbstractExpression {
             result.append(arg.toString()).append(", ");
         result.append(")");
         return result.toString();
+    }
+
+    @Override
+    public void analyze(SymbolTable symbolTable) {
+
+    }
+
+    @Override
+    public void collectData(Scope currentScope) {
+
     }
 }

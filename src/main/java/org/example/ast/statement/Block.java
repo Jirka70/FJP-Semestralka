@@ -1,5 +1,8 @@
 package org.example.ast.statement;
 
+import org.example.semantic.symbolTable.SymbolTable;
+import org.example.semantic.symbolTable.scope.Scope;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,5 +18,17 @@ public class Block extends AbstractStatement {
     @Override
     public String toString() {
         return "Block: " + mBlockStatements;
+    }
+
+    @Override
+    public void analyze(SymbolTable symbolTable) {
+
+    }
+
+    @Override
+    public void collectData(Scope currentScope) {
+        for (AbstractBlockStatement blockStatement : mBlockStatements) {
+            blockStatement.collectData(currentScope);
+        }
     }
 }

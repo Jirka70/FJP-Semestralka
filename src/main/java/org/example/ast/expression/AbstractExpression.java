@@ -1,6 +1,8 @@
 package org.example.ast.expression;
 
-public abstract class AbstractExpression {
+import org.example.semantic.ISemanticallyAnalyzable;
+
+public abstract class AbstractExpression implements ISemanticallyAnalyzable {
     public final ExpressionType mExpressionType;
 
     protected AbstractExpression(ExpressionType expressionType) {

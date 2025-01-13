@@ -6,10 +6,12 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.example.ast.AST;
 import org.example.errorHandle.errorListener.IavaSyntaxErrorListener;
+import org.example.semantic.SemanticAnalyzer;
+import org.example.semantic.exception.SemanticException;
 import org.example.visitor.AppVisitor;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SemanticException {
         if (args.length != 1) {
             System.out.println("Expected 1 argument (path to .iava source code)");
             return;
@@ -38,5 +40,8 @@ public class Main {
         ParseTree tree = parser.compilationUnit();
         AppVisitor visitor = new AppVisitor();
         AST ast = visitor.visit(tree); // TODO make semantic analyze
+        SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer(ast);
+        semanticAnalyzer.analyse();
+        System.out.println("done");
     }
 }
