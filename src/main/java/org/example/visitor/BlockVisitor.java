@@ -2,11 +2,12 @@ package org.example.visitor;
 
 import org.example.IavaParser;
 import org.example.IavaParserBaseVisitor;
-import org.example.ast.statement.Block;
 import org.example.ast.statement.AbstractBlockStatement;
+import org.example.ast.statement.Block;
+import org.example.util.Location;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class BlockVisitor extends IavaParserBaseVisitor<Block> {
     @Override
@@ -19,6 +20,11 @@ public class BlockVisitor extends IavaParserBaseVisitor<Block> {
             blockStatements.add(blockStatement);
         }
 
-        return new Block(blockStatements);
+        Location location = getBlockLocation(ctx);
+        return new Block(blockStatements, location);
+    }
+
+    private Location getBlockLocation(IavaParser.BlockContext ctx) {
+        return new Location(ctx.start.getLine(), ctx.start.getCharPositionInLine());
     }
 }

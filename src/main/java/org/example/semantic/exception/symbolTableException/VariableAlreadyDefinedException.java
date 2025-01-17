@@ -4,7 +4,7 @@ import org.example.semantic.exception.SemanticException;
 
 public class VariableAlreadyDefinedException extends SemanticException {
 
-    public VariableAlreadyDefinedException(String message, Throwable cause) {
-        super(message, cause);
+    public VariableAlreadyDefinedException(String message) {
+        super(message);
     }
 }

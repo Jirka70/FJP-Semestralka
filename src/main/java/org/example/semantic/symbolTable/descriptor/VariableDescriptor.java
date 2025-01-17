@@ -1,5 +1,7 @@
 package org.example.semantic.symbolTable.descriptor;
 
+import java.util.Objects;
+
 public class VariableDescriptor extends AbstractDescriptor {
     private static final String VOID_TYPE = "vacuum";
     public final String mName;
@@ -18,6 +20,23 @@ public class VariableDescriptor extends AbstractDescriptor {
         mType = type;
         mIsAssigned = isAssigned;
         mIsFinal = isFinal;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(mName, mType, mIsAssigned, mIsFinal);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof VariableDescriptor other) {
+            return mName.equals(other.mName)
+                    && mType.equals(other.mType)
+                    && mIsAssigned == other.mIsAssigned
+                    && mIsFinal == other.mIsFinal;
+        }
+
+        return false;
     }
 
     @Override

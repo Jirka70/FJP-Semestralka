@@ -4,7 +4,7 @@ import org.example.semantic.exception.SemanticException;
 
 public class UndefinedMethodException extends SemanticException {
 
-    public UndefinedMethodException(String message, Throwable cause) {
-        super(message, cause);
+    public UndefinedMethodException(String message) {
+        super(message);
     }
 }

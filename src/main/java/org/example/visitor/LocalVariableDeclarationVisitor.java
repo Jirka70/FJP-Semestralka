@@ -1,10 +1,12 @@
 package org.example.visitor;
 
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.example.IavaParser;
 import org.example.IavaParserBaseVisitor;
 import org.example.ast.LocalVariable;
 import org.example.ast.expression.AbstractExpression;
 import org.example.ast.statement.LocalVariableDeclaration;
+import org.example.util.Location;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +18,12 @@ public class LocalVariableDeclarationVisitor extends IavaParserBaseVisitor<Local
         String type = extractType(ctx);
         List<LocalVariable> localVariables = extractLocalVariables(modifiers, type, ctx);
 
-        return new LocalVariableDeclaration(localVariables);
+        Location location = getLocalVariableLocation(ctx);
+        return new LocalVariableDeclaration(localVariables, location);
+    }
+
+    private Location getLocalVariableLocation(ParserRuleContext ctx) {
+        return new  Location(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine());
     }
 
     private List<LocalVariable> extractLocalVariables(List<String> modifiers, String type,
@@ -46,7 +53,7 @@ public class LocalVariableDeclarationVisitor extends IavaParserBaseVisitor<Local
             expression = new ExpressionVisitor().visit(exprCtx);
         }
 
-        return new LocalVariable(modifiers, type, name, expression);
+        return new LocalVariable(modifiers, type, name, expression, getLocalVariableLocation(variableDeclaratorContext));
     }
 
     private List<String> extractModifiers(IavaParser.LocalVariableDeclarationContext ctx) {

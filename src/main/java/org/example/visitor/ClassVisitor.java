@@ -5,12 +5,11 @@ import org.example.IavaParserBaseVisitor;
 import org.example.ast.clazz.ClassPrimitive;
 import org.example.ast.clazz.FieldPrimitive;
 import org.example.ast.clazz.method.MethodPrimitive;
+import org.example.util.Location;
 
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO generate ClassPrimitive instance
-// TODO many methods are here just "testing", how ANTLR API works
 public class ClassVisitor extends IavaParserBaseVisitor<ClassPrimitive> {
 
     @Override
@@ -32,8 +31,13 @@ public class ClassVisitor extends IavaParserBaseVisitor<ClassPrimitive> {
             }
         }
 
-        //System.out.println("Class: " + new ClassPrimitive(fields, methods, classes, ctx.identifier().getText()));
-        return new ClassPrimitive(fields, methods, classes, ctx.identifier().getText());
+        Location location = getMethodLocation(ctx);
+        return new ClassPrimitive(fields, methods, classes, ctx.identifier().getText(), location);
+    }
+
+    private Location getMethodLocation(IavaParser.ClassDeclarationContext ctx) {
+        return new Location(ctx.start.getLine(),
+                ctx.start.getCharPositionInLine());
     }
 
     @Override

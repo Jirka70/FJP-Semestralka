@@ -4,7 +4,7 @@ import org.example.semantic.exception.SemanticException;
 
 public class TypeMismatchException extends SemanticException {
 
-    public TypeMismatchException(String message, Throwable cause) {
-        super(message, cause);
+    public TypeMismatchException(String message) {
+        super(message);
     }
 }

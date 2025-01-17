@@ -4,7 +4,7 @@ import org.example.semantic.exception.SemanticException;
 
 public class UndefinedVariableException extends SemanticException {
 
-    public UndefinedVariableException(String message, Throwable cause) {
-        super(message, cause);
+    public UndefinedVariableException(String message) {
+        super(message);
     }
 }

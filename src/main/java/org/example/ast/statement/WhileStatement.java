@@ -1,18 +1,24 @@
 package org.example.ast.statement;
 
 import org.example.ast.expression.AbstractExpression;
-import org.example.semantic.symbolTable.SymbolTable;
+import org.example.semantic.exception.SemanticException;
+import org.example.semantic.exception.symbolTableException.InvalidStatementException;
 import org.example.semantic.symbolTable.descriptor.AbstractDescriptor;
 import org.example.semantic.symbolTable.descriptor.WhileLoopDescriptor;
-import org.example.semantic.symbolTable.scope.Scope;
+import org.example.semantic.symbolTable.scope.AbstractScope;
+import org.example.semantic.symbolTable.scope.BlockScope;
+import org.example.semantic.symbolTable.symbol.AbstractSymbol;
+import org.example.semantic.symbolTable.symbol.StatementSymbol;
+import org.example.util.Location;
 
 
 public class WhileStatement extends AbstractStatement {
+    private static final String WHILE_KEYWORD = "while";
     public final AbstractExpression mExpression;
     public final AbstractStatement mBody;
 
-    public WhileStatement(AbstractExpression expression, AbstractStatement body) {
-        super(StatementType.WHILE);
+    public WhileStatement(AbstractExpression expression, AbstractStatement body, Location location) {
+        super(StatementType.WHILE, location);
         mExpression = expression;
         mBody = body;
     }
@@ -23,16 +29,25 @@ public class WhileStatement extends AbstractStatement {
     }
 
     @Override
-    public void analyze(SymbolTable symbolTable) {
-        mBody.analyze(symbolTable);
+    public void analyze(AbstractScope abstractScope) throws SemanticException {
+        AbstractSymbol symbol = new StatementSymbol(WHILE_KEYWORD, mLocation);
+
+        AbstractScope whileAbstractScope = abstractScope.getChildScopeBySymbol(symbol);
+
+        if (whileAbstractScope == null) {
+            throw new InvalidStatementException("While statement was not found on location " + mLocation);
+        }
+
+        mBody.analyze(abstractScope);
     }
 
     @Override
-    public void collectData(Scope currentScope) {
+    public void collectData(AbstractScope currentAbstractScope) throws SemanticException {
         AbstractDescriptor abstractDescriptor = new WhileLoopDescriptor();
-        Scope whileScope = new Scope(currentScope, abstractDescriptor);
-        currentScope.addChildScope(whileScope);
+        AbstractScope whileAbstractScope = new BlockScope(currentAbstractScope, abstractDescriptor);
+        AbstractSymbol whileSymbol = new StatementSymbol(WHILE_KEYWORD, mLocation);
+        currentAbstractScope.addChildScope(whileSymbol, whileAbstractScope);
 
-        mBody.collectData(whileScope);
+        mBody.collectData(whileAbstractScope);
     }
 }

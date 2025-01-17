@@ -40,7 +40,7 @@ public class Main {
         ParseTree tree = parser.compilationUnit();
         AppVisitor visitor = new AppVisitor();
         AST ast = visitor.visit(tree); // TODO make semantic analyze
-        SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer(ast);
+        SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer(ast); // Final keyword in binary expression + in POSTepxression and preexprssion
         semanticAnalyzer.analyse();
         System.out.println("done");
     }

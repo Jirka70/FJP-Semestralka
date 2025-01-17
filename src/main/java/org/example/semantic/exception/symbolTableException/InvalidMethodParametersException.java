@@ -4,7 +4,7 @@ import org.example.semantic.exception.SemanticException;
 
 public class InvalidMethodParametersException extends SemanticException {
 
-    public InvalidMethodParametersException(String message, Throwable cause) {
-        super(message, cause);
+    public InvalidMethodParametersException(String message) {
+        super(message);
     }
 }

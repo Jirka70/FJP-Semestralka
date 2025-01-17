@@ -9,7 +9,16 @@ public class ClassDescriptor extends AbstractDescriptor {
     }
 
     @Override
-    public String toString() {
-        return "";
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof ClassDescriptor other) {
+            return mClassName.equals(other.mClassName);
+        }
+
+        return false;
     }
 }

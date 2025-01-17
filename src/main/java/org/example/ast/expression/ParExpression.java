@@ -1,14 +1,21 @@
 package org.example.ast.expression;
 
-import org.example.semantic.symbolTable.SymbolTable;
-import org.example.semantic.symbolTable.scope.Scope;
+import org.example.semantic.exception.SemanticException;
+import org.example.semantic.symbolTable.scope.AbstractScope;
+import org.example.semantic.type.AbstractType;
+import org.example.util.Location;
 
 public class ParExpression extends PrimaryExpression {
     public final AbstractExpression mExpression;
 
-    public ParExpression(AbstractExpression expression) {
-        super(ExpressionType.PARENTHESES);
+    public ParExpression(AbstractExpression expression, Location location) {
+        super(ExpressionType.PARENTHESES, location);
         mExpression = expression;
+    }
+
+    @Override
+    public AbstractType evaluateType(AbstractScope abstractScope) throws SemanticException {
+        return mExpression.evaluateType(abstractScope);
     }
 
     @Override
@@ -17,12 +24,12 @@ public class ParExpression extends PrimaryExpression {
     }
 
     @Override
-    public void analyze(SymbolTable symbolTable) {
-
+    public void analyze(AbstractScope abstractScope) throws SemanticException {
+        mExpression.analyze(abstractScope);
     }
 
     @Override
-    public void collectData(Scope currentScope) {
+    public void collectData(AbstractScope currentAbstractScope) {
 
     }
 }

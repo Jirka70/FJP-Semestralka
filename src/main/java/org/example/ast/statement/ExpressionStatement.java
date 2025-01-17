@@ -1,14 +1,15 @@
 package org.example.ast.statement;
 
 import org.example.ast.expression.AbstractExpression;
-import org.example.semantic.symbolTable.SymbolTable;
-import org.example.semantic.symbolTable.scope.Scope;
+import org.example.semantic.exception.SemanticException;
+import org.example.semantic.symbolTable.scope.AbstractScope;
+import org.example.util.Location;
 
 public class ExpressionStatement extends AbstractStatement {
     public final AbstractExpression mExpression;
 
-    public ExpressionStatement(AbstractExpression expression) {
-        super(StatementType.EXPRESSION);
+    public ExpressionStatement(AbstractExpression expression, Location location) {
+        super(StatementType.EXPRESSION, location);
         mExpression = expression;
     }
 
@@ -18,12 +19,12 @@ public class ExpressionStatement extends AbstractStatement {
     }
 
     @Override
-    public void analyze(SymbolTable symbolTable) {
-
+    public void analyze(AbstractScope abstractScope) throws SemanticException {
+        mExpression.analyze(abstractScope);
     }
 
     @Override
-    public void collectData(Scope currentScope) {
+    public void collectData(AbstractScope currentAbstractScope) {
 
     }
 }

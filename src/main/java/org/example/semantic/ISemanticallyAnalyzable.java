@@ -1,9 +1,9 @@
 package org.example.semantic;
 
-import org.example.semantic.symbolTable.SymbolTable;
-import org.example.semantic.symbolTable.scope.Scope;
+import org.example.semantic.exception.SemanticException;
+import org.example.semantic.symbolTable.scope.AbstractScope;
 
 public interface ISemanticallyAnalyzable {
-    void analyze(SymbolTable symbolTable);
-    void collectData(Scope currentScope);
+    void analyze(AbstractScope abstractScope) throws SemanticException;
+    void collectData(AbstractScope currentAbstractScope) throws SemanticException;
 }

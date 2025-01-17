@@ -4,6 +4,7 @@ import org.antlr.v4.runtime.Token;
 import org.example.IavaParser;
 import org.example.IavaParserBaseVisitor;
 import org.example.ast.expression.*;
+import org.example.util.Location;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ public class ExpressionVisitor extends IavaParserBaseVisitor<AbstractExpression>
 
     @Override
     public AbstractExpression visitExpression(IavaParser.ExpressionContext ctx) {
+        System.out.println("expression: " + ctx.getText());
         if (isTernaryExpression(ctx)) {
             return extractTernaryExpression(ctx);
         } else if (isPrimaryExpression(ctx)) {
@@ -50,20 +52,23 @@ public class ExpressionVisitor extends IavaParserBaseVisitor<AbstractExpression>
         AbstractExpression rightExpression = visit(right);
         String operatorStr = operator.getText();
 
-        BinaryExpression expr = new BinaryExpression(leftExpression, rightExpression, ExpressionType.valueOfByOperator(operatorStr));
-        //System.out.println("Binary: " + expr);
-        return new BinaryExpression(leftExpression, rightExpression, ExpressionType.valueOfByOperator(operatorStr));
+        Location location = getExpresssionLocation(ctx);
+        return new BinaryExpression(leftExpression, rightExpression, ExpressionType.valueOfByOperator(operatorStr),
+                location);
+    }
+
+    private Location getExpresssionLocation(IavaParser.ExpressionContext ctx) {
+        return new Location(ctx.start.getLine(), ctx.start.getCharPositionInLine());
     }
 
     private PrimaryExpression extractPrimaryExpression(IavaParser.ExpressionContext ctx) {
+        Location location = getExpresssionLocation(ctx);
         IavaParser.PrimaryContext primCtx = ctx.primary();
         if (primCtx.expression() != null) {
             AbstractExpression expr = visit(primCtx.expression());
-            //System.out.println("ParExpr: " + new ParExpression(expr));
-            return new ParExpression(expr);
+            return new ParExpression(expr, location);
         } else if (primCtx.identifier() != null) {
-            //System.out.println("IdentifierExpr: " + new IdentifierExpression(primCtx.identifier().getText()));
-            return new IdentifierExpression(primCtx.identifier().getText());
+            return new IdentifierExpression(primCtx.identifier().getText(), location);
         } else if (primCtx.literal() != null) {
             IavaParser.LiteralContext litCtx = primCtx.literal();
             LiteralExpression.LiteralType type = null;
@@ -96,8 +101,7 @@ public class ExpressionVisitor extends IavaParserBaseVisitor<AbstractExpression>
                     type = LiteralExpression.LiteralType.NULL_LITERAL;
                 }
             }
-            //System.out.println("LitExpr: " + new LiteralExpression(litCtx.getText(), type));
-            return new LiteralExpression(litCtx.getText(), type);
+            return new LiteralExpression(litCtx.getText(), type, location);
         }
 
         throw new IllegalArgumentException("Type of primary expression " + ctx.getText() + " not recognized");
@@ -107,16 +111,6 @@ public class ExpressionVisitor extends IavaParserBaseVisitor<AbstractExpression>
         return ctx.primary() != null;
     }
 
-//    private boolean isBooleanExpression(IavaParser.ExpressionContext ctx) {
-//        return ctx.EQUAL() != null
-//                || ctx.AND() != null
-//                || ctx.OR() != null
-//                || ctx.NOTEQUAL() != null
-//                || ctx.GE() != null
-//                || ctx.LE() != null
-//                || ctx.LT().size() == 1
-//                || ctx.GT().size() == 1;
-//    }
 
     private boolean isBinaryExpression(IavaParser.ExpressionContext ctx) {
         return ctx.expression().size() == 2 && ctx.bop != null;
@@ -130,9 +124,8 @@ public class ExpressionVisitor extends IavaParserBaseVisitor<AbstractExpression>
         AbstractExpression innerExpr = visit(ctx.expression(0));
 
         if (ctx.typeType() != null) {
-            CastExpression e = new CastExpression(innerExpr, ctx.typeType().getText());
-            System.out.println("Cast: " + e);
-            return new CastExpression(innerExpr, ctx.typeType().getText());
+            Location location = getExpresssionLocation(ctx);
+            return new CastExpression(innerExpr, ctx.typeType().getText(), location);
         } else if (ctx.prefix != null) {
             ExpressionType type = switch (ctx.prefix.getText()) {
                 case "++" -> ExpressionType.PRE_INC;
@@ -143,18 +136,16 @@ public class ExpressionVisitor extends IavaParserBaseVisitor<AbstractExpression>
                 case "-" ->  ExpressionType.UNARY_MINUS;
                 default -> null;
             };
-            PrefixExpression e = new PrefixExpression(innerExpr, type);
+            PrefixExpression e = new PrefixExpression(innerExpr, type, getExpresssionLocation(ctx));
             System.out.println("Prefix: " + e);
-            return new PrefixExpression(innerExpr, type);
+            return new PrefixExpression(innerExpr, type, getExpresssionLocation(ctx));
         } else if (ctx.postfix != null) {
             ExpressionType type = switch (ctx.postfix.getText()) {
                 case "++" -> ExpressionType.POST_INC;
                 case "--" -> ExpressionType.POST_DEC;
                 default -> null;
             };
-            PostfixExpression e = new PostfixExpression(innerExpr, type);
-            //System.out.println("Postfix: " + e);
-            return new PostfixExpression(innerExpr, type);
+            return new PostfixExpression(innerExpr, type, getExpresssionLocation(ctx));
         }
 
         throw new IllegalArgumentException("Type of unary expression " + ctx.getText() + " not recognized");
@@ -178,7 +169,7 @@ public class ExpressionVisitor extends IavaParserBaseVisitor<AbstractExpression>
             args.add(visit(argCtx));
 
         //System.out.println("Method call: " + new MethodCallExpression(name, args));
-        return new MethodCallExpression(name, args);
+        return new MethodCallExpression(name, args, getExpresssionLocation(ctx));
     }
 
     private boolean isTernaryExpression(IavaParser.ExpressionContext ctx) {
@@ -204,8 +195,7 @@ public class ExpressionVisitor extends IavaParserBaseVisitor<AbstractExpression>
         AbstractExpression trueBranchExpression = visit(trueBranch);
         AbstractExpression falseBranchExpression = visit(falseBranch);
 
-        TernaryExpression expr = new TernaryExpression(conditionExpression, trueBranchExpression, falseBranchExpression);
-        //System.out.println("Ternary: " + expr);
-        return new TernaryExpression(conditionExpression, trueBranchExpression, falseBranchExpression);
+        return new TernaryExpression(conditionExpression, trueBranchExpression, falseBranchExpression,
+                getExpresssionLocation(ctx));
     }
 }

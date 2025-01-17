@@ -5,6 +5,7 @@ import org.example.IavaParser;
 import org.example.IavaParserBaseVisitor;
 import org.example.ast.clazz.FieldPrimitive;
 import org.example.ast.expression.AbstractExpression;
+import org.example.util.Location;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ public class FieldVisitor extends IavaParserBaseVisitor<List<FieldPrimitive>> {
         IavaParser.ClassBodyDeclarationContext cbCtx = (IavaParser.ClassBodyDeclarationContext) ctx.getParent().getParent();
         List<String> modifiers = cbCtx.modifier().stream().map(RuleContext::getText).toList();
 
+
         List<FieldPrimitive> fields = new ArrayList<>();
         for (IavaParser.VariableDeclaratorContext dclCtx : ctx.variableDeclarators().variableDeclarator()) {
             String name = dclCtx.variableDeclaratorId().getText();
@@ -30,10 +32,16 @@ public class FieldVisitor extends IavaParserBaseVisitor<List<FieldPrimitive>> {
                 initExpr = new ExpressionVisitor().visit(exprCtx);
             }
 
-            FieldPrimitive field = new FieldPrimitive(modifiers, type, name, initExpr);
+            Location location = getFieldLocation(ctx);
+            FieldPrimitive field = new FieldPrimitive(modifiers, type, name, initExpr, location);
             fields.add(field);
             System.out.println("Field: " + field);
         }
         return fields;
+    }
+
+    private Location getFieldLocation(IavaParser.FieldDeclarationContext ctx) {
+        return new Location(ctx.getStart().getLine(),
+                ctx.getStart().getCharPositionInLine());
     }
 }

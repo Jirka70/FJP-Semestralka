@@ -2,21 +2,30 @@ package org.example.ast.statement;
 
 import org.example.ast.expression.AbstractExpression;
 import org.example.semantic.ISemanticallyAnalyzable;
-import org.example.semantic.symbolTable.SymbolTable;
+import org.example.semantic.exception.SemanticException;
+import org.example.semantic.exception.symbolTableException.InvalidStatementException;
 import org.example.semantic.symbolTable.descriptor.AbstractDescriptor;
-import org.example.semantic.symbolTable.scope.Scope;
+import org.example.semantic.symbolTable.descriptor.CaseDescriptor;
+import org.example.semantic.symbolTable.scope.AbstractScope;
+import org.example.semantic.symbolTable.scope.BlockScope;
+import org.example.semantic.symbolTable.symbol.AbstractSymbol;
+import org.example.semantic.symbolTable.symbol.StatementSymbol;
+import org.example.util.Location;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SwitchCase implements ISemanticallyAnalyzable {
+    private static final String KEYWORD_CASE = "case";
     public final AbstractExpression mExpression;
     public final List<AbstractBlockStatement> mBody = new ArrayList<>();
+    public final Location mLocation;
 
-    public SwitchCase(AbstractExpression expression, List<AbstractBlockStatement> body) {
+    public SwitchCase(AbstractExpression expression, List<AbstractBlockStatement> body, Location location) {
         mExpression = expression;
         if (body != null)
             mBody.addAll(body);
+        mLocation = location;
     }
 
     @Override
@@ -25,18 +34,28 @@ public class SwitchCase implements ISemanticallyAnalyzable {
     }
 
     @Override
-    public void analyze(SymbolTable symbolTable) {
+    public void analyze(AbstractScope abstractScope) throws SemanticException {
+        AbstractSymbol symbol = new StatementSymbol(KEYWORD_CASE, mLocation);
+        AbstractScope caseAbstractScope = abstractScope.getChildScopeBySymbol(symbol);
 
+        if (caseAbstractScope == null) {
+            throw new InvalidStatementException("Case statement was not found on location " + mLocation);
+        }
+
+        for (AbstractBlockStatement blockStatement : mBody) {
+            blockStatement.analyze(caseAbstractScope);
+        }
     }
 
     @Override
-    public void collectData(Scope currentScope) {
+    public void collectData(AbstractScope currentAbstractScope) throws SemanticException {
         AbstractDescriptor caseDescriptor = new CaseDescriptor();
-        Scope caseScope = new Scope(currentScope, caseDescriptor);
-        currentScope.addChildScope(caseScope);
+        AbstractScope caseAbstractScope = new BlockScope(currentAbstractScope, caseDescriptor);
+        AbstractSymbol switchSymbol = new StatementSymbol(KEYWORD_CASE, mLocation);
+        currentAbstractScope.addChildScope(switchSymbol, caseAbstractScope);
 
         for (AbstractBlockStatement blockStatement : mBody) {
-            blockStatement.collectData(caseScope);
+            blockStatement.collectData(caseAbstractScope);
         }
     }
 }

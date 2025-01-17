@@ -3,7 +3,7 @@ package org.example.errorHandle.impl;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 import org.example.IavaParser;
-import org.example.errorHandle.ErrorHandleStrategy;;
+import org.example.errorHandle.ErrorHandleStrategy;
 
 public class VariableInitializerErrorStrategy implements ErrorHandleStrategy {
     @Override

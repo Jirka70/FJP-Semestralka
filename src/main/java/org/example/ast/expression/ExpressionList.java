@@ -1,8 +1,8 @@
 package org.example.ast.expression;
 
 import org.example.semantic.ISemanticallyAnalyzable;
-import org.example.semantic.symbolTable.SymbolTable;
-import org.example.semantic.symbolTable.scope.Scope;
+import org.example.semantic.exception.SemanticException;
+import org.example.semantic.symbolTable.scope.AbstractScope;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,16 +20,14 @@ public class ExpressionList implements ISemanticallyAnalyzable {
     }
 
     @Override
-    public void analyze(SymbolTable symbolTable) {
+    public void analyze(AbstractScope abstractScope) throws SemanticException {
         for (AbstractExpression expression : mExpressions) {
-            expression.analyze(symbolTable);
+            expression.analyze(abstractScope);
         }
     }
 
     @Override
-    public void collectData(Scope currentScope) {
-        for (AbstractExpression expression : mExpressions) {
-            expression.collectData(currentScope);
-        }
+    public void collectData(AbstractScope currentAbstractScope) {
+
     }
 }

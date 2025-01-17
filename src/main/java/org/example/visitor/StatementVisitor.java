@@ -3,11 +3,12 @@ package org.example.visitor;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.example.IavaParser;
 import org.example.IavaParserBaseVisitor;
+import org.example.ast.expression.AbstractExpression;
 import org.example.ast.expression.EmptyExpression;
 import org.example.ast.statement.*;
-import org.example.ast.expression.AbstractExpression;
 import org.example.ast.statement.ifStatement.ElseStatement;
 import org.example.ast.statement.ifStatement.IfStatement;
+import org.example.util.Location;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,7 +52,8 @@ public class StatementVisitor extends IavaParserBaseVisitor<AbstractStatement> {
         ParseTree forLoopControlTree = ctx.children.get(forLoopControlStatementIndex);
 
         ForLoopControl forLoopControl = new ForLoopControlVisitor().visit(forLoopControlTree);
-        return new ForLoopStatement(forLoopControl, forLoopBody);
+        Location location = getStatementLocation(ctx);
+        return new ForLoopStatement(forLoopControl, forLoopBody, location);
     }
 
     private boolean isForStatement(IavaParser.StatementContext ctx) {
@@ -66,7 +68,8 @@ public class StatementVisitor extends IavaParserBaseVisitor<AbstractStatement> {
                 ? extractElseStatement(ctx)
                 : null;
 
-        return new IfStatement(parExpression, ifBody, elseStatement);
+        Location location = getStatementLocation(ctx);
+        return new IfStatement(parExpression, ifBody, elseStatement, location);
     }
 
     private AbstractStatement extractIfBody(IavaParser.StatementContext ctx) {
@@ -86,7 +89,7 @@ public class StatementVisitor extends IavaParserBaseVisitor<AbstractStatement> {
 
         IavaParser.StatementContext elseBodyStatement = ctx.statement(elseBodyIndex);
         AbstractStatement elseIfBody = visit(elseBodyStatement);
-        return new ElseStatement(elseIfBody);
+        return new ElseStatement(elseIfBody, getStatementLocation(ctx));
     }
 
     private boolean isIfStatement(IavaParser.StatementContext ctx) {
@@ -111,7 +114,7 @@ public class StatementVisitor extends IavaParserBaseVisitor<AbstractStatement> {
 
     private ExpressionStatement extractExpressionStatement(IavaParser.StatementContext ctx) {
         AbstractExpression expression = new ExpressionVisitor().visit(ctx.statementExpression);
-        return new ExpressionStatement(expression);
+        return new ExpressionStatement(expression, getStatementLocation(ctx));
     }
 
     private boolean isKeywordStatement(IavaParser.StatementContext ctx) {
@@ -125,7 +128,8 @@ public class StatementVisitor extends IavaParserBaseVisitor<AbstractStatement> {
         } else if (ctx.CONTINUE() != null) {
             type = KeywordStatement.StatementKeywordType.CONTINUE;
         }
-        return new KeywordStatement(type);
+        Location location = getStatementLocation(ctx);
+        return new KeywordStatement(type, location);
     }
 
     private boolean isEmptyStatement(IavaParser.StatementContext ctx) {
@@ -140,10 +144,15 @@ public class StatementVisitor extends IavaParserBaseVisitor<AbstractStatement> {
     }
 
     private ReturnStatement extractReturnStatement(IavaParser.StatementContext ctx) {
+        Location location = getStatementLocation(ctx);
         AbstractExpression expression = ctx.expression() == null
-            ? new EmptyExpression()
+            ? new EmptyExpression(location)
             : new ExpressionVisitor().visit(ctx.expression());
-        return new ReturnStatement(expression);
+        return new ReturnStatement(expression, location);
+    }
+
+    private Location getStatementLocation(IavaParser.StatementContext ctx) {
+        return new Location(ctx.start.getLine(), ctx.start.getCharPositionInLine());
     }
 
     private boolean isSwitchStatement(IavaParser.StatementContext ctx) {
@@ -155,11 +164,12 @@ public class StatementVisitor extends IavaParserBaseVisitor<AbstractStatement> {
         List<SwitchCase> cases = extractNonEmptySwitchCases(ctx);
         cases.addAll(extractEmptySwitchCases(ctx));
 
-        return new SwitchStatement(parExpression, cases);
+        return new SwitchStatement(parExpression, cases, getStatementLocation(ctx));
     }
 
     private List<SwitchCase> extractNonEmptySwitchCases(IavaParser.StatementContext ctx) {
         List<SwitchCase> cases = new ArrayList<>();
+
 
         for (IavaParser.SwitchBlockStatementGroupContext group : ctx.switchBlockStatementGroup()) {
             List<AbstractBlockStatement> groupStatements = new ArrayList<>();
@@ -172,7 +182,7 @@ public class StatementVisitor extends IavaParserBaseVisitor<AbstractStatement> {
                         ? null
                         : new ExpressionVisitor().visit(lbl.constantExpression);
 
-                SwitchCase swCase = new SwitchCase(caseExpression, groupStatements);
+                SwitchCase swCase = new SwitchCase(caseExpression, groupStatements, getStatementLocation(ctx));
                 cases.add(swCase);
             }
         }
@@ -186,7 +196,7 @@ public class StatementVisitor extends IavaParserBaseVisitor<AbstractStatement> {
                     ? null
                     : new ExpressionVisitor().visit(lbl.constantExpression);
 
-            SwitchCase swCase = new SwitchCase(caseExpression, Collections.emptyList());
+            SwitchCase swCase = new SwitchCase(caseExpression, Collections.emptyList(), getStatementLocation(ctx));
             cases.add(swCase);
         }
         return cases;
@@ -199,7 +209,7 @@ public class StatementVisitor extends IavaParserBaseVisitor<AbstractStatement> {
     private DoWhileStatement extractDoWhileStatement(IavaParser.StatementContext ctx) {
         AbstractStatement statement = visit(ctx.statement(0));
         AbstractExpression parExpression = new ExpressionVisitor().visit(ctx.parExpression());
-        return new DoWhileStatement(statement, parExpression);
+        return new DoWhileStatement(statement, parExpression, getStatementLocation(ctx));
     }
 
     private boolean isWhileStatement(IavaParser.StatementContext ctx) {
@@ -209,6 +219,6 @@ public class StatementVisitor extends IavaParserBaseVisitor<AbstractStatement> {
     private WhileStatement extractWhileStatement(IavaParser.StatementContext ctx) {
         AbstractExpression parExpression = new ExpressionVisitor().visit(ctx.parExpression());
         AbstractStatement statement = visit(ctx.statement(0));
-        return new WhileStatement(parExpression, statement);
+        return new WhileStatement(parExpression, statement, getStatementLocation(ctx));
     }
 }

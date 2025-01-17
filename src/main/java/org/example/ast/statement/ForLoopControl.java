@@ -3,18 +3,21 @@ package org.example.ast.statement;
 import org.example.ast.expression.AbstractExpression;
 import org.example.ast.expression.ExpressionList;
 import org.example.semantic.ISemanticallyAnalyzable;
-import org.example.semantic.symbolTable.SymbolTable;
-import org.example.semantic.symbolTable.scope.Scope;
+import org.example.semantic.exception.SemanticException;
+import org.example.semantic.symbolTable.scope.AbstractScope;
+import org.example.util.Location;
 
 public class ForLoopControl implements ISemanticallyAnalyzable {
     public final ForInit mInit;
     public final AbstractExpression mEnd;
     public final ExpressionList mUpdate;
+    public final Location mLocation;
 
-    public ForLoopControl(ForInit init, AbstractExpression end, ExpressionList update) {
+    public ForLoopControl(ForInit init, AbstractExpression end, ExpressionList update, Location location) {
         mInit = init;
         mEnd = end;
         mUpdate = update;
+        mLocation = location;
     }
 
     @Override
@@ -23,14 +26,16 @@ public class ForLoopControl implements ISemanticallyAnalyzable {
     }
 
     @Override
-    public void analyze(SymbolTable symbolTable) {
-
+    public void analyze(AbstractScope abstractScope) throws SemanticException {
+        mInit.analyze(abstractScope);
+        mEnd.analyze(abstractScope);
+        mUpdate.analyze(abstractScope);
     }
 
     @Override
-    public void collectData(Scope currentScope) {
-        mInit.collectData(currentScope);
-        mEnd.collectData(currentScope);
-        mUpdate.collectData(currentScope);
+    public void collectData(AbstractScope currentAbstractScope) throws SemanticException {
+        mInit.collectData(currentAbstractScope);
+        mEnd.collectData(currentAbstractScope);
+        mUpdate.collectData(currentAbstractScope);
     }
 }

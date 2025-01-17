@@ -8,6 +8,7 @@ import org.example.ast.expression.ExpressionList;
 import org.example.ast.statement.ForInit;
 import org.example.ast.statement.ForLoopControl;
 import org.example.ast.statement.LocalVariableDeclaration;
+import org.example.util.Location;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ public class ForLoopControlVisitor extends IavaParserBaseVisitor<ForLoopControl>
             : extractForInit(ctx);
 
         AbstractExpression forStopExpression = ctx.expression() == null
-            ? createEmptyExpression()
+            ? createEmptyExpression(ctx)
             : extractExpression(ctx.expression());
 
         ExpressionList forUpdate = ctx.forUpdate == null
@@ -33,7 +34,8 @@ public class ForLoopControlVisitor extends IavaParserBaseVisitor<ForLoopControl>
 
         //System.out.println("forInit: " + forInit);
 
-        return new ForLoopControl(forInit, forStopExpression, forUpdate);
+        Location location = getExpressionLocation(ctx);
+        return new ForLoopControl(forInit, forStopExpression, forUpdate, location);
     }
 
     private ForInit createEmptyForInit() {
@@ -56,8 +58,13 @@ public class ForLoopControlVisitor extends IavaParserBaseVisitor<ForLoopControl>
     }
 
 
-    private AbstractExpression createEmptyExpression() {
-        return new EmptyExpression();
+    private AbstractExpression createEmptyExpression(IavaParser.ForControlContext ctx) {
+        Location location = getExpressionLocation(ctx);
+        return new EmptyExpression(location);
+    }
+
+    private Location getExpressionLocation(IavaParser.ForControlContext ctx) {
+        return new Location(ctx.start.getLine(), ctx.start.getCharPositionInLine());
     }
 
     private ExpressionList createEmptyExpressionList() {

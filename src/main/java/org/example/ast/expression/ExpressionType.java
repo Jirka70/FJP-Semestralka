@@ -26,7 +26,9 @@ public enum ExpressionType {
     METHOD_CALL,
     PARENTHESES,
     IDENTIFIER,
-    LITERAL, EMPTY, AND("&&"), OR("||"); // TODO: doplnit chybejici typy
+    LITERAL, EMPTY, AND("&&"), OR("||"), NOT_EQUAL_TO("!="), PLUS_EQUALS("+="),
+        MINUS_EQUALS("-="), MULTIPLY_EQUALS("*="), DIVIDE_EQUALS("/="),
+        MODULO_EQUALS("%="); // TODO: doplnit chybejici typy
 
     public final String mOperator;
 
@@ -45,5 +47,16 @@ public enum ExpressionType {
             }
         }
         throw new IllegalArgumentException("No enum constant with operator " + operator);
+    }
+
+    public boolean isInequalityType() {
+        return this == LESS_THAN
+                || this == GREATER_THAN
+                || this == LESS_THAN_OR_EQUAL
+                || this == GREATER_THAN_OR_EQUAL;
+    }
+
+    public boolean isLogicalType() {
+        return this == AND || this == OR;
     }
 }

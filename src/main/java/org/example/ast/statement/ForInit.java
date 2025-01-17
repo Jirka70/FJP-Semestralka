@@ -2,8 +2,8 @@ package org.example.ast.statement;
 
 import org.example.ast.expression.ExpressionList;
 import org.example.semantic.ISemanticallyAnalyzable;
-import org.example.semantic.symbolTable.SymbolTable;
-import org.example.semantic.symbolTable.scope.Scope;
+import org.example.semantic.exception.SemanticException;
+import org.example.semantic.symbolTable.scope.AbstractScope;
 
 public class ForInit implements ISemanticallyAnalyzable {
     public final ExpressionList mExpressionList;
@@ -32,14 +32,24 @@ public class ForInit implements ISemanticallyAnalyzable {
     }
 
     @Override
-    public void analyze(SymbolTable symbolTable) {
+    public void analyze(AbstractScope abstractScope) throws SemanticException {
+        if (hasLocalVariableDeclaration()) {
+            mLocalVariableDeclaration.analyze(abstractScope);
+        }
 
+        if (hasExpressionList()) {
+            mExpressionList.analyze(abstractScope);
+        }
     }
 
     @Override
-    public void collectData(Scope currentScope) {
+    public void collectData(AbstractScope currentAbstractScope) throws SemanticException {
         if (hasLocalVariableDeclaration()) {
-            mLocalVariableDeclaration.collectData(currentScope);
+            mLocalVariableDeclaration.collectData(currentAbstractScope);
+        }
+
+        if (hasExpressionList()) {
+            mExpressionList.collectData(currentAbstractScope);
         }
     }
 }

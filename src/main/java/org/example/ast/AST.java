@@ -2,10 +2,11 @@ package org.example.ast;
 
 import org.example.ast.clazz.ClassPrimitive;
 import org.example.semantic.ISemanticallyAnalyzable;
-import org.example.semantic.symbolTable.SymbolTable;
-import org.example.semantic.symbolTable.descriptor.AbstractDescriptor;
-import org.example.semantic.symbolTable.descriptor.AppDescriptor;
-import org.example.semantic.symbolTable.scope.Scope;
+import org.example.semantic.exception.SemanticException;
+import org.example.semantic.exception.symbolTableException.UndefinedClassException;
+import org.example.semantic.symbolTable.scope.AbstractScope;
+import org.example.semantic.symbolTable.symbol.AbstractSymbol;
+import org.example.semantic.symbolTable.symbol.ClassSymbol;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,22 +25,23 @@ public class AST implements ISemanticallyAnalyzable {
     }
 
     @Override
-    public void analyze(SymbolTable symbolTable) {
+    public void analyze(AbstractScope abstractScope) throws SemanticException {
         for (ClassPrimitive classPrimitive : mClasses) {
-            classPrimitive.analyze(symbolTable);
+            AbstractSymbol classPrimitiveSymbol = new ClassSymbol(classPrimitive.mName);
+            AbstractScope classPrimitiveAbstractScope = abstractScope.getChildScopeBySymbol(classPrimitiveSymbol);
+            if (classPrimitiveAbstractScope == null) {
+                throw new UndefinedClassException("Class " + classPrimitive.mName + " is not defined");
+            }
+
+            classPrimitive.analyze(classPrimitiveAbstractScope);
         }
     }
 
     @Override
-    public void collectData(Scope currentScope) {
-        Scope rootScope = createRootScope();
+    public void collectData(AbstractScope currentAbstractScope) throws SemanticException {
         for (ClassPrimitive classPrimitive : mClasses) {
-            classPrimitive.collectData(rootScope);
+            classPrimitive.collectData(currentAbstractScope);
         }
     }
 
-    private Scope createRootScope() {
-        AbstractDescriptor appDescriptor = new AppDescriptor();
-        return new Scope(null, appDescriptor);
-    }
 }

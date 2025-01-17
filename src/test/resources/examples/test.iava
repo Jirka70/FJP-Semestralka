@@ -1,44 +1,32 @@
 class Trida {
-    finalis int a = 3;
+    boolean bool = verus;
+    finalis float a = ahoj("verus");
 
-    vacuum metoda(int parameter1, float parameter2) {
-        int i = 0;
-        face {
-            int face1 = 2;
-            int face2 = 3;
-            int fance3 = 4;
-            subsiste;
-        } dum (i < 40);
-
-        trivium (borys) {
-            casus 1: {
-                int case1 = 10;
-                subsiste;
-            }
-            casus 2: {
-                int case2 = 20;
-                subsiste;
-            }
-            defaltam: {
-                int defaultPromenna = 69;
-            }
-        }
+    vacuum metoda(int pepa, int jirka) {
+        //a += 1f;
+        int a = 32;
+        a++;
     }
-    /*vacuum method() {
-        finalis int z, v = 0;
-        dum (a < 20 && b > 34) {
-            z--;
-            jednuMetoduVolam(2);
-            druhouMetoduVolam(ahoj, pepa);
-            si (z < 34) {
-                udelejTohleVIfu();
-            } aliter {
-                udelejTohleVElsu();
-                int p = 3;
-                pro (int ahoj = 2; else < 2 && else2 > 23; i++, j++) {
-                    blockVeForu();
+
+    int ahoj(float b) {
+        String ahoj = "pepa";
+        si (a == 2 && b != 0) {
+            pro (int a = 0; a < 10; a++) {
+                dum (a < 4) {
+                    a--;
                 }
             }
         }
-    }*/
+
+        redi (int) 3.12;
+    }
+
+    int ahoj(boolean b) {
+        redi 3;
+    }
+
+    int ahoj(String ahoj) {
+        metoda(1,1);
+        redi 3;
+    }
 }

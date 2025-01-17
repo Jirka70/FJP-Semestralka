@@ -15,6 +15,7 @@ public class BlockStatementVisitor extends IavaParserBaseVisitor<AbstractBlockSt
             return new LocalVariableDeclarationVisitor().visit(ctx.localVariableDeclaration());
         }
 
+
         throw new IllegalStateException("Expected statement or local variable declaration, got: " + ctx.getText());
     }
 }
