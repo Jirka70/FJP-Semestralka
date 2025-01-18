@@ -34,7 +34,7 @@ public class ReturnStatement extends AbstractStatement {
         AbstractType returnType = mExpression.evaluateType(abstractScope);
 
         if (!returnType.canBeAssignedTo(declaredReturnType)) {
-            throw new TypeMismatchException("Return type " + returnType.mName + " cannot be assigned to declared type "
+            throw new TypeMismatchException("Return type " + returnType.mName + " does not match declared type "
                 + declaredReturnType.mName + " on " + mLocation);
         }
     }

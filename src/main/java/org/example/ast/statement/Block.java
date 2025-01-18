@@ -24,6 +24,10 @@ public class Block extends AbstractStatement {
     @Override
     public void analyze(AbstractScope abstractScope) throws SemanticException {
         for (AbstractBlockStatement blockStatement : mBlockStatements) {
+            if (blockStatement == null) { // e.g. two semicolons in row
+                continue;
+            }
+
             blockStatement.analyze(abstractScope);
         }
     }
@@ -31,6 +35,10 @@ public class Block extends AbstractStatement {
     @Override
     public void collectData(AbstractScope currentAbstractScope) throws SemanticException {
         for (AbstractBlockStatement blockStatement : mBlockStatements) {
+            if (blockStatement == null) { // e.g. two semicolons in row
+                continue;
+            }
+
             blockStatement.collectData(currentAbstractScope);
         }
     }

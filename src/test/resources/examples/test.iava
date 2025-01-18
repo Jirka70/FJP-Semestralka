@@ -2,6 +2,7 @@ class Trida {
     boolean bool = verus;
     finalis float a = 2;
     char c = 3;
+    int ahoj;
 
     vacuum metoda(float pepa, int jirka) {
         //a += 1f;
@@ -10,10 +11,10 @@ class Trida {
     }
 
     int ahoj(float b) {
-        String ahoj = "pepa";
+        int ahoj = 3;
         char c = (int) (float) 3 + (int) 2f;
         boolean bool = a > c + 2f;
-        si (bool) {
+        si (c <= 'c') {
             pro (;;) {
                 int prom = 3;
                 dum (prom <= 3) {
@@ -22,7 +23,7 @@ class Trida {
             }
         }
 
-        redi (3 + 2) * ('c' - (char) 2.1);
+        redi ahoj;
     }
 
     int ahoj(boolean b) {

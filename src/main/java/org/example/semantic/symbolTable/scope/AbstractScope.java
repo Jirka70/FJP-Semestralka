@@ -14,12 +14,13 @@ public abstract class AbstractScope {
     public final Map<AbstractSymbol, AbstractScope> mChildrenScopes = new HashMap<>();
 
     static {
+        mDefinedDataTypes.add("vacuum");
         mDefinedDataTypes.add("int");
         mDefinedDataTypes.add("float");
         mDefinedDataTypes.add("char");
         mDefinedDataTypes.add("boolean");
         mDefinedDataTypes.add("String");
-        mDefinedDataTypes.add("null");
+        mDefinedDataTypes.add("nullus");
     }
 
     public AbstractScope(AbstractScope parentScope, AbstractDescriptor descriptor) {
@@ -36,7 +37,7 @@ public abstract class AbstractScope {
         return mChildrenScopes.get(symbol);
     }
 
-    public boolean isDefinedAsType(AbstractSymbol symbol) {
+    public boolean isTypeDefined(AbstractSymbol symbol) {
         return mDefinedDataTypes.contains(symbol.mName);
     }
 

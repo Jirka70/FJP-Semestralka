@@ -80,7 +80,7 @@ public class ClassPrimitive implements ISemanticallyAnalyzable {
         AbstractScope classAbstractScope = new ClassScope(currentAbstractScope, classDescriptor);
         AbstractSymbol classSymbol = new ClassSymbol(mName);
 
-        if (currentAbstractScope.isDefinedAsType(classSymbol)) {
+        if (currentAbstractScope.isTypeDefined(classSymbol)) {
             throw new UnsupportedNameException("Class name " + mName + " cannot be used as name, because it is a type");
         }
 

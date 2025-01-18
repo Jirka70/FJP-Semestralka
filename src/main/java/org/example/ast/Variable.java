@@ -4,6 +4,7 @@ import org.example.ast.expression.AbstractExpression;
 import org.example.ast.expression.EmptyExpression;
 import org.example.semantic.ISemanticallyAnalyzable;
 import org.example.semantic.exception.SemanticException;
+import org.example.semantic.exception.symbolTableException.UndefinedTypeException;
 import org.example.semantic.exception.symbolTableException.UnknownModifierException;
 import org.example.semantic.exception.symbolTableException.UnsupportedNameException;
 import org.example.semantic.exception.symbolTableException.VariableAlreadyDefinedException;
@@ -11,6 +12,7 @@ import org.example.semantic.symbolTable.descriptor.AbstractDescriptor;
 import org.example.semantic.symbolTable.descriptor.VariableDescriptor;
 import org.example.semantic.symbolTable.scope.AbstractScope;
 import org.example.semantic.symbolTable.symbol.AbstractSymbol;
+import org.example.semantic.symbolTable.symbol.TypeSymbol;
 import org.example.semantic.symbolTable.symbol.VariableSymbol;
 import org.example.util.Location;
 
@@ -56,6 +58,11 @@ public class Variable implements ISemanticallyAnalyzable {
 
     @Override
     public void analyze(AbstractScope abstractScope) throws SemanticException {
+        TypeSymbol typeSymbol = new TypeSymbol(mDeclaredType);
+        if (!abstractScope.isTypeDefined(typeSymbol)) {
+            throw new UndefinedTypeException("Type " + mDeclaredType + " is not defined in current scope on " + mLocation);
+        }
+
         for (String modifier : mModifiers) {
             if (!modifier.equals(FINAL_KEYWORD)) {
                 throw new UnknownModifierException("Modifier " + modifier + " is not defined on " + mLocation);
@@ -76,7 +83,7 @@ public class Variable implements ISemanticallyAnalyzable {
     public void collectData(AbstractScope currentAbstractScope) throws SemanticException {
         AbstractSymbol abstractSymbol = new VariableSymbol(mName);
 
-        if (currentAbstractScope.isDefinedAsType(abstractSymbol)) {
+        if (currentAbstractScope.isTypeDefined(abstractSymbol)) {
             throw new UnsupportedNameException("Variable name " + mName + " cannot be used as name, because it is a type");
         }
 
