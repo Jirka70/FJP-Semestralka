@@ -27,4 +27,12 @@ public class MethodSymbol extends AbstractSymbol {
 
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "MethodSymbol{" +
+                "mName=" + mName +
+                ", mParameterTypes=" + mParameterTypes +
+                '}';
+    }
 }

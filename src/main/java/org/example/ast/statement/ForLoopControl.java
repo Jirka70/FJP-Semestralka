@@ -27,15 +27,31 @@ public class ForLoopControl implements ISemanticallyAnalyzable {
 
     @Override
     public void analyze(AbstractScope abstractScope) throws SemanticException {
-        mInit.analyze(abstractScope);
-        mEnd.analyze(abstractScope);
-        mUpdate.analyze(abstractScope);
+        if (mInit != null) {
+            mInit.analyze(abstractScope);
+        }
+
+        if (mEnd != null) {
+            mEnd.analyze(abstractScope);
+        }
+
+        if (mUpdate != null) {
+            mUpdate.analyze(abstractScope);
+        }
     }
 
     @Override
     public void collectData(AbstractScope currentAbstractScope) throws SemanticException {
-        mInit.collectData(currentAbstractScope);
-        mEnd.collectData(currentAbstractScope);
-        mUpdate.collectData(currentAbstractScope);
+        if (mInit != null) {
+            mInit.collectData(currentAbstractScope);
+        }
+
+        if (mEnd != null) {
+            mEnd.collectData(currentAbstractScope);
+        }
+
+        if (mUpdate != null) {
+            mUpdate.collectData(currentAbstractScope);
+        }
     }
 }

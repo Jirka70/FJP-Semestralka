@@ -4,10 +4,7 @@ import org.example.semantic.symbolTable.descriptor.AbstractDescriptor;
 import org.example.semantic.symbolTable.symbol.AbstractSymbol;
 import org.example.util.Location;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public abstract class AbstractScope {
     private static final Set<String> mDefinedDataTypes = new HashSet<>();
@@ -54,4 +51,5 @@ public abstract class AbstractScope {
     public abstract boolean containsSymbolInScopeOnLocation(AbstractSymbol symbol, Location location);
 
     public abstract AbstractDescriptor getSymbolDescriptorOnLocation(AbstractSymbol symbol, Location location);
+    public abstract Collection<AbstractSymbol> getAllSymbols();
 }

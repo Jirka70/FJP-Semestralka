@@ -17,14 +17,7 @@ public class CastExpression extends UnaryExpression {
 
     @Override
     public AbstractType evaluateType(AbstractScope abstractScope) throws SemanticException {
-        AbstractType castType = TypeFactory.fromString(mTypeType);
-        AbstractType type = mExpression.evaluateType(abstractScope);
-
-        if (!castType.isCompatibleWith(type)) {
-            throw new CastException("Cannot cast type " + type.mName + " to " + castType.mName);
-        }
-
-        return castType;
+        return TypeFactory.fromString(mTypeType);
     }
 
     @Override
@@ -33,8 +26,15 @@ public class CastExpression extends UnaryExpression {
     }
 
     @Override
-    public void analyze(AbstractScope abstractScope) {
+    public void analyze(AbstractScope abstractScope) throws SemanticException {
+        AbstractType castType = TypeFactory.fromString(mTypeType);
+        AbstractType type = mExpression.evaluateType(abstractScope);
 
+        if (!castType.isCompatibleWith(type)) {
+            throw new CastException("Cannot cast type " + type.mName + " to " + castType.mName + " on " + mLocation);
+        }
+
+        mExpression.analyze(abstractScope);
     }
 
     @Override

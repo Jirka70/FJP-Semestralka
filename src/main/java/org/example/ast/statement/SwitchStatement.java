@@ -37,6 +37,8 @@ public class SwitchStatement extends AbstractStatement {
         AbstractSymbol switchSymbol = new StatementSymbol(SWITCH_KEYWORD, mLocation);
         AbstractScope switchAbstractScope = abstractScope.getChildScopeBySymbol(switchSymbol);
 
+        mExpression.analyze(abstractScope);
+
         if (switchAbstractScope == null) {
             throw new InvalidStatementException("Switch statement was not found on location " + mLocation);
         }

@@ -4,8 +4,8 @@ import org.example.semantic.exception.SemanticException;
 import org.example.semantic.exception.symbolTableException.UndefinedMethodException;
 import org.example.semantic.symbolTable.descriptor.AbstractDescriptor;
 import org.example.semantic.symbolTable.descriptor.MethodDescriptor;
-import org.example.semantic.symbolTable.descriptor.VariableDescriptor;
 import org.example.semantic.symbolTable.scope.AbstractScope;
+import org.example.semantic.symbolTable.scope.ClassScope;
 import org.example.semantic.symbolTable.symbol.AbstractSymbol;
 import org.example.semantic.symbolTable.symbol.MethodSymbol;
 import org.example.semantic.type.AbstractType;
@@ -13,6 +13,7 @@ import org.example.semantic.type.TypeFactory;
 import org.example.util.Location;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class MethodCallExpression extends AbstractExpression {
@@ -29,6 +30,13 @@ public class MethodCallExpression extends AbstractExpression {
     public AbstractType evaluateType(AbstractScope abstractScope) throws SemanticException {
         List<AbstractType> types = collectArgsTypes(abstractScope);
         AbstractSymbol symbol = new MethodSymbol(mName, types);
+
+        List<MethodDescriptor> matchingMethods = findAllMatchingMethods(abstractScope);
+
+        if (matchingMethods.size() == 1) {
+            MethodDescriptor methodDescriptor = matchingMethods.get(0);
+            return TypeFactory.fromString(methodDescriptor.mReturnType);
+        }
 
         AbstractDescriptor descriptor = abstractScope.getSymbolDescriptorOnLocation(symbol, mLocation);
 
@@ -64,39 +72,74 @@ public class MethodCallExpression extends AbstractExpression {
 
     @Override
     public void analyze(AbstractScope abstractScope) throws SemanticException {
-        List<AbstractType> argsTypes = collectArgsTypes(abstractScope);
+        /*List<AbstractType> argsTypes = collectArgsTypes(abstractScope);
         AbstractSymbol symbol = new MethodSymbol(mName, argsTypes);
 
         AbstractDescriptor descriptor = abstractScope.getSymbolDescriptorOnLocation(symbol, mLocation);
 
-        if (!(descriptor instanceof MethodDescriptor methodDescriptor)) {
-            throw new UndefinedMethodException("Cannot call method \""
-                    + mName
-                    + "\" because it is not defined with those parameter types on "
-                    + mLocation);
+        List<MethodDescriptor> matchingMethods = findAllMatchingMethods(abstractScope);*/
+        for (AbstractExpression arg : mArgs) {
+            arg.analyze(abstractScope);
+        }
+    }
+
+    private List<MethodDescriptor> findAllMatchingMethods(AbstractScope scope) throws SemanticException {
+        List<AbstractType> argsTypes = collectArgsTypes(scope);
+
+        AbstractScope currentScope = scope;
+
+        List<MethodDescriptor> methodDescriptors = new ArrayList<>();
+
+        while (currentScope.hasParent()) {
+            if (currentScope instanceof ClassScope classScope) {
+                List<MethodDescriptor> methodDescriptorsInCurrentScope
+                        = findAllMatchingMethodDescriptorsInClassScope(argsTypes, classScope);
+                methodDescriptors.addAll(methodDescriptorsInCurrentScope);
+            }
+
+            currentScope = currentScope.mParentAbstractScope;
         }
 
-        List<VariableDescriptor> expectedArgs = methodDescriptor.mFormalVariableDescriptors;
+        return methodDescriptors;
+    }
 
-        if (expectedArgs.size() != mArgs.size()) {
-            throw new UndefinedMethodException("Method " + mName + " with "+ mArgs.size()
-                    + " parameters is not defined in current scope on " + mLocation);
-        }
+    private List<MethodDescriptor> findAllMatchingMethodDescriptorsInClassScope(List<AbstractType> argsTypes,
+                                                                                ClassScope classScope) {
+        Collection<AbstractSymbol> symbolsInClassScope = classScope.getAllSymbols();
+        List<MethodDescriptor> matchingMethods = new ArrayList<>();
 
-        for (int i = 0; i < mArgs.size(); i++) {
-            VariableDescriptor expectedParameter = expectedArgs.get(i);
-            AbstractExpression actualParameter = mArgs.get(i);
+        for (AbstractSymbol symbol : symbolsInClassScope) {
+            if (symbol instanceof MethodSymbol methodSymbol) {
+                List<AbstractType> declaredTypes = methodSymbol.mParameterTypes;
+                if (canBeAllTypesAssignedToDeclaredTypes(argsTypes, declaredTypes)
+                    && mName.equals(methodSymbol.mName)) {
+                    MethodDescriptor descriptor = (MethodDescriptor)
+                            classScope.getSymbolDescriptorOnLocation(symbol, mLocation);
 
-            AbstractType expectedType = TypeFactory.fromString(expectedParameter.mType);
-            AbstractType actualType = actualParameter.evaluateType(abstractScope);
-
-            if (!actualType.canBeAssignedTo(expectedType)) {
-                throw new UndefinedMethodException("Method \""
-                        + mName
-                        + "\" with provided parameters is not defined in current scope on "
-                        + mLocation);
+                    matchingMethods.add(descriptor);
+                }
             }
         }
+
+        return matchingMethods;
+    }
+
+    private boolean canBeAllTypesAssignedToDeclaredTypes(List<AbstractType> assigningTypes,
+                                                         List<AbstractType> declaredTypes) {
+        if (assigningTypes.size() != declaredTypes.size()) {
+            return false;
+        }
+
+        for (int i = 0; i < assigningTypes.size(); i++) {
+            AbstractType assigningType = assigningTypes.get(i);
+            AbstractType declaredType = declaredTypes.get(i);
+
+            if (!assigningType.canBeAssignedTo(declaredType)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @Override

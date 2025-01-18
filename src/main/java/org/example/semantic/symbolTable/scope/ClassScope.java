@@ -5,6 +5,9 @@ import org.example.semantic.symbolTable.scope.table.ScopeTable;
 import org.example.semantic.symbolTable.symbol.AbstractSymbol;
 import org.example.util.Location;
 
+import java.util.Collection;
+import java.util.List;
+
 public class ClassScope extends AbstractScope {
     public final ScopeTable mScopeTable = new ScopeTable();
 
@@ -46,5 +49,10 @@ public class ClassScope extends AbstractScope {
         }
 
         return null;
+    }
+
+    @Override
+    public Collection<AbstractSymbol> getAllSymbols() {
+        return mScopeTable.getAllSymbols();
     }
 }

@@ -3,7 +3,7 @@ package org.example.semantic.type;
 import org.example.semantic.exception.symbolTableException.NullCombineException;
 
 public class NullType extends ObjectType {
-    private static final String NULL_KEYWORD = "null";
+    private static final String NULL_KEYWORD = "nullus";
 
     public NullType() {
         super(NULL_KEYWORD);
@@ -21,6 +21,6 @@ public class NullType extends ObjectType {
 
     @Override
     public AbstractType combineWith(AbstractType other) throws NullCombineException {
-        throw new NullCombineException("Null cannot be combined with any type");
+        throw new NullCombineException("Nullus cannot be combined with any type");
     }
 }

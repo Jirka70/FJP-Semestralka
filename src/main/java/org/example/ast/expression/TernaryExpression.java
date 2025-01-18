@@ -44,8 +44,10 @@ public class TernaryExpression extends AbstractExpression {
     }
 
     @Override
-    public void analyze(AbstractScope abstractScope) {
-        
+    public void analyze(AbstractScope abstractScope) throws SemanticException {
+        mCondition.analyze(abstractScope);
+        mFirst.analyze(abstractScope);
+        mSecond.analyze(abstractScope);
     }
 
     @Override

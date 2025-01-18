@@ -37,6 +37,7 @@ public class SwitchCase implements ISemanticallyAnalyzable {
     public void analyze(AbstractScope abstractScope) throws SemanticException {
         AbstractSymbol symbol = new StatementSymbol(KEYWORD_CASE, mLocation);
         AbstractScope caseAbstractScope = abstractScope.getChildScopeBySymbol(symbol);
+        mExpression.analyze(abstractScope);
 
         if (caseAbstractScope == null) {
             throw new InvalidStatementException("Case statement was not found on location " + mLocation);

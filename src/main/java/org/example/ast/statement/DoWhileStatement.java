@@ -43,6 +43,7 @@ public class DoWhileStatement extends AbstractStatement {
         }
 
         AbstractType expressionType = mExpression.evaluateType(abstractScope);
+        mExpression.analyze(abstractScope);
 
         if (!(expressionType instanceof BooleanType)) {
             throw new TypeMismatchException("Expression in while has to be in boolean type on " + mLocation);

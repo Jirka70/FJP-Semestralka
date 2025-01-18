@@ -54,19 +54,23 @@ public class IfStatement extends AbstractStatement {
     @Override
     public void analyze(AbstractScope abstractScope) throws SemanticException {
         AbstractType type = mExpression.evaluateType(abstractScope);
+        mExpression.analyze(abstractScope);
+
+        System.out.println("if: " + mExpression);
+        mExpression.analyze(abstractScope);
 
         if (!(type instanceof BooleanType)) {
             throw new TypeMismatchException("Expression in if statement is not boolean expression on " + mLocation);
         }
 
         AbstractSymbol ifSymbol = new StatementSymbol(IF_KEYWORD, mLocation);
-        AbstractScope ifSCope = abstractScope.getChildScopeBySymbol(ifSymbol);
+        AbstractScope ifScope = abstractScope.getChildScopeBySymbol(ifSymbol);
 
-        if (ifSCope == null) {
+        if (ifScope == null) {
             throw new InvalidStatementException("If statement on location " + mLocation + " was not found");
         }
 
-        mBody.analyze(ifSCope);
+        mBody.analyze(ifScope);
 
         if (hasElse()) {
             mElseStatement.analyze(abstractScope);

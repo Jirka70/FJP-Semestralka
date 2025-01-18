@@ -5,6 +5,7 @@ import org.example.semantic.symbolTable.symbol.AbstractSymbol;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class ScopeTable {
     public final Map<AbstractSymbol, AbstractDescriptor> mScopeTable = new HashMap<>();
@@ -19,5 +20,8 @@ public class ScopeTable {
 
     public AbstractDescriptor getDescriptor(AbstractSymbol symbol) {
         return mScopeTable.get(symbol);
+    }
+    public Set<AbstractSymbol> getAllSymbols() {
+        return mScopeTable.keySet();
     }
 }

@@ -26,6 +26,7 @@ public class ReturnStatement extends AbstractStatement {
 
     @Override
     public void analyze(AbstractScope abstractScope) throws SemanticException {
+        mExpression.analyze(abstractScope);
         MethodDescriptor methodDescriptor = obtainMethodDescriptor(abstractScope);
 
         String declaredReturnTypeRaw = methodDescriptor.mReturnType;

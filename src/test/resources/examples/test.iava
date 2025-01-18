@@ -1,8 +1,9 @@
 class Trida {
     boolean bool = verus;
-    finalis float a = ahoj("verus");
+    finalis float a = 2;
+    char c = 3;
 
-    vacuum metoda(int pepa, int jirka) {
+    vacuum metoda(float pepa, int jirka) {
         //a += 1f;
         int a = 32;
         a++;
@@ -10,15 +11,17 @@ class Trida {
 
     int ahoj(float b) {
         String ahoj = "pepa";
-        si (a == 2 && b != 0) {
-            pro (int a = 0; a < 10; a++) {
-                dum (a < 4) {
-                    a--;
+        boolean bool = (a == 2 && b != 0) > (verus);
+        si (bool) {
+            pro (;;) {
+                int prom = 3;
+                dum (prom <= 3) {
+                    int b = (int) a;
                 }
             }
         }
 
-        redi (int) 3.12;
+        redi (3 + 2) * ('c' - (char) 2.1);
     }
 
     int ahoj(boolean b) {
@@ -28,5 +31,9 @@ class Trida {
     int ahoj(String ahoj) {
         metoda(1,1);
         redi 3;
+    }
+
+    int ahoj(char c) {
+        redi 2;
     }
 }

@@ -50,7 +50,7 @@ public class LiteralExpression extends PrimaryExpression {
                 return new ObjectType("String");
             }
 
-            return new ObjectType("null");
+            return new NullType();
         }
 
         throw new TypeMismatchException("Type of literal " + mLiteral + " is not defined");

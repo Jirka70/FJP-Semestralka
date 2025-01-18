@@ -30,19 +30,12 @@ public class IdentifierExpression extends PrimaryExpression {
         }
 
         AbstractSymbol identifierSymbol = new VariableSymbol(mIdentifier);
-        if (!abstractScope.isSymbolDefinedOnLocation(identifierSymbol, mLocation)) {
-            throw new UndefinedIdentifierException("Identifier '" + mIdentifier + "' is not defined on " + mLocation);
-        }
-
         AbstractDescriptor descriptor = abstractScope.getSymbolDescriptorOnLocation(identifierSymbol, mLocation);
+
         if (!(descriptor instanceof VariableDescriptor variableDescriptor)) {
             throw new UndefinedIdentifierException("Identifier '" + mIdentifier + "' is not a variable on " + mLocation);
         }
 
-        if (!variableDescriptor.mIsAssigned) {
-            throw new VariableNotAssignedException("Variable '" + mIdentifier
-                    + "' is not assigned and cannot be used in expression on " + mLocation);
-        }
         return TypeFactory.fromString(variableDescriptor.mType);
     }
 
@@ -55,9 +48,18 @@ public class IdentifierExpression extends PrimaryExpression {
     public void analyze(AbstractScope abstractScope) throws SemanticException {
         AbstractSymbol symbol = new VariableSymbol(mIdentifier);
 
+        if (!abstractScope.isSymbolDefinedOnLocation(symbol, mLocation)) {
+            throw new UndefinedIdentifierException("Identifier '" + mIdentifier + "' is not defined on " + mLocation);
+        }
+
         AbstractDescriptor descriptor = abstractScope.getSymbolDescriptorOnLocation(symbol, mLocation);
-        if (!(descriptor instanceof VariableDescriptor)) {
+        if (!(descriptor instanceof VariableDescriptor variableDescriptor)) {
             throw new UndefinedVariableException("Symbol " + symbol.mName + " is not a variable on " + mLocation);
+        }
+
+        if (!variableDescriptor.mIsAssigned) {
+            throw new VariableNotAssignedException("Variable '" + mIdentifier
+                    + "' is not assigned and cannot be used in expression on " + mLocation);
         }
     }
 

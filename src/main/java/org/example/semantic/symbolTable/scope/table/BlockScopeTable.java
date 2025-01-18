@@ -6,6 +6,7 @@ import org.example.util.Location;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class BlockScopeTable {
     public final Map<AbstractSymbol, SymbolDescriptor> mScopeTable = new HashMap<>();
@@ -43,8 +44,8 @@ public class BlockScopeTable {
         return descriptor.mDescriptor;
     }
 
-    public boolean containsSymbolInCurrentScope(AbstractSymbol symbol) {
-        return mScopeTable.containsKey(symbol);
+    public Set<AbstractSymbol> getAllSymbols() {
+        return mScopeTable.keySet();
     }
 
     public static class SymbolDescriptor {

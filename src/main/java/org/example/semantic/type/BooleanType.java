@@ -22,10 +22,6 @@ public class BooleanType extends PrimitiveType {
 
     @Override
     public AbstractType combineWith(AbstractType other) throws SemanticException {
-        if (!isCompatibleWith(other)) {
-            throw new TypeMismatchException("Type \"" + mName + "\" is not compatible with \"" + other.mName);
-        }
-
-        return new BooleanType();
+        throw new TypeMismatchException("Type \"" + mName + "\" is not compatible with \"" + other.mName);
     }
 }

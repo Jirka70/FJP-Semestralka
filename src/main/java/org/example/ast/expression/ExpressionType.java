@@ -59,4 +59,17 @@ public enum ExpressionType {
     public boolean isLogicalType() {
         return this == AND || this == OR;
     }
+
+    public boolean isAssignmentType() {
+        return this == ASSIGN
+                || this == PRE_INC
+                || this == PRE_DEC
+                || this == POST_INC
+                || this == POST_DEC
+                || this == PLUS_EQUALS
+                || this == MINUS_EQUALS
+                || this == MULTIPLY_EQUALS
+                || this == DIVIDE_EQUALS
+                || this == MODULO_EQUALS;
+    }
 }

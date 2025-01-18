@@ -5,6 +5,8 @@ import org.example.semantic.symbolTable.scope.table.BlockScopeTable;
 import org.example.semantic.symbolTable.symbol.AbstractSymbol;
 import org.example.util.Location;
 
+import java.util.Collection;
+
 public class BlockScope extends AbstractScope {
 
     public final BlockScopeTable mBlockScopeTable = new BlockScopeTable();
@@ -47,5 +49,10 @@ public class BlockScope extends AbstractScope {
         }
 
         return null;
+    }
+
+    @Override
+    public Collection<AbstractSymbol> getAllSymbols() {
+        return mBlockScopeTable.getAllSymbols();
     }
 }

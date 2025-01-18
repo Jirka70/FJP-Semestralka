@@ -22,6 +22,8 @@ public class LocalVariable extends Variable {
         AbstractType expressionType = mExpression.evaluateType(abstractScope);
         AbstractType declaredType = TypeFactory.fromString(mDeclaredType);
 
+        mExpression.analyze(abstractScope);
+
         if (!expressionType.canBeAssignedTo(declaredType)) {
             throw new TypeMismatchException("Cannot assign expression to type " + mDeclaredType + " on " + mLocation);
         }
