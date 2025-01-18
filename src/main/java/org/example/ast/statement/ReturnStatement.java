@@ -58,4 +58,5 @@ public class ReturnStatement extends AbstractStatement {
     public void collectData(AbstractScope currentAbstractScope) {
 
     }
+
 }

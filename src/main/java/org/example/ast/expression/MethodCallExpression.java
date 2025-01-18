@@ -4,12 +4,12 @@ import org.example.semantic.exception.SemanticException;
 import org.example.semantic.exception.symbolTableException.UndefinedMethodException;
 import org.example.semantic.symbolTable.descriptor.AbstractDescriptor;
 import org.example.semantic.symbolTable.descriptor.MethodDescriptor;
+import org.example.semantic.symbolTable.descriptor.VariableDescriptor;
 import org.example.semantic.symbolTable.scope.AbstractScope;
 import org.example.semantic.symbolTable.scope.ClassScope;
 import org.example.semantic.symbolTable.symbol.AbstractSymbol;
 import org.example.semantic.symbolTable.symbol.MethodSymbol;
-import org.example.semantic.type.AbstractType;
-import org.example.semantic.type.TypeFactory;
+import org.example.semantic.type.*;
 import org.example.util.Location;
 
 import java.util.ArrayList;
@@ -28,26 +28,71 @@ public class MethodCallExpression extends AbstractExpression {
 
     @Override
     public AbstractType evaluateType(AbstractScope abstractScope) throws SemanticException {
-        List<AbstractType> types = collectArgsTypes(abstractScope);
-        AbstractSymbol symbol = new MethodSymbol(mName, types);
+        List<AbstractType> argsTypes = collectArgsTypes(abstractScope);
+        AbstractSymbol methodSymbol = new MethodSymbol(mName, argsTypes);
+        AbstractDescriptor descriptor = abstractScope.getSymbolDescriptorOnLocation(methodSymbol, mLocation);
 
-        List<MethodDescriptor> matchingMethods = findAllMatchingMethods(abstractScope);
-
-        if (matchingMethods.size() == 1) {
-            MethodDescriptor methodDescriptor = matchingMethods.get(0);
+        if (descriptor instanceof MethodDescriptor methodDescriptor) {
             return TypeFactory.fromString(methodDescriptor.mReturnType);
         }
 
-        AbstractDescriptor descriptor = abstractScope.getSymbolDescriptorOnLocation(symbol, mLocation);
+        List<MethodDescriptor> candidateMethods = findAllMatchingMethods(abstractScope);
 
-        if (!(descriptor instanceof MethodDescriptor methodDescriptor)) {
-            throw new UndefinedMethodException("Cannot call method \""
-                    + mName
-                    + "\" because it is not a method on "
+        if (candidateMethods.isEmpty()) {
+            throw new UndefinedMethodException("No suitable method " + mName + " was found for this method call on "
                     + mLocation);
         }
 
-        return TypeFactory.fromString(methodDescriptor.mReturnType);
+        MethodDescriptor mostSuitableMethod = chooseTheMostSuitableMethod(candidateMethods, argsTypes);
+
+        return TypeFactory.fromString(mostSuitableMethod.mReturnType);
+    }
+
+    private MethodDescriptor chooseTheMostSuitableMethod(List<MethodDescriptor> descriptors,
+                                                         List<AbstractType> givenArgsTypes) {
+        MethodDescriptor mostSuitableMethod = null;
+        int minScore = Integer.MAX_VALUE;
+
+        for (MethodDescriptor methodDescriptor : descriptors) {
+            int score = calculateMethodDescriptorScore(methodDescriptor, givenArgsTypes);
+            if (score < minScore) {
+                minScore = score;
+                mostSuitableMethod = methodDescriptor;
+            }
+        }
+
+        return mostSuitableMethod;
+    }
+
+    private int calculateMethodDescriptorScore(MethodDescriptor methodDescriptor, List<AbstractType> givenArgsTypes) {
+        List<VariableDescriptor> declaredParameters = methodDescriptor.mFormalVariableDescriptors;
+        List<AbstractType> declaredTypes = declaredParameters.stream()
+                .map(el -> TypeFactory.fromString(el.mType))
+                .toList();
+
+        int score = 0;
+
+        for (int i = 0; i < givenArgsTypes.size(); i++) {
+            AbstractType declaredType = declaredTypes.get(i);
+            AbstractType givenType = givenArgsTypes.get(i);
+
+            if (givenType.equals(declaredType)) {
+                continue;
+            }
+
+            if (declaredType instanceof FloatType) {
+                if (givenType instanceof CharType) score += 2;
+                if (givenType instanceof IntType) score += 1;
+                continue;
+            }
+
+            if (declaredType instanceof IntType) {
+                if (givenType instanceof CharType) score += 1;
+                continue;
+            }
+        }
+
+        return score;
     }
 
     @Override
@@ -72,12 +117,21 @@ public class MethodCallExpression extends AbstractExpression {
 
     @Override
     public void analyze(AbstractScope abstractScope) throws SemanticException {
-        /*List<AbstractType> argsTypes = collectArgsTypes(abstractScope);
-        AbstractSymbol symbol = new MethodSymbol(mName, argsTypes);
+        List<AbstractType> argsTypes = collectArgsTypes(abstractScope);
+        AbstractSymbol methodSymbol = new MethodSymbol(mName, argsTypes);
+        AbstractDescriptor descriptor = abstractScope.getSymbolDescriptorOnLocation(methodSymbol, mLocation);
 
-        AbstractDescriptor descriptor = abstractScope.getSymbolDescriptorOnLocation(symbol, mLocation);
+        if (descriptor instanceof MethodDescriptor) { // method was found
+            return;
+        }
 
-        List<MethodDescriptor> matchingMethods = findAllMatchingMethods(abstractScope);*/
+        // finding all methods with compatible formal parameters
+        List<MethodDescriptor> descriptors = findAllMatchingMethods(abstractScope);
+        if (descriptors.isEmpty()) { // no method is defined un current scope
+            throw new UndefinedMethodException("No suitable method " + mName + " was found for this method call on "
+                + mLocation);
+        }
+
         for (AbstractExpression arg : mArgs) {
             arg.analyze(abstractScope);
         }

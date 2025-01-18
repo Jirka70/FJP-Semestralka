@@ -30,6 +30,7 @@ public abstract class AbstractType {
     public abstract boolean isCompatibleWith(AbstractType other);
     public abstract boolean canBeAssignedTo(AbstractType identifierType);
     public abstract AbstractType combineWith(AbstractType other) throws SemanticException;
+
     public String toString() {
         return getClass().getSimpleName();
     }

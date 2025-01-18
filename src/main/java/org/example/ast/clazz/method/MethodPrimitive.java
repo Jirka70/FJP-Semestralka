@@ -104,12 +104,13 @@ public class MethodPrimitive implements ISemanticallyAnalyzable {
                 throw new MethodAlreadyDefinedException("Method with name '"
                         + mName
                         + "' and with parameters '"
-                        + mParameters
+                        + mParameters.mParameters
                         + "' already exists");
             }
         }
 
         classAbstractScope.addSymbol(methodSymbol, methodDescriptor, mLocation);
+
 
         List<ParameterPrimitive> parameterPrimitives = mParameters.mParameters;
         for (ParameterPrimitive parameter : parameterPrimitives) {

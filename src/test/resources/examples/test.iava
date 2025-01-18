@@ -1,6 +1,6 @@
 class Trida {
     boolean bool = verus;
-    finalis float a = 2;
+    finalis float a = ahoj(3,3,3,3);
     char c = 3;
     int ahoj;
 
@@ -27,7 +27,7 @@ class Trida {
     }
 
     int ahoj(boolean b) {
-        redi 3;
+        redi c;
     }
 
     int ahoj(String ahoj) {
@@ -35,7 +35,7 @@ class Trida {
         redi 3;
     }
 
-    int ahoj(char c) {
+    int ahoj(char c, int a, float c, float d) {
         redi 2;
     }
 }
