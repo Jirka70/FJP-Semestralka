@@ -25,7 +25,8 @@ public class LocalVariable extends Variable {
         mExpression.analyze(abstractScope);
 
         if (!expressionType.canBeAssignedTo(declaredType)) {
-            throw new TypeMismatchException("Cannot assign expression to type " + mDeclaredType + " on " + mLocation);
+            throw new TypeMismatchException("Cannot assign type "
+                    + expressionType.mName + " to type " + mDeclaredType + " on " + mLocation);
         }
     }
 }

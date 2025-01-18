@@ -11,7 +11,8 @@ class Trida {
 
     int ahoj(float b) {
         String ahoj = "pepa";
-        boolean bool = (a == 2 && b != 0) > (verus);
+        char c = (int) (float) 3 + (int) 2f;
+        boolean bool = a > c + 2f;
         si (bool) {
             pro (;;) {
                 int prom = 3;

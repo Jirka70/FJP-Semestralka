@@ -110,6 +110,7 @@ public class BinaryExpression extends AbstractExpression {
     private void validateIdentifierExpression(AbstractScope abstractScope, IdentifierExpression identifierExpression)
             throws SemanticException {
 
+
         AbstractSymbol symbol = new VariableSymbol(identifierExpression.mIdentifier);
         AbstractDescriptor descriptor = abstractScope.getSymbolDescriptorOnLocation(symbol, mLocation);
 
@@ -121,8 +122,15 @@ public class BinaryExpression extends AbstractExpression {
         AbstractType variableType = TypeFactory.fromString(variableDescriptor.mType);
         AbstractType rightType = mRightExpression.evaluateType(abstractScope);
 
-        if (!rightType.canBeAssignedTo(variableType)) {
-            throw new TypeMismatchException("Type " + rightType.mName + " cannot be used with type "
+        if (mExpressionType.isAssignmentType()) {
+            if (!rightType.canBeAssignedTo(variableType)) {
+                throw new TypeMismatchException("Type " + rightType.mName + " cannot be used with type "
+                        + variableType.mName + " on location " + mLocation);
+            }
+        }
+
+        if (!rightType.isCompatibleWith(variableType)) {
+            throw new TypeMismatchException("Type " + rightType.mName + " is not compatible with "
                     + variableType.mName + " on location " + mLocation);
         }
 
@@ -131,7 +139,6 @@ public class BinaryExpression extends AbstractExpression {
                 throw new FinalVariableOverwrittenException("Finalis identifier " + identifierExpression.mIdentifier +
                         " cannot be overwritten on " + mLocation);
             }
-
         }
     }
 }
