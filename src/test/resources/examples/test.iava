@@ -23,6 +23,23 @@ class Trida {
             }
         }
 
+        si (c != (3)) {
+            int ahoj = 3;
+        }
+
+        trivium (ahoj) {
+            casus 1:
+                redi 2;
+            casus 2:
+                redi 45;
+            casus 4:
+                finalis int a = 34;
+                int b = a++;
+                redi 11111;
+            defaltam:
+                redi 2222;
+        }
+
         redi ahoj;
     }
 

@@ -37,13 +37,19 @@ public class SwitchCase implements ISemanticallyAnalyzable {
     public void analyze(AbstractScope abstractScope) throws SemanticException {
         AbstractSymbol symbol = new StatementSymbol(KEYWORD_CASE, mLocation);
         AbstractScope caseAbstractScope = abstractScope.getChildScopeBySymbol(symbol);
-        mExpression.analyze(abstractScope);
+
+        if (mExpression != null) {
+            mExpression.analyze(abstractScope);
+        }
 
         if (caseAbstractScope == null) {
             throw new InvalidStatementException("Case statement was not found on location " + mLocation);
         }
 
         for (AbstractBlockStatement blockStatement : mBody) {
+            if (blockStatement == null) {
+                continue;
+            }
             blockStatement.analyze(caseAbstractScope);
         }
     }
@@ -56,6 +62,9 @@ public class SwitchCase implements ISemanticallyAnalyzable {
         currentAbstractScope.addChildScope(switchSymbol, caseAbstractScope);
 
         for (AbstractBlockStatement blockStatement : mBody) {
+            if (blockStatement == null) {
+                continue;
+            }
             blockStatement.collectData(caseAbstractScope);
         }
     }
