@@ -70,38 +70,7 @@ public class ExpressionVisitor extends IavaParserBaseVisitor<AbstractExpression>
         } else if (primCtx.identifier() != null) {
             return new IdentifierExpression(primCtx.identifier().getText(), location);
         } else if (primCtx.literal() != null) {
-            IavaParser.LiteralContext litCtx = primCtx.literal();
-            LiteralExpression.LiteralType type = null;
-            if (litCtx.integerLiteral() != null) {
-                IavaParser.IntegerLiteralContext intLitCtx = litCtx.integerLiteral();
-                if (intLitCtx.DECIMAL_LITERAL() != null) {
-                    type = LiteralExpression.LiteralType.DECIMAL_LITERAL;
-                } else if (intLitCtx.HEX_LITERAL() != null) {
-                    type = LiteralExpression.LiteralType.HEX_LITERAL;
-                } else if (intLitCtx.OCT_LITERAL() != null) {
-                    type = LiteralExpression.LiteralType.OCT_LITERAL;
-                } else if (intLitCtx.BINARY_LITERAL() != null) {
-                    type = LiteralExpression.LiteralType.BINARY_LITERAL;
-                }
-            } else if (litCtx.floatLiteral() != null) {
-                IavaParser.FloatLiteralContext floatLitCtx = litCtx.floatLiteral();
-                if (floatLitCtx.FLOAT_LITERAL() != null) {
-                    type = LiteralExpression.LiteralType.FLOAT_LITERAL;
-                } else if (floatLitCtx.HEX_FLOAT_LITERAL() != null) {
-                    type = LiteralExpression.LiteralType.HEX_FLOAT_LITERAL;
-                }
-            } else {
-                if (litCtx.CHAR_LITERAL() != null) {
-                    type = LiteralExpression.LiteralType.CHAR_LITERAL;
-                } else if (litCtx.STRING_LITERAL() != null) {
-                    type = LiteralExpression.LiteralType.STRING_LITERAL;
-                } else if (litCtx.BOOL_LITERAL() != null) {
-                    type = LiteralExpression.LiteralType.BOOL_LITERAL;
-                } else if (litCtx.NULL_LITERAL() != null) {
-                    type = LiteralExpression.LiteralType.NULL_LITERAL;
-                }
-            }
-            return new LiteralExpression(litCtx.getText(), type, location);
+            return new LiteralVisitor().visit(primCtx.literal());
         }
 
         throw new IllegalArgumentException("Type of primary expression " + ctx.getText() + " not recognized");

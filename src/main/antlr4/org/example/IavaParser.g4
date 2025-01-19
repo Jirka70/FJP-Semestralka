@@ -109,24 +109,24 @@ formalParameter
     ;
 
 literal
-    : integerLiteral
-    | floatLiteral
-    | CHAR_LITERAL
-    | STRING_LITERAL
-    | BOOL_LITERAL
-    | NULL_LITERAL
+    : integerLiteral #IntegerLitNonTerminal
+    | floatLiteral #FloatLitNonTerminal
+    | CHAR_LITERAL #CharLit
+    | STRING_LITERAL #StringLit
+    | BOOL_LITERAL #BoolLit
+    | NULL_LITERAL #NullLit
     ;
 
 integerLiteral
-    : DECIMAL_LITERAL
-    | HEX_LITERAL
-    | OCT_LITERAL
-    | BINARY_LITERAL
+    : DECIMAL_LITERAL #DecimalLit
+    | HEX_LITERAL #HexLit
+    | OCT_LITERAL #OctLit
+    | BINARY_LITERAL #BinaryLit
     ;
 
 floatLiteral
-    : FLOAT_LITERAL
-    | HEX_FLOAT_LITERAL
+    : FLOAT_LITERAL #FloatLit
+    | HEX_FLOAT_LITERAL #HexFloatLit
     ;
 
 // STATEMENTS / BLOCKS

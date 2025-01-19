@@ -35,7 +35,7 @@ public class FieldVisitor extends IavaParserBaseVisitor<List<FieldPrimitive>> {
             Location location = getFieldLocation(ctx);
             FieldPrimitive field = new FieldPrimitive(modifiers, type, name, initExpr, location);
             fields.add(field);
-            System.out.println("Field: " + field);
+//            System.out.println("Field: " + field);
         }
         return fields;
     }

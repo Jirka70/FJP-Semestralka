@@ -14,7 +14,6 @@ public enum ExpressionType {
     GREATER_THAN(">"),
     LESS_THAN_OR_EQUAL("<="),
     GREATER_THAN_OR_EQUAL(">="),
-    VALUE,
     ASSIGN("="),
     CAST,
     PRE_INC,

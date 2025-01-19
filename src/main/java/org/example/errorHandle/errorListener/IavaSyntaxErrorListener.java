@@ -32,6 +32,6 @@ public class IavaSyntaxErrorListener extends BaseErrorListener {
             }
         }
 
-        System.err.println("Unexpected error: " + msg + " on line: " + line + ":" + charPositionInLine);
+        System.err.println("Unexpected syntax error: " + msg + " on line: " + line + ":" + charPositionInLine);
     }
 }

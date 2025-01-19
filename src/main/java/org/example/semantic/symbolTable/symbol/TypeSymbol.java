@@ -15,7 +15,7 @@ public class TypeSymbol extends AbstractSymbol {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof StatementSymbol other) {
+        if (obj instanceof TypeSymbol other) {
             return other.mName.equals(mName);
         }
 
