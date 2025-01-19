@@ -25,7 +25,7 @@ public class CodeGenerator {
         mInstructionCounter = 0;
     }
 
-    public void generate(AbstractScope rootScope) {
+    public List<String> generate(AbstractScope rootScope) {
         System.out.println("-------------------------------");
         System.out.println("Code generation started");
         mGeneratableNode.generate(rootScope, this);
@@ -33,14 +33,37 @@ public class CodeGenerator {
 
         // TODO - zatím provizorně
         System.out.println();
-        instructions.stream().forEach(s -> {
+
+        List<String> labeledInstructions = new ArrayList<>();
+
+        for (String instruction : instructions) {
+            String labeledInstruction = labelInstruction(instruction);
+            labeledInstructions.add(labeledInstruction);
+        }
+
+        /*instructions.stream().forEach(s -> {
             for (Map.Entry<String, Long> entry : mCodeLabels.entrySet()) {
                 if (s.contains(entry.getKey())) s = s.replace(entry.getKey(), entry.getValue().toString());
             }
             System.out.println(s);
-        } );
+        } );*/
 //        instructions.forEach(System.out::println);
 
+        return labeledInstructions;
+    }
+
+    private String labelInstruction(String instruction) {
+        String labeledInstruction = instruction;
+        for (Map.Entry<String, Long> entry : mCodeLabels.entrySet()) {
+            String label = entry.getKey();
+            if (instruction.contains(label)) {
+                Long labelValue = entry.getValue();
+                String labelValueStr = labelValue.toString();
+                labeledInstruction = labeledInstruction.replace(label, labelValueStr);
+            }
+        }
+
+        return labeledInstruction;
     }
 
     public void addInstruction(String instruction) {

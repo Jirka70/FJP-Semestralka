@@ -11,10 +11,21 @@ import org.example.semantic.SemanticAnalyzer;
 import org.example.semantic.exception.SemanticException;
 import org.example.visitor.AppVisitor;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.List;
+
 public class Main {
+    private static final int EXPECTED_ARGS_COUNT = 2;
+    private static final char BREAK_LINE = '\n';
+
     public static void main(String[] args) throws SemanticException {
-        if (args.length != 1) {
-            System.out.println("Expected 1 argument (path to .iava source code)");
+        if (args.length != EXPECTED_ARGS_COUNT) {
+            System.out.println("Expected "
+                    + EXPECTED_ARGS_COUNT
+                    + " arguments (path to .iava source code and output file with PL/0 instructions)");
             return;
         }
         String inputName = args[0];
@@ -43,9 +54,26 @@ public class Main {
         AST ast = visitor.visit(tree); // TODO make semantic analyze
         SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer(ast);
         semanticAnalyzer.analyse();
-        System.out.println("done");
 
         CodeGenerator generator = new CodeGenerator(ast);
-        generator.generate(semanticAnalyzer.mSymbolTable);
+
+        String outputFile = args[1];
+        List<String> pl0instructions = generator.generate(semanticAnalyzer.mSymbolTable);
+        writeInstructionsToOutputFile(pl0instructions, outputFile);
+    }
+
+    private static void writeInstructionsToOutputFile(List<String> instructions, String outputFile) {
+        try (Writer writer = new BufferedWriter(new FileWriter(outputFile))) {
+            for (String instruction : instructions) {
+                writeInstruction(writer, instruction);
+            }
+        } catch (IOException e) {
+            System.err.println("Cannot write instructions to output file " + outputFile + ". Exception: " + e);
+        }
+    }
+
+    private static void writeInstruction(Writer writer, String instruction) throws IOException {
+        writer.write(instruction);
+        writer.write(BREAK_LINE);
     }
 }
