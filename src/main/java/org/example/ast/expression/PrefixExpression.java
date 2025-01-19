@@ -1,5 +1,6 @@
 package org.example.ast.expression;
 
+import org.example.codeGeneration.CodeGenerator;
 import org.example.semantic.exception.SemanticException;
 import org.example.semantic.exception.symbolTableException.FinalVariableOverwrittenException;
 import org.example.semantic.exception.symbolTableException.UndefinedVariableException;
@@ -48,5 +49,29 @@ public class PrefixExpression extends UnaryExpression {
     @Override
     public void collectData(AbstractScope currentAbstractScope) {
 
+    }
+
+    @Override
+    public void generate(AbstractScope currentScope, CodeGenerator generator) {
+        System.out.println("Generating prefix expression " + this);
+        if (mExpressionType.equals(ExpressionType.PRE_INC)) {
+            generateIncExpression(currentScope, generator);
+        } else if (mExpressionType.equals(ExpressionType.PRE_DEC)) {
+            generateDecExpression(currentScope, generator);
+        } else if (mExpressionType.equals(ExpressionType.TILDE)) {
+            mExpression.generate(currentScope, generator); // -x - 1
+            generator.addInstruction("OPR 0 1");
+            generator.addInstruction("LIT 0 1");
+            generator.addInstruction("OPR 0 3");
+        } else if (mExpressionType.equals(ExpressionType.NEG)) {
+            generator.addInstruction("LIT 0 1"); // 1 - 0, 1 - 1
+            mExpression.generate(currentScope, generator);
+            generator.addInstruction("OPR 0 3");
+        } else if (mExpressionType.equals(ExpressionType.UNARY_PLUS)) {
+            mExpression.generate(currentScope, generator);
+        } else if (mExpressionType.equals(ExpressionType.UNARY_MINUS)) {
+            mExpression.generate(currentScope, generator);
+            generator.addInstruction("OPR 0 1");
+        }
     }
 }

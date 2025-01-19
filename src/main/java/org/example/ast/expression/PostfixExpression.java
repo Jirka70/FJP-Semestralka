@@ -1,5 +1,6 @@
 package org.example.ast.expression;
 
+import org.example.codeGeneration.CodeGenerator;
 import org.example.semantic.exception.SemanticException;
 import org.example.semantic.exception.symbolTableException.FinalVariableOverwrittenException;
 import org.example.semantic.exception.symbolTableException.UndefinedVariableException;
@@ -48,5 +49,17 @@ public class PostfixExpression extends UnaryExpression {
     @Override
     public void collectData(AbstractScope currentAbstractScope) {
 
+    }
+    @Override
+    public void generate(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        System.out.println("Generating postfix expression " + this);
+        mExpression.generate(currentAbstractScope, generator);
+        if (mExpressionType.equals(ExpressionType.POST_INC)) {
+            generateIncExpression(currentAbstractScope, generator);
+            generator.addInstruction("INT 0 " + -expressionTypeSize(currentAbstractScope, generator)); // ignore updated value
+        } else if (mExpressionType.equals(ExpressionType.POST_DEC)) {
+            generateDecExpression(currentAbstractScope, generator);
+            generator.addInstruction("INT 0 " + -expressionTypeSize(currentAbstractScope, generator)); // ignore updated value
+        }
     }
 }
