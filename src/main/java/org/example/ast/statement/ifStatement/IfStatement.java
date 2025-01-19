@@ -1,8 +1,11 @@
 package org.example.ast.statement.ifStatement;
 
 import org.example.ast.expression.AbstractExpression;
+import org.example.ast.expression.ExpressionType;
+import org.example.ast.expression.PrefixExpression;
 import org.example.ast.statement.AbstractStatement;
 import org.example.ast.statement.StatementType;
+import org.example.codeGeneration.CodeGenerator;
 import org.example.semantic.exception.SemanticException;
 import org.example.semantic.exception.symbolTableException.InvalidStatementException;
 import org.example.semantic.exception.symbolTableException.TypeMismatchException;
@@ -88,5 +91,26 @@ public class IfStatement extends AbstractStatement {
         if (hasElse()) {
             mElseStatement.collectData(currentAbstractScope);
         }
+    }
+
+    private static final String IF_CLAUSE_LABEL_SUFFIX = "if_clause";
+    private static final String IF_STATEMENT_END_LABEL_SUFFIX = "if_end";
+
+    @Override
+    public void generate(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        System.out.println("Generating if");
+        PrefixExpression negExpr = new PrefixExpression(mExpression, ExpressionType.NEG, mLocation);
+        negExpr.generate(currentAbstractScope, generator);
+        generator.addInstruction("JMC 0 " + (mLocation + IF_CLAUSE_LABEL_SUFFIX)); // skok, pokud mExpression platí
+
+        if (hasElse()) {
+            mElseStatement.generate(currentAbstractScope, generator);
+        }
+        generator.addInstruction("JMP 0 " + (mLocation + IF_STATEMENT_END_LABEL_SUFFIX));
+
+        generator.addCodeLabel(mLocation + IF_CLAUSE_LABEL_SUFFIX);
+        mBody.generate(currentAbstractScope, generator);
+
+        generator.addCodeLabel((mLocation + IF_STATEMENT_END_LABEL_SUFFIX));
     }
 }

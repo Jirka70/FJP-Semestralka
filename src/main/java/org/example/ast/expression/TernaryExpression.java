@@ -1,5 +1,6 @@
 package org.example.ast.expression;
 
+import org.example.codeGeneration.CodeGenerator;
 import org.example.semantic.exception.SemanticException;
 import org.example.semantic.exception.symbolTableException.TypeMismatchException;
 import org.example.semantic.symbolTable.scope.AbstractScope;
@@ -53,5 +54,24 @@ public class TernaryExpression extends AbstractExpression {
     @Override
     public void collectData(AbstractScope currentAbstractScope) {
 
+    }
+
+    private static final String TRUE_EXPRESSION_LABEL_SUFFIX = "TRUE_EXPRESSION";
+    private static final String TERNARY_EXPRESSION_END_LABEL_SUFFIX = "TERNARY_EXPRESSION_END";
+
+    @Override
+    public void generate(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        System.out.println("Generating ternary expression");
+        PrefixExpression negExpr = new PrefixExpression(mCondition, ExpressionType.NEG, mLocation);
+        negExpr.generate(currentAbstractScope, generator);
+        generator.addInstruction("JMC 0 " + (mLocation + TRUE_EXPRESSION_LABEL_SUFFIX)); // skok, pokud mExpression platí
+
+        mSecond.generate(currentAbstractScope, generator);
+        generator.addInstruction("JMP 0 " + (mLocation + TERNARY_EXPRESSION_END_LABEL_SUFFIX));
+
+        generator.addCodeLabel(mLocation + TRUE_EXPRESSION_LABEL_SUFFIX);
+        mFirst.generate(currentAbstractScope, generator);
+
+        generator.addCodeLabel((mLocation + TERNARY_EXPRESSION_END_LABEL_SUFFIX));
     }
 }

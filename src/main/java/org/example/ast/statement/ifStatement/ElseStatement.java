@@ -2,6 +2,7 @@ package org.example.ast.statement.ifStatement;
 
 import org.example.ast.statement.AbstractStatement;
 import org.example.ast.statement.StatementType;
+import org.example.codeGeneration.CodeGenerator;
 import org.example.semantic.exception.SemanticException;
 import org.example.semantic.exception.symbolTableException.InvalidStatementException;
 import org.example.semantic.symbolTable.descriptor.AbstractDescriptor;
@@ -47,5 +48,10 @@ public class ElseStatement extends AbstractStatement {
         AbstractSymbol elseSymbol = new StatementSymbol(ELSE_KEYWORD, mLocation);
         currentAbstractScope.addChildScope(elseSymbol, elseAbstractScope);
         mBody.collectData(elseAbstractScope);
+    }
+
+    @Override
+    public void generate(AbstractScope currentScope, CodeGenerator generator) {
+        mBody.generate(currentScope, generator);
     }
 }
