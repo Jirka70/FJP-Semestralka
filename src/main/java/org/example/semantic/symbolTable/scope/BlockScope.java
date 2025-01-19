@@ -55,4 +55,9 @@ public class BlockScope extends AbstractScope {
     public Collection<AbstractSymbol> getAllSymbols() {
         return mBlockScopeTable.getAllSymbols();
     }
+
+    @Override
+    public Collection<AbstractDescriptor> getAllDescriptors() {
+        return mBlockScopeTable.getAllDescriptors();
+    }
 }

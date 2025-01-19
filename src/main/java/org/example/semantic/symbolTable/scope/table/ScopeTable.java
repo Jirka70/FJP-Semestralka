@@ -3,6 +3,7 @@ package org.example.semantic.symbolTable.scope.table;
 import org.example.semantic.symbolTable.descriptor.AbstractDescriptor;
 import org.example.semantic.symbolTable.symbol.AbstractSymbol;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -23,5 +24,9 @@ public class ScopeTable {
     }
     public Set<AbstractSymbol> getAllSymbols() {
         return mScopeTable.keySet();
+    }
+
+    public Collection<AbstractDescriptor> getAllDescriptors() {
+        return mScopeTable.values();
     }
 }

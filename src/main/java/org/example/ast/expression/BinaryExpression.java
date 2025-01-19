@@ -1,5 +1,6 @@
 package org.example.ast.expression;
 
+import org.example.codeGeneration.CodeGenerator;
 import org.example.semantic.exception.SemanticException;
 import org.example.semantic.exception.symbolTableException.FinalVariableOverwrittenException;
 import org.example.semantic.exception.symbolTableException.TypeMismatchException;
@@ -106,6 +107,52 @@ public class BinaryExpression extends AbstractExpression {
     public void collectData(AbstractScope currentAbstractScope) {
 
     }
+
+    @Override
+    public void generate(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        if (mExpressionType.equals(ExpressionType.ASSIGN)) {
+            generateAssign(currentAbstractScope, generator);
+        }
+
+        else throw new RuntimeException("Generate not implemented for " + this);
+    }
+
+
+    private void generateAssign(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        System.out.println("Generating variable assignment " + this);
+
+        // Implicit cast
+        AbstractExpression leftOperand = mLeftExpression;
+        AbstractExpression rightOperand = mRightExpression;
+        try {
+            if (evaluateType(currentAbstractScope) instanceof FloatType) {
+                if (!(mLeftExpression.evaluateType(currentAbstractScope) instanceof FloatType)) {
+                    leftOperand = new CastExpression(mLeftExpression, FloatType.FLOAT_KEYWORD, mLocation);
+                }
+                if (!(mRightExpression.evaluateType(currentAbstractScope) instanceof FloatType)) {
+                    rightOperand = new CastExpression(mRightExpression, FloatType.FLOAT_KEYWORD, mLocation);
+                }
+            }
+        } catch (SemanticException e) {
+            throw new RuntimeException(e); // should not happen in this phase
+        }
+
+        rightOperand.generate(currentAbstractScope, generator);
+
+        String varName = ((IdentifierExpression) leftOperand).mIdentifier;
+        AbstractSymbol symbol = new VariableSymbol(varName);
+        AbstractDescriptor descriptor = currentAbstractScope.getSymbolDescriptorOnLocation(symbol, mLocation);
+        VariableDescriptor varDescriptor = (VariableDescriptor) descriptor;
+
+        int variableAddress = generator.getStackFrameAddress(varDescriptor.mName);
+        int variableSize = generator.typeSize(varDescriptor.mType);
+        for (int i = 0; i < variableSize; i++) {
+            generator.addInstruction("STO 0 " + (variableAddress + i));
+        }
+
+        generator.addInstruction("INT 0 " + variableSize); // assignment should return assigned value
+    }
+
 
     private void validateIdentifierExpression(AbstractScope abstractScope, IdentifierExpression identifierExpression)
             throws SemanticException {

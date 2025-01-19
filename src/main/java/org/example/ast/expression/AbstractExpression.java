@@ -1,12 +1,14 @@
 package org.example.ast.expression;
 
+import org.example.codeGeneration.CodeGenerator;
+import org.example.codeGeneration.IGeneratable;
 import org.example.semantic.ISemanticallyAnalyzable;
 import org.example.semantic.exception.SemanticException;
 import org.example.semantic.symbolTable.scope.AbstractScope;
 import org.example.semantic.type.AbstractType;
 import org.example.util.Location;
 
-public abstract class AbstractExpression implements ISemanticallyAnalyzable {
+public abstract class AbstractExpression implements ISemanticallyAnalyzable, IGeneratable {
     public final ExpressionType mExpressionType;
     public final Location mLocation;
 
@@ -19,4 +21,10 @@ public abstract class AbstractExpression implements ISemanticallyAnalyzable {
 
     @Override
     public abstract String toString();
+
+    @Override
+    public void generate(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        throw new RuntimeException("Generate not implemented for " + this);
+        // TODO: smazat až bude všude implementováno
+    }
 }

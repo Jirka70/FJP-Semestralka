@@ -1,5 +1,6 @@
 package org.example.ast.statement;
 
+import org.example.codeGeneration.CodeGenerator;
 import org.example.semantic.exception.SemanticException;
 import org.example.semantic.symbolTable.scope.AbstractScope;
 import org.example.util.Location;
@@ -40,6 +41,17 @@ public class Block extends AbstractStatement {
             }
 
             blockStatement.collectData(currentAbstractScope);
+        }
+    }
+
+    @Override
+    public void generate(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        for (AbstractBlockStatement blockStatement : mBlockStatements) {
+            if (blockStatement == null) { // e.g. two semicolons in row
+                continue;
+            }
+
+            blockStatement.generate(currentAbstractScope, generator);
         }
     }
 }

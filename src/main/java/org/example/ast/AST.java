@@ -1,6 +1,8 @@
 package org.example.ast;
 
 import org.example.ast.clazz.ClassPrimitive;
+import org.example.codeGeneration.CodeGenerator;
+import org.example.codeGeneration.IGeneratable;
 import org.example.semantic.ISemanticallyAnalyzable;
 import org.example.semantic.exception.SemanticException;
 import org.example.semantic.exception.symbolTableException.UndefinedClassException;
@@ -11,7 +13,7 @@ import org.example.semantic.symbolTable.symbol.ClassSymbol;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AST implements ISemanticallyAnalyzable {
+public class AST implements ISemanticallyAnalyzable, IGeneratable {
     public final List<ClassPrimitive> mClasses = new ArrayList<>();
 
     public AST(List<ClassPrimitive> classes) {
@@ -44,4 +46,11 @@ public class AST implements ISemanticallyAnalyzable {
         }
     }
 
+    @Override
+    public void generate(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        System.out.println("Generating AST");
+        generator.addInstruction("JMP 0 1");
+        for (ClassPrimitive classPrimitive : mClasses)
+            classPrimitive.generate(currentAbstractScope, generator);
+    }
 }

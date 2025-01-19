@@ -1,6 +1,8 @@
 package org.example.ast.clazz;
 
 import org.example.ast.clazz.method.MethodPrimitive;
+import org.example.codeGeneration.CodeGenerator;
+import org.example.codeGeneration.IGeneratable;
 import org.example.semantic.ISemanticallyAnalyzable;
 import org.example.semantic.exception.SemanticException;
 import org.example.semantic.exception.symbolTableException.ClassAlreadyDefinedException;
@@ -20,7 +22,7 @@ import org.example.util.Location;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClassPrimitive implements ISemanticallyAnalyzable {
+public class ClassPrimitive implements ISemanticallyAnalyzable, IGeneratable {
     public final List<FieldPrimitive> mFields = new ArrayList<>();
     public final List<MethodPrimitive> mMethods = new ArrayList<>();
     public final List<ClassPrimitive> mClasses = new ArrayList<>();
@@ -106,6 +108,23 @@ public class ClassPrimitive implements ISemanticallyAnalyzable {
 
         for (ClassPrimitive classPrimitive : mClasses) {
             classPrimitive.collectData(classAbstractScope);
+        }
+    }
+
+    @Override
+    public void generate(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        System.out.println("Generating class " + mName);
+
+        AbstractSymbol classSymbol = new ClassSymbol(mName);
+        AbstractScope classAbstractScope = currentAbstractScope.getChildScopeBySymbol(classSymbol);
+
+        for (ClassPrimitive mClass : mClasses) {
+            mClass.generate(classAbstractScope, generator);
+        }
+//        for (FieldPrimitive mField : mFields) TODO
+//            mField.generate();
+        for (MethodPrimitive mMethod : mMethods) {
+            mMethod.generate(classAbstractScope, generator);
         }
     }
 }

@@ -53,4 +53,5 @@ public abstract class AbstractScope {
 
     public abstract AbstractDescriptor getSymbolDescriptorOnLocation(AbstractSymbol symbol, Location location);
     public abstract Collection<AbstractSymbol> getAllSymbols();
+    public abstract Collection<AbstractDescriptor> getAllDescriptors();
 }

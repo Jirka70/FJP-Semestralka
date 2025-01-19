@@ -6,25 +6,28 @@ import java.util.Objects;
 
 public class MethodDescriptor extends AbstractDescriptor {
     public final String mMethodName;
+    public final String mFullMethodName;
     public final String mReturnType;
     public final List<VariableDescriptor> mFormalVariableDescriptors = new ArrayList<>();
 
-    public MethodDescriptor(String methodName, String returnType, List<VariableDescriptor> formalParametersDescriptors) {
+    public MethodDescriptor(String methodName, String returnType,
+                            List<VariableDescriptor> formalParametersDescriptors, String fullMethodName) {
         super(DescriptorType.METHOD_DESCRIPTOR);
         mMethodName = methodName;
         mReturnType = returnType;
         mFormalVariableDescriptors.addAll(formalParametersDescriptors);
+        mFullMethodName = fullMethodName;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(mMethodName, mReturnType, mFormalVariableDescriptors);
+        return Objects.hash(mFullMethodName, mReturnType, mFormalVariableDescriptors);
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof MethodDescriptor other) {
-            return mMethodName.equals(other.mMethodName)
+            return mFullMethodName.equals(other.mFullMethodName)
                     && mReturnType.equals(other.mReturnType)
                     && areOtherFormalParametersDescriptorsSame(other.mFormalVariableDescriptors);
         }
@@ -51,7 +54,7 @@ public class MethodDescriptor extends AbstractDescriptor {
     @Override
     public String toString() {
         return "MethodDescriptor: methodName="
-                + mMethodName
+                + mFullMethodName
                 + ", returnType="
                 + mReturnType;
     }

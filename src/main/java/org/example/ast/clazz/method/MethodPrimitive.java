@@ -3,6 +3,8 @@ package org.example.ast.clazz.method;
 import org.example.ast.statement.AbstractBlockStatement;
 import org.example.ast.statement.Block;
 import org.example.ast.statement.ReturnStatement;
+import org.example.codeGeneration.CodeGenerator;
+import org.example.codeGeneration.IGeneratable;
 import org.example.semantic.ISemanticallyAnalyzable;
 import org.example.semantic.exception.SemanticException;
 import org.example.semantic.exception.symbolTableException.InvalidStatementException;
@@ -10,6 +12,7 @@ import org.example.semantic.exception.symbolTableException.MethodAlreadyDefinedE
 import org.example.semantic.exception.symbolTableException.UndefinedTypeException;
 import org.example.semantic.exception.symbolTableException.UnsupportedNameException;
 import org.example.semantic.symbolTable.descriptor.AbstractDescriptor;
+import org.example.semantic.symbolTable.descriptor.ClassDescriptor;
 import org.example.semantic.symbolTable.descriptor.MethodDescriptor;
 import org.example.semantic.symbolTable.descriptor.VariableDescriptor;
 import org.example.semantic.symbolTable.scope.AbstractScope;
@@ -17,12 +20,13 @@ import org.example.semantic.symbolTable.scope.BlockScope;
 import org.example.semantic.symbolTable.symbol.AbstractSymbol;
 import org.example.semantic.symbolTable.symbol.MethodSymbol;
 import org.example.semantic.symbolTable.symbol.TypeSymbol;
+import org.example.semantic.type.AbstractType;
 import org.example.util.Location;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MethodPrimitive implements ISemanticallyAnalyzable {
+public class MethodPrimitive implements ISemanticallyAnalyzable, IGeneratable {
     private static final String VOID_KEYWORD = "vacuum";
     public final String mDeclaredReturnType;
     public final String mName;
@@ -85,7 +89,7 @@ public class MethodPrimitive implements ISemanticallyAnalyzable {
     public void collectData(AbstractScope classAbstractScope) throws SemanticException {
         List<VariableDescriptor> formalParametersDescriptors = createFormalParametersDescriptors();
         AbstractDescriptor methodDescriptor = new MethodDescriptor(mName, mDeclaredReturnType,
-                formalParametersDescriptors);
+                formalParametersDescriptors, getFullMethodName(classAbstractScope));
 
 
         AbstractScope methodScope = new BlockScope(classAbstractScope, methodDescriptor);
@@ -139,5 +143,35 @@ public class MethodPrimitive implements ISemanticallyAnalyzable {
                 parameter.mDeclaredType,
                 true,
                 parameter.isFinal());
+    }
+
+    @Override
+    public void generate(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        System.out.println("Generating method " + getFullMethodName(currentAbstractScope));
+
+        List<AbstractType> parameterTypes = mParameters.collectParameterTypesFromMethod();
+        AbstractSymbol methodSymbol = new MethodSymbol(mName, parameterTypes);
+        AbstractScope methodAbstractScope = currentAbstractScope.getChildScopeBySymbol(methodSymbol);
+
+        generator.addCodeLabel("" + methodAbstractScope.mScopeDescriptor.hashCode());
+        generator.newStackFrame();
+        generator.mapLocalVariables(methodAbstractScope);
+        generator.addInstruction("INT 0 " + generator.getStackFrameSize());
+
+        mMethodBody.generate(methodAbstractScope, generator);
+
+        System.out.println(generator.mCurrentStackFrameMappings);
+        generator.addInstruction("RET 0 0");
+    }
+
+    private String getFullMethodName(AbstractScope currentAbstractScope) {
+        StringBuilder fullMethodName = new StringBuilder(mName);
+        AbstractScope tmpScope = currentAbstractScope;
+        while (tmpScope.hasParent())  {
+            ClassDescriptor classDescriptor = (ClassDescriptor) tmpScope.mScopeDescriptor;
+            fullMethodName.insert(0, classDescriptor.mClassName + ".");
+            tmpScope = tmpScope.mParentAbstractScope;
+        }
+        return fullMethodName.toString();
     }
 }

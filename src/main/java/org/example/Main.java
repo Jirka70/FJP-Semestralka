@@ -5,6 +5,7 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.example.ast.AST;
+import org.example.codeGeneration.CodeGenerator;
 import org.example.errorHandle.errorListener.IavaSyntaxErrorListener;
 import org.example.semantic.SemanticAnalyzer;
 import org.example.semantic.exception.SemanticException;
@@ -43,5 +44,8 @@ public class Main {
         SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer(ast);
         semanticAnalyzer.analyse();
         System.out.println("done");
+
+        CodeGenerator generator = new CodeGenerator(ast);
+        generator.generate(semanticAnalyzer.mSymbolTable);
     }
 }

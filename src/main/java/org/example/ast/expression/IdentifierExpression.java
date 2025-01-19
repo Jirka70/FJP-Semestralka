@@ -1,5 +1,6 @@
 package org.example.ast.expression;
 
+import org.example.codeGeneration.CodeGenerator;
 import org.example.semantic.exception.SemanticException;
 import org.example.semantic.exception.symbolTableException.UndefinedIdentifierException;
 import org.example.semantic.exception.symbolTableException.UndefinedVariableException;
@@ -66,5 +67,18 @@ public class IdentifierExpression extends PrimaryExpression {
     @Override
     public void collectData(AbstractScope currentAbstractScope) {
 
+    }
+
+    @Override
+    public void generate(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        AbstractSymbol symbol = new VariableSymbol(mIdentifier);
+        AbstractDescriptor descriptor = currentAbstractScope.getSymbolDescriptorOnLocation(symbol, mLocation);
+        VariableDescriptor varDescriptor = (VariableDescriptor) descriptor;
+
+        int variableAddress = generator.getStackFrameAddress(varDescriptor.mName);
+        int variableSize = generator.typeSize(varDescriptor.mType);
+        for (int i = variableSize - 1; i >= 0; i--) {
+            generator.addInstruction("LOD 0 " + (variableAddress + i));
+        }
     }
 }

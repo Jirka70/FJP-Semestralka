@@ -7,6 +7,7 @@ import org.example.util.Location;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class BlockScopeTable {
     public final Map<AbstractSymbol, SymbolDescriptor> mScopeTable = new HashMap<>();
@@ -31,7 +32,7 @@ public class BlockScopeTable {
             return false;
         }
 
-        return symbolLocation.mCharPositionInLine < location.mCharPositionInLine;
+        return symbolLocation.mCharPositionInLine <= location.mCharPositionInLine;
     }
 
     public AbstractDescriptor getDescriptor(AbstractSymbol symbol) {
@@ -46,6 +47,13 @@ public class BlockScopeTable {
 
     public Set<AbstractSymbol> getAllSymbols() {
         return mScopeTable.keySet();
+    }
+
+    public Set<AbstractDescriptor> getAllDescriptors() {
+        return mScopeTable.values()
+                .stream()
+                .map(symbolDescriptor -> symbolDescriptor.mDescriptor)
+                .collect(Collectors.toSet());
     }
 
     public static class SymbolDescriptor {
