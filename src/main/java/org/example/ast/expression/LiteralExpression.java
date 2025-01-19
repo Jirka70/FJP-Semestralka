@@ -141,7 +141,9 @@ public class LiteralExpression extends PrimaryExpression {
         float f = toFloat();
         int intPart = (int) f;
         final int MUL_FACTOR = 6;
-        int fracPart = (int) ((f - intPart) * Math.pow(10, MUL_FACTOR));
+        // zaokrouhlení pro lepší přesnost
+        double diff = Math.round((f - intPart) * Math.pow(10, MUL_FACTOR)) / Math.pow(10, MUL_FACTOR);
+        int fracPart = (int) (diff * Math.pow(10, MUL_FACTOR));
 
         generator.addInstruction("LIT 0 " + intPart);
         generator.addInstruction("LIT 0 " + fracPart);

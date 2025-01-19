@@ -1,10 +1,10 @@
 package org.example.ast.expression;
 
+import org.example.codeGeneration.CodeGenerator;
 import org.example.semantic.exception.SemanticException;
 import org.example.semantic.exception.symbolTableException.CastException;
 import org.example.semantic.symbolTable.scope.AbstractScope;
-import org.example.semantic.type.AbstractType;
-import org.example.semantic.type.TypeFactory;
+import org.example.semantic.type.*;
 import org.example.util.Location;
 
 public class CastExpression extends UnaryExpression {
@@ -40,5 +40,30 @@ public class CastExpression extends UnaryExpression {
     @Override
     public void collectData(AbstractScope currentAbstractScope) {
 
+    }
+
+    @Override
+    public void generate(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        System.out.println("Generating cast " + this);
+        mExpression.generate(currentAbstractScope, generator);
+
+        AbstractType sourceType;
+        AbstractType targetType = TypeFactory.fromString(mTypeType);
+        try {
+            sourceType = mExpression.evaluateType(currentAbstractScope);
+        } catch (SemanticException e) {
+            throw new RuntimeException(e); // should not happen in this phase
+        }
+
+        // char, int -> float
+        if ((sourceType instanceof CharType || sourceType instanceof IntType) && targetType instanceof FloatType) {
+            generator.addInstruction("LIT 0 0");
+            generator.addInstruction("ITR 0 0");
+        }
+
+        // float -> int, char
+        else if (sourceType instanceof FloatType && (targetType instanceof CharType || targetType instanceof IntType)) {
+            generator.addInstruction("RTI 0 1");
+        }
     }
 }

@@ -1,5 +1,6 @@
 package org.example.ast.expression;
 
+import org.antlr.v4.runtime.misc.Pair;
 import org.example.codeGeneration.CodeGenerator;
 import org.example.semantic.exception.SemanticException;
 import org.example.semantic.exception.symbolTableException.FinalVariableOverwrittenException;
@@ -112,6 +113,42 @@ public class BinaryExpression extends AbstractExpression {
     public void generate(AbstractScope currentAbstractScope, CodeGenerator generator) {
         if (mExpressionType.equals(ExpressionType.ASSIGN)) {
             generateAssign(currentAbstractScope, generator);
+        } else if (mExpressionType.equals(ExpressionType.PLUS)) {
+            generatePlus(currentAbstractScope, generator);
+        } else if (mExpressionType.equals(ExpressionType.MINUS)) {
+            generateMinus(currentAbstractScope, generator);
+        } else if (mExpressionType.equals(ExpressionType.MULTIPLY)) {
+            generateMultiply(currentAbstractScope, generator);
+        }  else if (mExpressionType.equals(ExpressionType.DIVISION)) {
+            generateDivision(currentAbstractScope, generator);
+        } else if (mExpressionType.equals(ExpressionType.MODULO)) {
+            generateModulo(currentAbstractScope, generator);
+        } else if (mExpressionType.equals(ExpressionType.BOOL_EQUALS)) {
+            generateEquals(currentAbstractScope, generator);
+        } else if (mExpressionType.equals(ExpressionType.LESS_THAN)) {
+            generateLT(currentAbstractScope, generator);
+        } else if (mExpressionType.equals(ExpressionType.GREATER_THAN)) {
+            generateGT(currentAbstractScope, generator);
+        } else if (mExpressionType.equals(ExpressionType.LESS_THAN_OR_EQUAL)) {
+            generateLE(currentAbstractScope, generator);
+        } else if (mExpressionType.equals(ExpressionType.GREATER_THAN_OR_EQUAL)) {
+            generateGE(currentAbstractScope, generator);
+        } else if (mExpressionType.equals(ExpressionType.AND)) {
+            generateAnd(currentAbstractScope, generator);
+        } else if (mExpressionType.equals(ExpressionType.OR)) {
+            generateOr(currentAbstractScope, generator);
+        } else if (mExpressionType.equals(ExpressionType.NOT_EQUAL_TO)) {
+            generateNotEquals(currentAbstractScope, generator);
+        } else if (mExpressionType.equals(ExpressionType.PLUS_EQUALS)) {
+            generatePlusEquals(currentAbstractScope, generator);
+        } else if (mExpressionType.equals(ExpressionType.MINUS_EQUALS)) {
+            generateMinusEquals(currentAbstractScope, generator);
+        } else if (mExpressionType.equals(ExpressionType.MULTIPLY_EQUALS)) {
+            generateMultiplyEquals(currentAbstractScope, generator);
+        } else if (mExpressionType.equals(ExpressionType.DIVIDE_EQUALS)) {
+            generateDivideEquals(currentAbstractScope, generator);
+        } else if (mExpressionType.equals(ExpressionType.MODULO_EQUALS)) {
+            generateModuloEquals(currentAbstractScope, generator);
         }
 
         else throw new RuntimeException("Generate not implemented for " + this);
@@ -120,26 +157,11 @@ public class BinaryExpression extends AbstractExpression {
 
     private void generateAssign(AbstractScope currentAbstractScope, CodeGenerator generator) {
         System.out.println("Generating variable assignment " + this);
+        Pair<AbstractExpression, AbstractExpression> operands = getOperands(currentAbstractScope);
 
-        // Implicit cast
-        AbstractExpression leftOperand = mLeftExpression;
-        AbstractExpression rightOperand = mRightExpression;
-        try {
-            if (evaluateType(currentAbstractScope) instanceof FloatType) {
-                if (!(mLeftExpression.evaluateType(currentAbstractScope) instanceof FloatType)) {
-                    leftOperand = new CastExpression(mLeftExpression, FloatType.FLOAT_KEYWORD, mLocation);
-                }
-                if (!(mRightExpression.evaluateType(currentAbstractScope) instanceof FloatType)) {
-                    rightOperand = new CastExpression(mRightExpression, FloatType.FLOAT_KEYWORD, mLocation);
-                }
-            }
-        } catch (SemanticException e) {
-            throw new RuntimeException(e); // should not happen in this phase
-        }
+        operands.b.generate(currentAbstractScope, generator);
 
-        rightOperand.generate(currentAbstractScope, generator);
-
-        String varName = ((IdentifierExpression) leftOperand).mIdentifier;
+        String varName = ((IdentifierExpression) operands.a).mIdentifier;
         AbstractSymbol symbol = new VariableSymbol(varName);
         AbstractDescriptor descriptor = currentAbstractScope.getSymbolDescriptorOnLocation(symbol, mLocation);
         VariableDescriptor varDescriptor = (VariableDescriptor) descriptor;
@@ -153,6 +175,228 @@ public class BinaryExpression extends AbstractExpression {
         generator.addInstruction("INT 0 " + variableSize); // assignment should return assigned value
     }
 
+
+    // Implicit cast
+    private Pair<AbstractExpression, AbstractExpression> getOperands(AbstractScope currentAbstractScope) {
+        AbstractExpression leftOperand = mLeftExpression;
+        AbstractExpression rightOperand = mRightExpression;
+        try {
+            if (mLeftExpression.evaluateType(currentAbstractScope) instanceof FloatType) {
+                if (!(mRightExpression.evaluateType(currentAbstractScope) instanceof FloatType)) {
+                    rightOperand = new CastExpression(mRightExpression, FloatType.FLOAT_KEYWORD, mLocation);
+                }
+            }
+            if (mRightExpression.evaluateType(currentAbstractScope) instanceof FloatType) {
+                if (!(mLeftExpression.evaluateType(currentAbstractScope) instanceof FloatType)) {
+                    leftOperand = new CastExpression(mLeftExpression, FloatType.FLOAT_KEYWORD, mLocation);
+                }
+            }
+        } catch (SemanticException e) {
+            throw new RuntimeException(e); // should not happen in this phase
+        }
+        return new Pair<>(leftOperand, rightOperand);
+    }
+
+    private void generatePlus(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        System.out.println("Generating plus " + this);
+        Pair<AbstractExpression, AbstractExpression> operands = getOperands(currentAbstractScope);
+
+        operands.b.generate(currentAbstractScope, generator);
+        operands.a.generate(currentAbstractScope, generator);
+        if (isRealArithmetic(currentAbstractScope)) {
+            generator.addInstruction("OPF 0 2");
+        } else {
+            generator.addInstruction("OPR 0 2");
+        }
+    }
+
+    private boolean isRealArithmetic(AbstractScope currentAbstractScope) {
+        try {
+            return mLeftExpression.evaluateType(currentAbstractScope) instanceof FloatType
+                    || mRightExpression.evaluateType(currentAbstractScope) instanceof FloatType;
+        } catch (SemanticException e) {
+            throw new RuntimeException(e); // should not happen in this phase
+        }
+    }
+
+    private void generateMinus(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        System.out.println("Generating minus " + this);
+        Pair<AbstractExpression, AbstractExpression> operands = getOperands(currentAbstractScope);
+
+        operands.a.generate(currentAbstractScope, generator);
+        operands.b.generate(currentAbstractScope, generator);
+        if (isRealArithmetic(currentAbstractScope)) {
+            generator.addInstruction("OPF 0 3");
+        } else {
+            generator.addInstruction("OPR 0 3");
+        }
+    }
+
+    private void generateMultiply(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        System.out.println("Generating multiply " + this);
+        Pair<AbstractExpression, AbstractExpression> operands = getOperands(currentAbstractScope);
+
+        operands.a.generate(currentAbstractScope, generator);
+        operands.b.generate(currentAbstractScope, generator);
+        if (isRealArithmetic(currentAbstractScope)) {
+            generator.addInstruction("OPF 0 4");
+        } else {
+            generator.addInstruction("OPR 0 4");
+        }
+    }
+
+    private void generateDivision(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        System.out.println("Generating division " + this);
+        Pair<AbstractExpression, AbstractExpression> operands = getOperands(currentAbstractScope);
+
+        operands.a.generate(currentAbstractScope, generator);
+        operands.b.generate(currentAbstractScope, generator);
+        if (isRealArithmetic(currentAbstractScope)) {
+            generator.addInstruction("OPF 0 5");
+        } else {
+            generator.addInstruction("OPR 0 5");
+        }
+    }
+
+    private void generateModulo(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        System.out.println("Generating modulo " + this);
+        Pair<AbstractExpression, AbstractExpression> operands = getOperands(currentAbstractScope);
+
+        operands.a.generate(currentAbstractScope, generator);
+        operands.b.generate(currentAbstractScope, generator);
+        if (isRealArithmetic(currentAbstractScope)) {
+            generator.addInstruction("OPF 0 6");
+        } else {
+            generator.addInstruction("OPR 0 6");
+        }
+    }
+
+    private void generateEquals(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        System.out.println("Generating equals " + this);
+        Pair<AbstractExpression, AbstractExpression> operands = getOperands(currentAbstractScope);
+
+        operands.a.generate(currentAbstractScope, generator);
+        operands.b.generate(currentAbstractScope, generator);
+        if (isRealArithmetic(currentAbstractScope)) {
+            generator.addInstruction("OPF 0 8");
+        } else {
+            generator.addInstruction("OPR 0 8");
+        }
+    }
+
+    private void generateLT(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        System.out.println("Generating LT " + this);
+        Pair<AbstractExpression, AbstractExpression> operands = getOperands(currentAbstractScope);
+
+        operands.a.generate(currentAbstractScope, generator);
+        operands.b.generate(currentAbstractScope, generator);
+        if (isRealArithmetic(currentAbstractScope)) {
+            generator.addInstruction("OPF 0 10");
+        } else {
+            generator.addInstruction("OPR 0 10");
+        }
+    }
+
+    private void generateGT(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        System.out.println("Generating GT " + this);
+        Pair<AbstractExpression, AbstractExpression> operands = getOperands(currentAbstractScope);
+
+        operands.a.generate(currentAbstractScope, generator);
+        operands.b.generate(currentAbstractScope, generator);
+        if (isRealArithmetic(currentAbstractScope)) {
+            generator.addInstruction("OPF 0 12");
+        } else {
+            generator.addInstruction("OPR 0 12");
+        }
+    }
+
+    private void generateLE(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        System.out.println("Generating LE " + this);
+        Pair<AbstractExpression, AbstractExpression> operands = getOperands(currentAbstractScope);
+
+        operands.a.generate(currentAbstractScope, generator);
+        operands.b.generate(currentAbstractScope, generator);
+        if (isRealArithmetic(currentAbstractScope)) {
+            generator.addInstruction("OPF 0 13");
+        } else {
+            generator.addInstruction("OPR 0 13");
+        }
+    }
+
+    private void generateGE(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        System.out.println("Generating GE " + this);
+        Pair<AbstractExpression, AbstractExpression> operands = getOperands(currentAbstractScope);
+
+        operands.a.generate(currentAbstractScope, generator);
+        operands.b.generate(currentAbstractScope, generator);
+        if (isRealArithmetic(currentAbstractScope)) {
+            generator.addInstruction("OPF 0 11");
+        } else {
+            generator.addInstruction("OPR 0 11");
+        }
+    }
+
+    private void generateAnd(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        System.out.println("Generating AND " + this);
+
+        mLeftExpression.generate(currentAbstractScope, generator);
+        mRightExpression.generate(currentAbstractScope, generator);
+        generator.addInstruction("OPR 0 4"); // multiplication
+    }
+
+    private void generateOr(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        System.out.println("Generating OR " + this);
+
+        mLeftExpression.generate(currentAbstractScope, generator);
+        mRightExpression.generate(currentAbstractScope, generator);
+        generator.addInstruction("OPR 0 2"); // sum and > 0 check
+        generator.addInstruction("LIT 0 0");
+        generator.addInstruction("OPR 0 12");
+    }
+
+    private void generateNotEquals(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        System.out.println("Generating not equals " + this);
+        Pair<AbstractExpression, AbstractExpression> operands = getOperands(currentAbstractScope);
+
+        operands.a.generate(currentAbstractScope, generator);
+        operands.b.generate(currentAbstractScope, generator);
+        if (isRealArithmetic(currentAbstractScope)) {
+            generator.addInstruction("OPF 0 9");
+        } else {
+            generator.addInstruction("OPR 0 9");
+        }
+    }
+
+    private void generatePlusEquals(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        System.out.println("Generating plus equals " + this);
+        generateCompoundAssign(currentAbstractScope, generator, ExpressionType.PLUS);
+    }
+
+    private void generateCompoundAssign(AbstractScope currentAbstractScope, CodeGenerator generator, ExpressionType type) {
+        BinaryExpression valExpr = new BinaryExpression(mLeftExpression, mRightExpression, type, mLocation);
+        BinaryExpression assignExpr = new BinaryExpression(mLeftExpression, valExpr, ExpressionType.ASSIGN, mLocation);
+        assignExpr.generate(currentAbstractScope, generator);
+    }
+
+    private void generateMinusEquals(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        System.out.println("Generating minus equals " + this);
+        generateCompoundAssign(currentAbstractScope, generator, ExpressionType.MINUS);
+    }
+
+    private void generateMultiplyEquals(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        System.out.println("Generating multiply equals " + this);
+        generateCompoundAssign(currentAbstractScope, generator, ExpressionType.MULTIPLY);
+    }
+
+    private void generateDivideEquals(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        System.out.println("Generating divide equals " + this);
+        generateCompoundAssign(currentAbstractScope, generator, ExpressionType.DIVISION);
+    }
+
+    private void generateModuloEquals(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        System.out.println("Generating modulo equals " + this);
+        generateCompoundAssign(currentAbstractScope, generator, ExpressionType.MODULO);
+    }
 
     private void validateIdentifierExpression(AbstractScope abstractScope, IdentifierExpression identifierExpression)
             throws SemanticException {

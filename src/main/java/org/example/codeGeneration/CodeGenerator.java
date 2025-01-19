@@ -38,6 +38,8 @@ public class CodeGenerator {
 //            }
 //            System.out.println(s);
 //        } );
+        System.out.println();
+        instructions.forEach(System.out::println);
 
     }
 
