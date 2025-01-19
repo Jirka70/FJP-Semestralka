@@ -147,21 +147,24 @@ public class MethodPrimitive implements ISemanticallyAnalyzable, IGeneratable {
 
     @Override
     public void generate(AbstractScope currentAbstractScope, CodeGenerator generator) {
-        System.out.println("Generating method " + getFullMethodName(currentAbstractScope));
+        System.out.println("Generating method " + mName);
 
         List<AbstractType> parameterTypes = mParameters.collectParameterTypesFromMethod();
         AbstractSymbol methodSymbol = new MethodSymbol(mName, parameterTypes);
         AbstractScope methodAbstractScope = currentAbstractScope.getChildScopeBySymbol(methodSymbol);
+        MethodDescriptor descriptor = (MethodDescriptor) methodAbstractScope.mScopeDescriptor;
 
-        generator.addCodeLabel("" + methodAbstractScope.mScopeDescriptor.hashCode());
+        String label = descriptor.hashCode() + "_" + descriptor.mFullMethodName;
+        generator.addCodeLabel(label);
         generator.newStackFrame();
         generator.mapLocalVariables(methodAbstractScope);
         generator.addInstruction("INT 0 " + generator.getStackFrameSize());
+        initParameters(generator);
 
         mMethodBody.generate(methodAbstractScope, generator);
 
-        System.out.println(generator.mCurrentStackFrameMappings);
         generator.addInstruction("RET 0 0");
+        System.out.println(generator.mCurrentStackFrameMappings);
     }
 
     private String getFullMethodName(AbstractScope currentAbstractScope) {
@@ -173,5 +176,26 @@ public class MethodPrimitive implements ISemanticallyAnalyzable, IGeneratable {
             tmpScope = tmpScope.mParentAbstractScope;
         }
         return fullMethodName.toString();
+    }
+
+    private void initParameters(CodeGenerator generator) {
+        int paramsSize = mParameters.mParameters
+                .stream()
+                .mapToInt(value -> generator.typeSize(value.mDeclaredType))
+                .sum();
+        int argAddress = -paramsSize;
+
+        for (ParameterPrimitive param : mParameters.mParameters) {
+            int paramAddress = generator.getStackFrameAddress(param.mName);
+            int paramSize = generator.typeSize(param.mDeclaredType);
+            for (int i = paramSize - 1; i >= 0; i--) {
+                generator.addInstruction("LOD 0 " + (argAddress + i));
+            }
+            for (int i = 0; i < paramSize; i++) {
+                generator.addInstruction("STO 0 " + (paramAddress + i));
+            }
+
+            argAddress += paramSize;
+        }
     }
 }

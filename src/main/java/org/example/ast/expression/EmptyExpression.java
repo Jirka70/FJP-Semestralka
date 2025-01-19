@@ -1,5 +1,6 @@
 package org.example.ast.expression;
 
+import org.example.codeGeneration.CodeGenerator;
 import org.example.semantic.exception.SemanticException;
 import org.example.semantic.symbolTable.scope.AbstractScope;
 import org.example.semantic.type.AbstractType;
@@ -29,5 +30,10 @@ public class EmptyExpression extends AbstractExpression {
     @Override
     public void collectData(AbstractScope currentAbstractScope) {
 
+    }
+
+    @Override
+    public void generate(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        // empty
     }
 }

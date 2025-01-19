@@ -32,14 +32,14 @@ public class CodeGenerator {
         System.out.println(mCodeLabels);
 
         // TODO - zatím provizorně
-//        instructions.stream().forEach(s -> {
-//            for (Map.Entry<String, Long> entry : mCodeLabels.entrySet()) {
-//                if (s.contains(entry.getKey())) s = s.replace(entry.getKey(), entry.getValue().toString());
-//            }
-//            System.out.println(s);
-//        } );
         System.out.println();
-        instructions.forEach(System.out::println);
+        instructions.stream().forEach(s -> {
+            for (Map.Entry<String, Long> entry : mCodeLabels.entrySet()) {
+                if (s.contains(entry.getKey())) s = s.replace(entry.getKey(), entry.getValue().toString());
+            }
+            System.out.println(s);
+        } );
+//        instructions.forEach(System.out::println);
 
     }
 
@@ -76,6 +76,9 @@ public class CodeGenerator {
     }
 
     public int typeSize(String typeStr) {
+        if ("vacuum".equals(typeStr))
+            return 0;
+
         AbstractType type = TypeFactory.fromString(typeStr);
         if (type instanceof FloatType)
             return 2;

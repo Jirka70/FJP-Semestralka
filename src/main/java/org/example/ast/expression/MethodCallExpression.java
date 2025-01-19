@@ -1,5 +1,6 @@
 package org.example.ast.expression;
 
+import org.example.codeGeneration.CodeGenerator;
 import org.example.semantic.exception.SemanticException;
 import org.example.semantic.exception.symbolTableException.UndefinedMethodException;
 import org.example.semantic.symbolTable.descriptor.AbstractDescriptor;
@@ -199,5 +200,61 @@ public class MethodCallExpression extends AbstractExpression {
     @Override
     public void collectData(AbstractScope currentAbstractScope) {
 
+    }
+
+    @Override
+    public void generate(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        System.out.println("Generating method call " + mName);
+
+        List<MethodDescriptor> candidateMethods;
+        List<AbstractType> argsTypes;
+        try {
+            argsTypes = collectArgsTypes(currentAbstractScope);
+            candidateMethods = findAllMatchingMethods(currentAbstractScope);
+        } catch (SemanticException e) {
+            throw new RuntimeException(e); // should not happen in this phase
+        }
+        MethodDescriptor mostSuitableMethod = chooseTheMostSuitableMethod(candidateMethods, argsTypes);
+
+        int retValueSize = generator.typeSize(mostSuitableMethod.mReturnType);
+        generator.addInstruction("INT 0 " + retValueSize); // vyhrazení místa pro návratovou hodnotu
+
+        List<AbstractExpression> realArgs = getRealArguments(currentAbstractScope, mostSuitableMethod);
+        for (AbstractExpression realArg : realArgs) { // vygenerování parametrů
+            realArg.generate(currentAbstractScope, generator);
+        }
+
+        String label = mostSuitableMethod.hashCode() + "_" + mostSuitableMethod.mFullMethodName;
+        generator.addInstruction("CAL 0 " + label);
+
+        int paramsSize = mostSuitableMethod.mFormalVariableDescriptors // odebrání parametrů
+                .stream()
+                .mapToInt(value -> generator.typeSize(value.mType))
+                .sum();
+        generator.addInstruction("INT 0 " + -paramsSize);
+    }
+
+    // Implicit cast
+    private List<AbstractExpression> getRealArguments(AbstractScope currentAbstractScope, MethodDescriptor descriptor) {
+        List<AbstractExpression> realArgs = new ArrayList<>();
+        for (int i = 0; i < descriptor.mFormalVariableDescriptors.size(); i++) {
+            AbstractExpression realArg = mArgs.get(i);
+
+            AbstractType expectedType = TypeFactory.fromString(descriptor.mFormalVariableDescriptors.get(i).mType);
+            AbstractType providedType;
+            try {
+                 providedType = realArg.evaluateType(currentAbstractScope);
+            } catch (SemanticException e) {
+                throw new RuntimeException(e); // should not happen in this phase
+            }
+            if (expectedType instanceof FloatType) {
+                if (!(providedType instanceof FloatType)) {
+                    realArg = new CastExpression(realArg, FloatType.FLOAT_KEYWORD, mLocation);
+                }
+            }
+
+            realArgs.add(realArg);
+        }
+        return realArgs;
     }
 }
