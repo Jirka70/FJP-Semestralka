@@ -51,7 +51,9 @@ public class ElseStatement extends AbstractStatement {
     }
 
     @Override
-    public void generate(AbstractScope currentScope, CodeGenerator generator) {
-        mBody.generate(currentScope, generator);
+    public void generate(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        AbstractSymbol symbol = new StatementSymbol(ELSE_KEYWORD, mLocation);
+        AbstractScope elseAbstractScope = currentAbstractScope.getChildScopeBySymbol(symbol);
+        mBody.generate(elseAbstractScope, generator);
     }
 }

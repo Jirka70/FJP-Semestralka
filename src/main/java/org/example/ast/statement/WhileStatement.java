@@ -1,6 +1,7 @@
 package org.example.ast.statement;
 
 import org.example.ast.expression.AbstractExpression;
+import org.example.codeGeneration.CodeGenerator;
 import org.example.semantic.exception.SemanticException;
 import org.example.semantic.exception.symbolTableException.InvalidStatementException;
 import org.example.semantic.exception.symbolTableException.TypeMismatchException;
@@ -58,5 +59,22 @@ public class WhileStatement extends AbstractStatement {
         currentAbstractScope.addChildScope(whileSymbol, whileAbstractScope);
 
         mBody.collectData(whileAbstractScope);
+    }
+
+    private static final String WHILE_LOOP_START_LABEL_SUFFIX = "while_loop_start";
+    private static final String WHILE_LOOP_END_LABEL_SUFFIX = "while_loop_end";
+    @Override
+    public void generate(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        System.out.println("Generating while loop");
+        AbstractSymbol symbol = new StatementSymbol(WHILE_KEYWORD, mLocation);
+        AbstractScope whileAbstractScope = currentAbstractScope.getChildScopeBySymbol(symbol);
+
+        generator.addCodeLabel(mLocation + WHILE_LOOP_START_LABEL_SUFFIX);
+        mExpression.generate(whileAbstractScope, generator);
+        generator.addInstruction("JMC 0 " + (mLocation + WHILE_LOOP_END_LABEL_SUFFIX));
+
+        mBody.generate(whileAbstractScope, generator);
+        generator.addInstruction("JMP 0 " + (mLocation + WHILE_LOOP_START_LABEL_SUFFIX));
+        generator.addCodeLabel(mLocation + WHILE_LOOP_END_LABEL_SUFFIX);
     }
 }

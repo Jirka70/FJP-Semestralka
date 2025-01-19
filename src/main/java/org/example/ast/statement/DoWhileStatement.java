@@ -1,6 +1,7 @@
 package org.example.ast.statement;
 
 import org.example.ast.expression.AbstractExpression;
+import org.example.codeGeneration.CodeGenerator;
 import org.example.semantic.exception.SemanticException;
 import org.example.semantic.exception.symbolTableException.InvalidStatementException;
 import org.example.semantic.exception.symbolTableException.TypeMismatchException;
@@ -59,5 +60,24 @@ public class DoWhileStatement extends AbstractStatement {
         AbstractSymbol whileSymbol = new StatementSymbol(WHILE_SYMBOL, mLocation);
         currentAbstractScope.addChildScope(whileSymbol, doWhileAbstractScope);
         mBody.collectData(doWhileAbstractScope);
+    }
+
+    private static final String DO_WHILE_LOOP_START_LABEL_SUFFIX = "do_while_loop_start";
+    private static final String DO_WHILE_LOOP_END_LABEL_SUFFIX = "do_while_loop_end";
+
+    @Override
+    public void generate(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        System.out.println("Generating do-while loop");
+        AbstractSymbol doWhileSymbol = new StatementSymbol(WHILE_SYMBOL, mLocation);
+        AbstractScope doWhileAbstractScope = currentAbstractScope.getChildScopeBySymbol(doWhileSymbol);
+
+        mBody.generate(doWhileAbstractScope, generator);
+        generator.addCodeLabel(mLocation + DO_WHILE_LOOP_START_LABEL_SUFFIX);
+        mExpression.generate(doWhileAbstractScope, generator);
+        generator.addInstruction("JMC 0 " + (mLocation + DO_WHILE_LOOP_END_LABEL_SUFFIX));
+
+        mBody.generate(doWhileAbstractScope, generator);
+        generator.addInstruction("JMP 0 " + (mLocation + DO_WHILE_LOOP_START_LABEL_SUFFIX));
+        generator.addCodeLabel(mLocation + DO_WHILE_LOOP_END_LABEL_SUFFIX);
     }
 }

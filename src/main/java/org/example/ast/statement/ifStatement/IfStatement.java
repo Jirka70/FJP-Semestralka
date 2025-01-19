@@ -109,7 +109,9 @@ public class IfStatement extends AbstractStatement {
         generator.addInstruction("JMP 0 " + (mLocation + IF_STATEMENT_END_LABEL_SUFFIX));
 
         generator.addCodeLabel(mLocation + IF_CLAUSE_LABEL_SUFFIX);
-        mBody.generate(currentAbstractScope, generator);
+        AbstractSymbol ifSymbol = new StatementSymbol(IF_KEYWORD, mLocation);
+        AbstractScope ifScope = currentAbstractScope.getChildScopeBySymbol(ifSymbol);
+        mBody.generate(ifScope, generator);
 
         generator.addCodeLabel((mLocation + IF_STATEMENT_END_LABEL_SUFFIX));
     }

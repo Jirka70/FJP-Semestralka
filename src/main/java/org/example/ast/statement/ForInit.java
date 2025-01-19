@@ -1,11 +1,13 @@
 package org.example.ast.statement;
 
 import org.example.ast.expression.ExpressionList;
+import org.example.codeGeneration.CodeGenerator;
+import org.example.codeGeneration.IGeneratable;
 import org.example.semantic.ISemanticallyAnalyzable;
 import org.example.semantic.exception.SemanticException;
 import org.example.semantic.symbolTable.scope.AbstractScope;
 
-public class ForInit implements ISemanticallyAnalyzable {
+public class ForInit implements ISemanticallyAnalyzable, IGeneratable {
     public final ExpressionList mExpressionList;
     public final LocalVariableDeclaration mLocalVariableDeclaration;
 
@@ -50,6 +52,17 @@ public class ForInit implements ISemanticallyAnalyzable {
 
         if (hasExpressionList()) {
             mExpressionList.collectData(currentAbstractScope);
+        }
+    }
+
+    @Override
+    public void generate(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        if (hasLocalVariableDeclaration()) {
+            mLocalVariableDeclaration.generate(currentAbstractScope, generator);
+        }
+
+        if (hasExpressionList()) {
+            mExpressionList.generate(currentAbstractScope, generator);
         }
     }
 }
