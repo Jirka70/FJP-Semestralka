@@ -11,6 +11,7 @@ public class TypeFactory {
         typeMap.put("float", new FloatType());
         typeMap.put("char", new CharType());
         typeMap.put("boolean", new BooleanType());
+        typeMap.put("vacuum", new VoidType());
     }
 
     public static AbstractType fromString(String type) {

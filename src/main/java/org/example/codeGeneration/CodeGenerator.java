@@ -99,14 +99,13 @@ public class CodeGenerator {
     }
 
     public int typeSize(String typeStr) {
-        if ("vacuum".equals(typeStr))
-            return 0;
-
         AbstractType type = TypeFactory.fromString(typeStr);
         if (type instanceof FloatType)
             return 2;
         else if (type instanceof PrimitiveType || type instanceof ObjectType)
             return 1;
+        else if (type instanceof VoidType)
+            return 0;
 
         throw new RuntimeException("Size of type " + type + " is unknown");
     }

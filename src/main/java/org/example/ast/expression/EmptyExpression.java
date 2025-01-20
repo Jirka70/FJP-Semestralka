@@ -4,6 +4,7 @@ import org.example.codeGeneration.CodeGenerator;
 import org.example.semantic.exception.SemanticException;
 import org.example.semantic.symbolTable.scope.AbstractScope;
 import org.example.semantic.type.AbstractType;
+import org.example.semantic.type.VoidType;
 import org.example.util.Location;
 
 public class EmptyExpression extends AbstractExpression {
@@ -14,7 +15,7 @@ public class EmptyExpression extends AbstractExpression {
 
     @Override
     public AbstractType evaluateType(AbstractScope abstractScope) throws SemanticException {
-        return null;
+        return new VoidType();
     }
 
     @Override
