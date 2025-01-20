@@ -61,8 +61,8 @@ public class WhileStatement extends AbstractStatement {
         mBody.collectData(whileAbstractScope);
     }
 
-    private static final String WHILE_LOOP_START_LABEL_SUFFIX = "while_loop_start";
-    private static final String WHILE_LOOP_END_LABEL_SUFFIX = "while_loop_end";
+    public static final String WHILE_LOOP_START_LABEL_SUFFIX = "while_loop_start";
+    public static final String WHILE_LOOP_END_LABEL_SUFFIX = "while_loop_end";
     @Override
     public void generate(AbstractScope currentAbstractScope, CodeGenerator generator) {
         System.out.println("Generating while loop");

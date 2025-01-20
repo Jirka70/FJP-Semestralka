@@ -1,7 +1,6 @@
 package org.example.ast.statement;
 
 import org.example.ast.expression.AbstractExpression;
-import org.example.ast.expression.ExpressionType;
 import org.example.codeGeneration.CodeGenerator;
 import org.example.semantic.exception.SemanticException;
 import org.example.semantic.symbolTable.scope.AbstractScope;
@@ -34,11 +33,6 @@ public class ExpressionStatement extends AbstractStatement {
     @Override
     public void generate(AbstractScope currentScope, CodeGenerator generator) {
         mExpression.generate(currentScope, generator);
-
-//        if (mExpression.mExpressionType.equals(ExpressionType.METHOD_CALL)) {
-//            System.out.println("Removing ignored return value");
-//            // TODO: ignored return value must be ignored
-//        }
 
         // ignore expression return value
         AbstractType resultType;

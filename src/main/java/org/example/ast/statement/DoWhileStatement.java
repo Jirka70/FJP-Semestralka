@@ -62,8 +62,8 @@ public class DoWhileStatement extends AbstractStatement {
         mBody.collectData(doWhileAbstractScope);
     }
 
-    private static final String DO_WHILE_LOOP_START_LABEL_SUFFIX = "do_while_loop_start";
-    private static final String DO_WHILE_LOOP_END_LABEL_SUFFIX = "do_while_loop_end";
+    public static final String DO_WHILE_LOOP_START_LABEL_SUFFIX = "do_while_loop_start";
+    public static final String DO_WHILE_LOOP_END_LABEL_SUFFIX = "do_while_loop_end";
 
     @Override
     public void generate(AbstractScope currentAbstractScope, CodeGenerator generator) {

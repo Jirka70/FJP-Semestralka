@@ -1,6 +1,10 @@
 package org.example.ast.statement;
 
+import org.example.codeGeneration.CodeGenerator;
+import org.example.semantic.exception.symbolTableException.InvalidStatementException;
+import org.example.semantic.symbolTable.descriptor.DescriptorType;
 import org.example.semantic.symbolTable.scope.AbstractScope;
+import org.example.semantic.symbolTable.symbol.StatementSymbol;
 import org.example.util.Location;
 
 import java.util.Arrays;
@@ -34,5 +38,42 @@ public class KeywordStatement extends AbstractStatement {
     @Override
     public String toString() {
         return mType.toString();
+    }
+
+    @Override
+    public void generate(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        AbstractScope tmpScope = currentAbstractScope;
+        DescriptorType tmpDescriptorType = tmpScope.mScopeDescriptor.mDescriptorType;
+        while (true) {
+            boolean shouldBreakLoop = switch (tmpDescriptorType) {
+                case FOR_LOOP, WHILE_LOOP, DO_WHILE, SWITCH -> true;
+                default -> false;
+            };
+
+            if (shouldBreakLoop) break;
+            else {
+                tmpScope = tmpScope.mParentAbstractScope;
+                tmpDescriptorType = tmpScope.mScopeDescriptor.mDescriptorType;
+            }
+        }
+        StatementSymbol statementSymbol = (StatementSymbol) tmpScope.getSymbol();
+
+        String labelSuffix = null;
+        if (mType.equals(StatementKeywordType.BREAK)) {
+            switch (tmpDescriptorType) {
+                case FOR_LOOP -> labelSuffix = ForLoopStatement.FOR_LOOP_END_LABEL_SUFFIX;
+                case WHILE_LOOP -> labelSuffix = WhileStatement.WHILE_LOOP_END_LABEL_SUFFIX;
+                case DO_WHILE -> labelSuffix = DoWhileStatement.DO_WHILE_LOOP_END_LABEL_SUFFIX;
+                case SWITCH -> labelSuffix = SwitchStatement.SWITCH_END_LABEL_SUFFIX;
+            }
+        } else if (mType.equals(StatementKeywordType.CONTINUE)) {
+            switch (tmpDescriptorType) {
+                case FOR_LOOP -> labelSuffix = ForLoopStatement.FOR_LOOP_START_LABEL_SUFFIX;
+                case WHILE_LOOP -> labelSuffix = WhileStatement.WHILE_LOOP_START_LABEL_SUFFIX;
+                case DO_WHILE -> labelSuffix = DoWhileStatement.DO_WHILE_LOOP_START_LABEL_SUFFIX;
+                case SWITCH -> throw new RuntimeException(new InvalidStatementException("Continue inside switch statement"));
+            }
+        }
+        generator.addInstruction("JMP 0 " + (statementSymbol.mLocation + labelSuffix));
     }
 }

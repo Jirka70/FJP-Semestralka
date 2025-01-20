@@ -58,4 +58,6 @@ public class SwitchStatement extends AbstractStatement {
             cases.collectData(switchAbstractScope);
         }
     }
+
+    public static final String SWITCH_END_LABEL_SUFFIX = "switch_end";
 }

@@ -51,8 +51,8 @@ public class ForLoopStatement extends AbstractStatement {
         mBody.collectData(forLoopAbstractScope);
     }
 
-    private static final String FOR_LOOP_START_LABEL_SUFFIX = "for_loop_start";
-    private static final String FOR_LOOP_END_LABEL_SUFFIX = "for_loop_end";
+    public static final String FOR_LOOP_START_LABEL_SUFFIX = "for_loop_start";
+    public static final String FOR_LOOP_END_LABEL_SUFFIX = "for_loop_end";
 
     @Override
     public void generate(AbstractScope currentAbstractScope, CodeGenerator generator) {
