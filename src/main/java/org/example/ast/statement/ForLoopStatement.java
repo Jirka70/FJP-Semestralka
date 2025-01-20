@@ -1,5 +1,6 @@
 package org.example.ast.statement;
 
+import org.example.ast.expression.EmptyExpression;
 import org.example.codeGeneration.CodeGenerator;
 import org.example.semantic.exception.SemanticException;
 import org.example.semantic.exception.symbolTableException.InvalidStatementException;
@@ -63,9 +64,10 @@ public class ForLoopStatement extends AbstractStatement {
             mForLoopControl.mInit.generate(forLoopAbstractScope, generator);
         generator.addCodeLabel(mLocation + FOR_LOOP_START_LABEL_SUFFIX);
 
-        if (mForLoopControl.mEnd != null)
+        if (mForLoopControl.mEnd != null && !(mForLoopControl.mEnd instanceof EmptyExpression)) {
             mForLoopControl.mEnd.generate(forLoopAbstractScope, generator);
-        generator.addInstruction("JMC 0 " + (mLocation + FOR_LOOP_END_LABEL_SUFFIX));
+            generator.addInstruction("JMC 0 " + (mLocation + FOR_LOOP_END_LABEL_SUFFIX));
+        }
 
         mBody.generate(forLoopAbstractScope, generator);
         if (mForLoopControl.mUpdate != null)
