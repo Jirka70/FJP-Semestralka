@@ -1,6 +1,8 @@
 package org.example.ast.statement;
 
 import org.example.ast.expression.AbstractExpression;
+import org.example.ast.expression.CastExpression;
+import org.example.codeGeneration.CodeGenerator;
 import org.example.semantic.exception.SemanticException;
 import org.example.semantic.exception.symbolTableException.InvalidStatementException;
 import org.example.semantic.exception.symbolTableException.TypeMismatchException;
@@ -8,6 +10,7 @@ import org.example.semantic.symbolTable.descriptor.AbstractDescriptor;
 import org.example.semantic.symbolTable.descriptor.MethodDescriptor;
 import org.example.semantic.symbolTable.scope.AbstractScope;
 import org.example.semantic.type.AbstractType;
+import org.example.semantic.type.FloatType;
 import org.example.semantic.type.TypeFactory;
 import org.example.util.Location;
 
@@ -59,4 +62,37 @@ public class ReturnStatement extends AbstractStatement {
 
     }
 
+    @Override
+    public void generate(AbstractScope currentAbstractScope, CodeGenerator generator) {
+        AbstractExpression realReturnValue = mExpression;
+        MethodDescriptor methodDescriptor;
+        AbstractType providedType;
+        try {
+            methodDescriptor = obtainMethodDescriptor(currentAbstractScope);
+            providedType = mExpression.evaluateType(currentAbstractScope);
+        } catch (SemanticException e) {
+            throw new RuntimeException(e); // should not happen in this phase
+        }
+        AbstractType expectedType = TypeFactory.fromString(methodDescriptor.mReturnType);
+
+        if (expectedType instanceof FloatType) {
+            if (!(providedType instanceof FloatType)) {
+                realReturnValue = new CastExpression(realReturnValue, FloatType.FLOAT_KEYWORD, mLocation);
+            }
+        }
+
+        realReturnValue.generate(currentAbstractScope, generator);
+
+        int retValueSize = generator.typeSize(methodDescriptor.mReturnType);
+        int paramsSize = methodDescriptor.mFormalVariableDescriptors
+                .stream()
+                .mapToInt(value -> generator.typeSize(value.mType))
+                .sum();
+        int retAddress = -paramsSize - retValueSize;
+        for (int i = 0; i < retValueSize; i++) {
+            generator.addInstruction("STO 0 " + (retAddress + i));
+        }
+
+        generator.addInstruction("RET 0 0");
+    }
 }
