@@ -77,7 +77,7 @@ public class IdentifierExpression extends PrimaryExpression {
 
         int variableAddress = generator.getStackFrameAddress(varDescriptor.mName);
         int variableSize = generator.typeSize(varDescriptor.mType);
-        for (int i = variableSize - 1; i >= 0; i--) {
+        for (int i = 0; i < variableSize; i++) {
             generator.addInstruction("LOD 0 " + (variableAddress + i));
         }
     }

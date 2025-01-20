@@ -89,7 +89,7 @@ public class ReturnStatement extends AbstractStatement {
                 .mapToInt(value -> generator.typeSize(value.mType))
                 .sum();
         int retAddress = -paramsSize - retValueSize;
-        for (int i = 0; i < retValueSize; i++) {
+        for (int i = retValueSize - 1; i >= 0; i--) {
             generator.addInstruction("STO 0 " + (retAddress + i));
         }
 

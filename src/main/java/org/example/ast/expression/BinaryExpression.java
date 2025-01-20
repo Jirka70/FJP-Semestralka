@@ -168,7 +168,7 @@ public class BinaryExpression extends AbstractExpression {
 
         int variableAddress = generator.getStackFrameAddress(varDescriptor.mName);
         int variableSize = generator.typeSize(varDescriptor.mType);
-        for (int i = 0; i < variableSize; i++) {
+        for (int i = variableSize - 1; i >= 0; i--) {
             generator.addInstruction("STO 0 " + (variableAddress + i));
         }
 

@@ -188,10 +188,11 @@ public class MethodPrimitive implements ISemanticallyAnalyzable, IGeneratable {
         for (ParameterPrimitive param : mParameters.mParameters) {
             int paramAddress = generator.getStackFrameAddress(param.mName);
             int paramSize = generator.typeSize(param.mDeclaredType);
-            for (int i = paramSize - 1; i >= 0; i--) {
+            for (int i = 0; i < paramSize; i++) {
                 generator.addInstruction("LOD 0 " + (argAddress + i));
             }
-            for (int i = 0; i < paramSize; i++) {
+
+            for (int i = paramSize - 1; i >= 0; i--) {
                 generator.addInstruction("STO 0 " + (paramAddress + i));
             }
 
