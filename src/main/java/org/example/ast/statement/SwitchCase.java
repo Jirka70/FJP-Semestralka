@@ -17,7 +17,7 @@ import java.util.List;
 
 public class SwitchCase implements ISemanticallyAnalyzable {
     private static final String KEYWORD_CASE = "case";
-    public final AbstractExpression mExpression;
+    public final AbstractExpression mExpression; // null means default case
     public final List<AbstractBlockStatement> mBody = new ArrayList<>();
     public final Location mLocation;
 
