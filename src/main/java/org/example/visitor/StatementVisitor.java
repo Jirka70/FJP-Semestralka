@@ -174,15 +174,16 @@ public class StatementVisitor extends IavaParserBaseVisitor<AbstractStatement> {
         for (IavaParser.SwitchBlockStatementGroupContext group : ctx.switchBlockStatementGroup()) {
             List<AbstractBlockStatement> groupStatements = new ArrayList<>();
             for (IavaParser.BlockStatementContext blockCtx : group.blockStatement()) {
-                groupStatements.add(visit(blockCtx));
+                groupStatements.add(new BlockStatementVisitor().visit(blockCtx));
             }
 
             for (IavaParser.SwitchLabelContext lbl : group.switchLabel()) {
+                Location lblLocation = new Location(lbl.start.getLine(), lbl.start.getCharPositionInLine());
                 AbstractExpression caseExpression = lbl.constantExpression == null
                         ? null
                         : new ExpressionVisitor().visit(lbl.constantExpression);
 
-                SwitchCase swCase = new SwitchCase(caseExpression, groupStatements, getStatementLocation(ctx));
+                SwitchCase swCase = new SwitchCase(caseExpression, groupStatements, lblLocation);
                 cases.add(swCase);
             }
         }

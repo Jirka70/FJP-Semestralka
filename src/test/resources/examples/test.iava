@@ -1,0 +1,26 @@
+class Trida {
+    boolean bool = verus || 1 >= 0;
+    finalis float a = 3;
+    char c = 3;
+    int ahoj;
+
+    vacuum metoda(float pepa, int jirka) {
+        //a += 1f;
+        int a = 32;
+        a++;
+    }
+
+    vacuum ahoj(char c, int a, float b, float d) {
+        trivium (c) {
+            casus 'v':
+                int pepa = 32;
+                finalis int zuzka = pepa++;
+                subsiste;
+            casus 'g':
+                boolean p = falsus;
+                subsiste;
+            defaltam:
+                subsiste;
+        }
+    }
+}

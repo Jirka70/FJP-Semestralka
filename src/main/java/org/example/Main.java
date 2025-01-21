@@ -53,7 +53,13 @@ public class Main {
         AppVisitor visitor = new AppVisitor();
         AST ast = visitor.visit(tree); // TODO make semantic analyze
         SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer(ast);
-        semanticAnalyzer.analyse();
+        try {
+
+            semanticAnalyzer.analyse();
+        } catch (SemanticException e) {
+            e.printStackTrace();
+            return;
+        }
 
         CodeGenerator generator = new CodeGenerator(ast);
 
