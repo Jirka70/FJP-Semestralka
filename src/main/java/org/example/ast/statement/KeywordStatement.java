@@ -1,7 +1,9 @@
 package org.example.ast.statement;
 
 import org.example.codeGeneration.CodeGenerator;
+import org.example.semantic.exception.SemanticException;
 import org.example.semantic.exception.symbolTableException.InvalidStatementException;
+import org.example.semantic.symbolTable.descriptor.AbstractDescriptor;
 import org.example.semantic.symbolTable.descriptor.DescriptorType;
 import org.example.semantic.symbolTable.scope.AbstractScope;
 import org.example.semantic.symbolTable.symbol.StatementSymbol;
@@ -9,10 +11,58 @@ import org.example.util.Location;
 
 import java.util.Arrays;
 
+import org.example.ast.statement.StatementType;
+
 public class KeywordStatement extends AbstractStatement {
     @Override
-    public void analyze(AbstractScope abstractScope) {
+    public void analyze(AbstractScope abstractScope) throws SemanticException {
+        if (mType == StatementKeywordType.BREAK) {
+            analyzeBreak(abstractScope);
+        } else if (mType == StatementKeywordType.CONTINUE) {
+            analyzeContinue(abstractScope);
+        }
+    }
 
+    private void analyzeContinue(AbstractScope abstractScope) throws SemanticException {
+        AbstractScope currentScope = abstractScope;
+
+        while (currentScope.hasParent()) {
+            AbstractDescriptor currentSCopeDescriptor = currentScope.mScopeDescriptor;
+            DescriptorType currentScopeDescriptorType = currentSCopeDescriptor.mDescriptorType;
+            boolean camBeApplied = switch (currentScopeDescriptorType) {
+                case FOR_LOOP, WHILE_LOOP, DO_WHILE -> true;
+                default -> false;
+            };
+
+            if (camBeApplied) {
+                return;
+            }
+
+            currentScope = currentScope.mParentAbstractScope;
+        }
+
+        throw new InvalidStatementException("Continue keyword cannot be used outside of loop on " + mLocation);
+    }
+
+    private void analyzeBreak(AbstractScope abstractScope) throws SemanticException {
+        AbstractScope currentScope = abstractScope;
+
+        while (currentScope.hasParent()) {
+            AbstractDescriptor currentSCopeDescriptor = currentScope.mScopeDescriptor;
+            DescriptorType currentScopeDescriptorType = currentSCopeDescriptor.mDescriptorType;
+            boolean camBeApplied = switch (currentScopeDescriptorType) {
+                case FOR_LOOP, WHILE_LOOP, DO_WHILE, SWITCH -> true;
+                default -> false;
+            };
+
+            if (camBeApplied) {
+                return;
+            }
+
+            currentScope = currentScope.mParentAbstractScope;
+        }
+
+        throw new InvalidStatementException("Break keyword cannot be used outside of loop or switch on " + mLocation);
     }
 
     @Override
