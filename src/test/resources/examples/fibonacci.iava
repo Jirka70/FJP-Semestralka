@@ -1,0 +1,10 @@
+class Fibonnaci {
+
+    int calculateFibonacci(int n) {
+        si (n <= 2) {
+            redi n;
+        }
+
+        redi calculateFibonacci(n - 1) + calculateFibonacci(n - 2);
+    }
+}

@@ -1,0 +1,9 @@
+class SemanticError {
+    finalis boolean b = 'c' == 98;
+    int ahoj;
+
+    vacuum foo(int a, int b, float c) {
+        apple %= 900;
+        int apple = 3;
+    }
+}

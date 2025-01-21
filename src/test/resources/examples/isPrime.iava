@@ -1,0 +1,18 @@
+class Prime {
+
+    boolean isPrime(int n) {
+        si (n == 1) {
+            redi falsus;
+        }
+
+        int numberOfDividors = 0;
+
+        pro (int i = 1; i < n; i++) {
+            si (n % i == 0) {
+                numberOfDividors++;
+            }
+        }
+
+        redi numberOfDividors == 2;
+    }
+}
