@@ -150,7 +150,7 @@ identifier
 
 statement
     : blockLabel = block
-    | IF parExpression '{' statement '}' (ELSE statement)?
+    | IF parExpression statement (ELSE statement)?
     | FOR '(' forControl ')' statement
     | WHILE parExpression statement
     | DO statement WHILE parExpression ';'
