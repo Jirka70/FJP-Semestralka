@@ -78,6 +78,10 @@ public class MethodPrimitive implements ISemanticallyAnalyzable, IGeneratable {
 
     private AbstractBlockStatement getLastMethodStatement() {
         int size = mMethodBody.mBlockStatements.size();
+        if (size == 0) {
+            return null;
+        }
+
         return mMethodBody.mBlockStatements.get(size - 1);
     }
 
@@ -90,7 +94,6 @@ public class MethodPrimitive implements ISemanticallyAnalyzable, IGeneratable {
         List<VariableDescriptor> formalParametersDescriptors = createFormalParametersDescriptors();
         AbstractDescriptor methodDescriptor = new MethodDescriptor(mName, mDeclaredReturnType,
                 formalParametersDescriptors, getFullMethodName(classAbstractScope));
-
 
         AbstractScope methodScope = new BlockScope(classAbstractScope, methodDescriptor);
         AbstractSymbol methodSymbol = new MethodSymbol(mName, mParameters.collectParameterTypesFromMethod());

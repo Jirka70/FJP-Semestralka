@@ -4,23 +4,22 @@ import org.example.ast.expression.AbstractExpression;
 import org.example.ast.expression.EmptyExpression;
 import org.example.semantic.ISemanticallyAnalyzable;
 import org.example.semantic.exception.SemanticException;
-import org.example.semantic.exception.symbolTableException.UndefinedTypeException;
-import org.example.semantic.exception.symbolTableException.UnknownModifierException;
-import org.example.semantic.exception.symbolTableException.UnsupportedNameException;
-import org.example.semantic.exception.symbolTableException.VariableAlreadyDefinedException;
+import org.example.semantic.exception.symbolTableException.*;
 import org.example.semantic.symbolTable.descriptor.AbstractDescriptor;
 import org.example.semantic.symbolTable.descriptor.VariableDescriptor;
 import org.example.semantic.symbolTable.scope.AbstractScope;
 import org.example.semantic.symbolTable.symbol.AbstractSymbol;
 import org.example.semantic.symbolTable.symbol.TypeSymbol;
 import org.example.semantic.symbolTable.symbol.VariableSymbol;
+import org.example.semantic.type.AbstractType;
+import org.example.semantic.type.TypeFactory;
 import org.example.util.Location;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Variable implements ISemanticallyAnalyzable {
-    private static final String FINAL_KEYWORD = "finalis";
+    protected static final String FINAL_KEYWORD = "finalis";
 
     public final List<String> mModifiers = new ArrayList<>();
     public final String mDeclaredType;
@@ -47,10 +46,6 @@ public class Variable implements ISemanticallyAnalyzable {
         return mModifiers.contains(FINAL_KEYWORD);
     }
 
-    public boolean hasModifier() {
-        return mModifiers.isEmpty();
-    }
-
     @Override
     public String toString() {
         return  mModifiers + " " + mDeclaredType + " " + mName + (mExpression != null ? " = " + mExpression : "");
@@ -69,9 +64,32 @@ public class Variable implements ISemanticallyAnalyzable {
             }
         }
 
-        if (mExpression != null) {
-            mExpression.analyze(abstractScope);
+        AbstractSymbol symbol = new VariableSymbol(mName);
+        AbstractDescriptor descriptor = abstractScope.getSymbolDescriptorOnLocation(symbol, mLocation);
+        if (!(descriptor instanceof VariableDescriptor)) {
+            throw new UndefinedVariableException("Variable " + mName + " is not variable on " + mLocation);
         }
+
+        if (isFinal() && !isAssigned()) {
+            throw new VariableNotAssignedException("Variable cannot be unassigned and be marked as finalis on " + mLocation);
+        }
+
+        if (!isAssigned()) {
+            return;
+        }
+
+        AbstractType type = mExpression.evaluateType(abstractScope);
+        AbstractType expectedType = TypeFactory.fromString(mDeclaredType);
+
+        if (!type.canBeAssignedTo(expectedType)) {
+            throw new TypeMismatchException("Type \""
+                    + type.mName
+                    + "\" cannot be assigned to \""
+                    + expectedType.mName
+                    + "\" on " + mLocation);
+        }
+
+        mExpression.analyze(abstractScope);
     }
 
     public boolean isAssigned() {

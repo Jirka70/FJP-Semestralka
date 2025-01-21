@@ -6,6 +6,7 @@ import org.example.semantic.exception.SemanticException;
 import org.example.semantic.exception.symbolTableException.FinalVariableOverwrittenException;
 import org.example.semantic.exception.symbolTableException.TypeMismatchException;
 import org.example.semantic.exception.symbolTableException.UndefinedIdentifierException;
+import org.example.semantic.exception.symbolTableException.UndefinedVariableException;
 import org.example.semantic.symbolTable.descriptor.AbstractDescriptor;
 import org.example.semantic.symbolTable.descriptor.VariableDescriptor;
 import org.example.semantic.symbolTable.scope.AbstractScope;
@@ -94,6 +95,28 @@ public class BinaryExpression extends AbstractExpression {
             validateInequalityOperator(leftType, rightType);
         } else if (operator.isLogicalType()) {
             validateLogicalOperator(leftType, rightType);
+        } else if (operator == ExpressionType.ASSIGN) {
+            if (mLeftExpression instanceof IdentifierExpression identifierExpression) {
+                String name = identifierExpression.mIdentifier;
+                AbstractSymbol symbol = new VariableSymbol(name);
+                AbstractDescriptor descriptor = abstractScope.getSymbolDescriptorOnLocation(symbol, mLocation);
+                if (!(descriptor instanceof VariableDescriptor variableDescriptor)) {
+                    throw new UndefinedVariableException("Variable "
+                            + identifierExpression.mIdentifier
+                            + " is not variable on " + mLocation);
+                }
+
+                if (variableDescriptor.mIsFinal) {
+                    throw new FinalVariableOverwrittenException("Variable "
+                            + name + " is finalis and cannot be overwritten on "
+                            + mLocation);
+                }
+
+                variableDescriptor.assignValue();
+            }
+
+            mRightExpression.analyze(abstractScope);
+            return;
         }
 
         if (mLeftExpression instanceof IdentifierExpression identifierExpression) {

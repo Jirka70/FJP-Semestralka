@@ -58,7 +58,7 @@ public class IdentifierExpression extends PrimaryExpression {
             throw new UndefinedVariableException("Symbol " + symbol.mName + " is not a variable on " + mLocation);
         }
 
-        if (!variableDescriptor.mIsAssigned) {
+        if (!variableDescriptor.isAssigned()) {
             throw new VariableNotAssignedException("Variable '" + mIdentifier
                     + "' is not assigned and cannot be used in expression on " + mLocation);
         }

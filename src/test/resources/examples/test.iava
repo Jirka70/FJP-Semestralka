@@ -10,7 +10,7 @@ class Trida {
         a++;
     }
 
-    vacuum ahoj(char c, int a, float c, float d) {
-
+    vacuum ahoj(char c, int a, float b, float d) {
+        persevera;
     }
 }
