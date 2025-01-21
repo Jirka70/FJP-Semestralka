@@ -159,6 +159,18 @@ public class BinaryExpression extends AbstractExpression {
         System.out.println("Generating variable assignment " + this);
         Pair<AbstractExpression, AbstractExpression> operands = getOperands(currentAbstractScope);
 
+        if (operands.a instanceof ArrayExpression) {
+            ((ArrayExpression) operands.a).mIdentifier.generate(currentAbstractScope, generator);
+            generator.addInstruction("LIT 0 1"); // skip length
+            generator.addInstruction("OPR 0 2");
+            ((ArrayExpression) operands.a).mIndex.generate(currentAbstractScope, generator);
+            generator.addInstruction("OPR 0 2");
+
+            operands.b.generate(currentAbstractScope, generator);
+            generator.addInstruction("STA 0 0");
+            return;
+        }
+
         operands.b.generate(currentAbstractScope, generator);
 
         String varName = ((IdentifierExpression) operands.a).mIdentifier;

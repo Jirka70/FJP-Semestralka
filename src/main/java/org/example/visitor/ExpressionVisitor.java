@@ -25,6 +25,10 @@ public class ExpressionVisitor extends IavaParserBaseVisitor<AbstractExpression>
             return extractUnaryExpression(ctx);
         } else if (isMethodCallExpression(ctx)) {
             return extractMethodCallExpression(ctx);
+        } else if (isObjectCreation(ctx)) {
+            return extractObjectCreation(ctx);
+        } else if (isArrayIndex(ctx)) {
+            return extractArrayIndex(ctx);
         }
 
         throw new IllegalArgumentException("Type of expression " + ctx.getText() + " not recognized");
@@ -166,5 +170,32 @@ public class ExpressionVisitor extends IavaParserBaseVisitor<AbstractExpression>
 
         return new TernaryExpression(conditionExpression, trueBranchExpression, falseBranchExpression,
                 getExpresssionLocation(ctx));
+    }
+
+    private AbstractExpression extractArrayIndex(IavaParser.ExpressionContext ctx) {
+        return new ArrayExpression(visit(ctx.expression(0)), visit(ctx.expression(1)), getExpresssionLocation(ctx));
+    }
+
+    private boolean isArrayIndex(IavaParser.ExpressionContext ctx) {
+        return ctx.LBRACK() != null && ctx.RBRACK() != null;
+    }
+
+    private AbstractExpression extractObjectCreation(IavaParser.ExpressionContext ctx) {
+        String createdName = ctx.creator().createdName().getText();
+        IavaParser.ArrayCreatorRestContext restContext = ctx.creator().arrayCreatorRest();
+        if (!restContext.expression().isEmpty()) {
+            AbstractExpression sizeExpression = visit(restContext.expression(0));
+            return new ArrayCreationExpression(createdName, sizeExpression, getExpresssionLocation(ctx));
+        } else {
+            IavaParser.ArrayInitializerContext initCtx = restContext.arrayInitializer();
+            List<AbstractExpression> initializer = new ArrayList<>();
+            for (IavaParser.VariableInitializerContext varInitCtx : initCtx.variableInitializer())
+                initializer.add(visit(varInitCtx.expression()));
+            return new ArrayCreationExpression(createdName, initializer, getExpresssionLocation(ctx));
+        }
+    }
+
+    private boolean isObjectCreation(IavaParser.ExpressionContext ctx) {
+        return ctx.creator() != null;
     }
 }
