@@ -4,6 +4,10 @@ class Trida {
     char c = 3;
     int ahoj;
 
+    vacuum a() {
+        redi 3;
+    }
+
     vacuum main() {
         //a += 1f;
         int a = 32;

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IavaSyntaxErrorListener extends BaseErrorListener {
+    private static final int EXIT_STATUS = 1;
     public final List<ErrorHandleStrategy> mErrorHandleStrategies = new ArrayList<>();
 
     public IavaSyntaxErrorListener() {
@@ -28,10 +29,11 @@ public class IavaSyntaxErrorListener extends BaseErrorListener {
         for (ErrorHandleStrategy errorHandleStrategy : mErrorHandleStrategies) {
             if (errorHandleStrategy.canHandleError(recognizer, offendingSymbol, line, charPositionInLine, msg, e)) {
                 errorHandleStrategy.handleError(recognizer, offendingSymbol, line, charPositionInLine, msg, e);
-                return;
+                System.exit(EXIT_STATUS);
             }
         }
 
         System.err.println("Unexpected syntax error: " + msg + " on line: " + line + ":" + charPositionInLine);
+        System.exit(EXIT_STATUS);
     }
 }

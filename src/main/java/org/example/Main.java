@@ -54,10 +54,9 @@ public class Main {
         AST ast = visitor.visit(tree);
         SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer(ast);
         try {
-
             semanticAnalyzer.analyse();
         } catch (SemanticException e) {
-            e.printStackTrace();
+            System.err.println(e.getClass().getSimpleName() + ": " + e.getMessage());
             return;
         }
 

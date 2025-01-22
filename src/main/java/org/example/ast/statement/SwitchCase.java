@@ -3,13 +3,7 @@ package org.example.ast.statement;
 import org.example.ast.expression.AbstractExpression;
 import org.example.semantic.ISemanticallyAnalyzable;
 import org.example.semantic.exception.SemanticException;
-import org.example.semantic.exception.symbolTableException.InvalidStatementException;
-import org.example.semantic.symbolTable.descriptor.AbstractDescriptor;
-import org.example.semantic.symbolTable.descriptor.CaseDescriptor;
 import org.example.semantic.symbolTable.scope.AbstractScope;
-import org.example.semantic.symbolTable.scope.BlockScope;
-import org.example.semantic.symbolTable.symbol.AbstractSymbol;
-import org.example.semantic.symbolTable.symbol.StatementSymbol;
 import org.example.util.Location;
 
 import java.util.ArrayList;
