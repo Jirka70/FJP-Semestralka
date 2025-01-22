@@ -167,7 +167,7 @@ public class MethodPrimitive implements ISemanticallyAnalyzable, IGeneratable {
         mMethodBody.generate(methodAbstractScope, generator);
 
         generator.addInstruction("RET 0 0");
-        System.out.println(generator.mCurrentStackFrameMappings);
+        System.out.println("Stack frame mappings: " + generator.mCurrentStackFrameMappings);
     }
 
     private String getFullMethodName(AbstractScope currentAbstractScope) {

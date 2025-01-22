@@ -29,7 +29,7 @@ public class CodeGenerator {
         System.out.println("-------------------------------");
         System.out.println("Code generation started");
         mGeneratableNode.generate(rootScope, this);
-        System.out.println(mCodeLabels);
+        System.out.println("Code labels: " + mCodeLabels);
 
 
         List<String> labeledInstructions = new ArrayList<>();
@@ -57,7 +57,8 @@ public class CodeGenerator {
         String labeledInstruction = instruction;
         for (Map.Entry<String, Long> entry : mCodeLabels.entrySet()) {
             String label = entry.getKey();
-            if (instruction.contains(label)) {
+            final int LABEL_POSITION = 2;
+            if (instruction.split(" ")[LABEL_POSITION].equals(label)) {
                 Long labelValue = entry.getValue();
                 String labelValueStr = labelValue.toString();
                 labeledInstruction = labeledInstruction.replace(label, labelValueStr);
