@@ -1,0 +1,9 @@
+class Literals {
+
+    vacuum main() {
+        char c = 'c'; // char literal
+        int i = 1 + 0xF + 0_1 + 0b1; // decimal, hex, oct and binary literals
+        float f = 1.1 + 1.0f + 1e1 + 0x1p4; // float and hex float literals
+        boolean b = verus; //boolean literal
+    }
+}

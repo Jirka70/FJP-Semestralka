@@ -1,0 +1,33 @@
+class Expressions {
+
+    vacuum main() {
+        int a = +1; // unary plus
+        int b = -1; // unary minus
+
+        // preinc, predec, postinc, postdec
+        int tmp = 10;
+        int preinc = ++tmp;
+        int postinc = tmp++;
+
+        int bitwiseNegation = ~1; // bitwise negation
+        boolean logicalNegation = !falsus; // logical negation
+
+
+        int c = a + b; // arithmetic +, -, *, /, %
+        boolean relational = 5 == 5; // relational ==, != <, <=, >, >=
+        boolean logical = falsus && verus; // logical &&, ||
+        int compoundAssign = 1; compoundAssign += 4; // assignment =, +=, -=, *=, /=, %=
+        int a1 = 0, a2 = 0, a3 = 2;
+        a1 = a2 = a3; // multiple assignment
+
+
+        int ternary = a > b ? 4 : 5; // ternary
+
+
+        int cast = (int) 7.0f; // cast
+        int parentheses = (1 + 2); // parentheses
+        int[] pole = novus int[] {1, 2, 3, 4, 5}; // initializer
+        int zpole = pole[1]; // index
+        pole[1] = 20;
+    }
+}

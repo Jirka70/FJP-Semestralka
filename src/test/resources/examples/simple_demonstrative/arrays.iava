@@ -1,0 +1,21 @@
+class Arrays {
+
+    vacuum main() {
+        int[] pole1 = novus int[7]; // constant-length array
+
+        int a = 4;
+        int[] pole2 = novus int[a + 1]; // variable-length array
+
+        initArray(pole2, a + 1); // method call with array as an argument
+        int index1 = pole2[1]; // indexation
+        pole2[4] = 10;
+
+        int[] pole3 = novus int[] {1, 2, 3, 4, a * 2}; // initializer
+    }
+
+    vacuum initArray(int[] pole, int length) {
+        pro (int i = 0; i < length; i++) {
+            pole[i] = i;
+        }
+    }
+}

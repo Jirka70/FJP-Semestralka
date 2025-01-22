@@ -1,0 +1,22 @@
+class Switch {
+
+    vacuum main() {
+        int a = 5;
+        int result = 1;
+
+        trivium (a) { // switch statement
+            casus 0:
+            casus 1:
+                result++;
+            casus 4:
+            casus 5:
+                result++; // fall through
+            casus 6:
+            casus 7:
+                result++;
+                subsiste;
+            defaltam: // default case
+                result = 0;
+        }
+    }
+}

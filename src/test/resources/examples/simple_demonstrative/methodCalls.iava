@@ -1,0 +1,20 @@
+class MethodCalls {
+
+    vacuum main() {
+        procedure(); // without arguments, without return value
+        int result = function(1, 1); // with arguments and return value (can be ignored)
+    }
+
+    vacuum procedure() {
+        int a = 1;
+        redi; // optional return statement
+    }
+
+    int function(int a, int b) {
+        redi a + b;
+    }
+
+   int function(int a) { // function overloading
+        redi a;
+   }
+}

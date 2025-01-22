@@ -1,0 +1,25 @@
+class BreakAndContinue {
+
+    vacuum main() {
+        int i = 0;
+        dum (verus) {
+            si (i == 5) {
+                subsiste; // break
+            }
+            i++;
+        }
+
+        int j = 0;
+        int jCopy = 0; // testing of assignment in expression
+        int sum = 0;
+        dum ((jCopy = j) < 5) {
+            si (j == 2) {
+                j++;
+                persevera; // continue
+            }
+
+            sum += j;
+            j++;
+        }
+    }
+}

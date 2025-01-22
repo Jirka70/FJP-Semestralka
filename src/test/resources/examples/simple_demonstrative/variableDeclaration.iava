@@ -1,0 +1,9 @@
+class VariableDeclaration {
+
+    vacuum main() {
+        int a, b = 4, c = 5; // multiple variables declaration
+        a = b; // late variable initialization
+
+        finalis int f = 1; // final variable
+    }
+}

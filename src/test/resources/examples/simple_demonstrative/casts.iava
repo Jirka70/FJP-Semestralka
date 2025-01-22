@@ -1,0 +1,15 @@
+class Casts {
+
+    vacuum main() {
+        float f = 1; // implicit cast
+        float result = metoda(1); // implicit parameter cast
+
+        float f2 = 2.1;
+        int i = (int) f2; // explicit cast
+    }
+
+    float metoda(float f) {
+        char retValue = 'a';
+        redi retValue; // implicit return value cast
+    }
+}

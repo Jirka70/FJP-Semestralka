@@ -1,0 +1,17 @@
+class Ifs {
+
+    vacuum main() {
+        int a = 2;
+
+        si (a < 5) { // if
+            int b = 4;
+            a = b;
+        }
+
+        si (a < 2) { // if-else
+            a++;
+        } aliter {
+            a--;
+        }
+    }
+}
