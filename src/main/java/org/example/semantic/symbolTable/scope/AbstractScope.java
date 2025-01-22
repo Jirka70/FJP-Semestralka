@@ -21,6 +21,9 @@ public abstract class AbstractScope {
         mDefinedDataTypes.add("boolean");
         mDefinedDataTypes.add("String");
         mDefinedDataTypes.add("nullus");
+        mDefinedDataTypes.add("int[]");
+        mDefinedDataTypes.add("char[]");
+        mDefinedDataTypes.add("boolean[]");
     }
 
     public AbstractScope(AbstractScope parentScope, AbstractDescriptor descriptor) {

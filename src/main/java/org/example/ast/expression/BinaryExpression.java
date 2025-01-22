@@ -191,6 +191,7 @@ public class BinaryExpression extends AbstractExpression {
 
             operands.b.generate(currentAbstractScope, generator);
             generator.addInstruction("STA 0 0");
+            generator.addInstruction("INT 0 1");
             return;
         }
 
