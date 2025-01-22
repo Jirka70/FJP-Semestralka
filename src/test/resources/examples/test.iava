@@ -4,7 +4,7 @@ class Trida {
     char c = 3;
     int ahoj;
 
-    vacuum metoda(float pepa, int jirka) {
+    vacuum main() {
         //a += 1f;
         int a = 32;
         a++;

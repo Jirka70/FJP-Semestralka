@@ -1,7 +1,11 @@
 class Fibonnaci {
 
+    vacuum main() {
+        int result = calculateFibonacci(10);
+    }
+
     int calculateFibonacci(int n) {
-        si (n <= 2) {
+        si (n <= 1) {
             redi n;
         }
 

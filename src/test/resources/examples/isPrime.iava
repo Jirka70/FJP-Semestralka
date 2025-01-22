@@ -1,5 +1,9 @@
 class Prime {
 
+    vacuum main() {
+        boolean result = isPrime(11);
+    }
+
     boolean isPrime(int n) {
         si (n == 1) {
             redi falsus;
@@ -7,7 +11,7 @@ class Prime {
 
         int numberOfDividors = 0;
 
-        pro (int i = 1; i < n; i++) {
+        pro (int i = 1; i <= n; i++) {
             si (n % i == 0) {
                 numberOfDividors++;
             }
