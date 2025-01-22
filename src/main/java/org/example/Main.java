@@ -21,7 +21,7 @@ public class Main {
     private static final int EXPECTED_ARGS_COUNT = 2;
     private static final char BREAK_LINE = '\n';
 
-    public static void main(String[] args) throws SemanticException {
+    public static void main(String[] args) {
         if (args.length != EXPECTED_ARGS_COUNT) {
             System.out.println("Expected "
                     + EXPECTED_ARGS_COUNT
@@ -51,7 +51,7 @@ public class Main {
 
         ParseTree tree = parser.compilationUnit();
         AppVisitor visitor = new AppVisitor();
-        AST ast = visitor.visit(tree); // TODO make semantic analyze
+        AST ast = visitor.visit(tree);
         SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer(ast);
         try {
 

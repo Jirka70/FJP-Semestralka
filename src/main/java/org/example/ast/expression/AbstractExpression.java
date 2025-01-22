@@ -1,6 +1,5 @@
 package org.example.ast.expression;
 
-import org.example.codeGeneration.CodeGenerator;
 import org.example.codeGeneration.IGeneratable;
 import org.example.semantic.ISemanticallyAnalyzable;
 import org.example.semantic.exception.SemanticException;
@@ -22,9 +21,4 @@ public abstract class AbstractExpression implements ISemanticallyAnalyzable, IGe
     @Override
     public abstract String toString();
 
-    @Override
-    public void generate(AbstractScope currentAbstractScope, CodeGenerator generator) {
-        throw new RuntimeException("Generate not implemented for " + this);
-        // TODO: smazat až bude všude implementováno
-    }
 }

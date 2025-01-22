@@ -22,17 +22,6 @@ public class ParameterPrimitive extends Variable {
 
     @Override
     public void collectData(AbstractScope currentAbstractScope) throws SemanticException {
-        switch ('a') {
-            case 'v':
-                int pepa = 32;
-                final int zuzka = pepa++;
-                break;
-            case 'g':
-                boolean p = false;
-                break;
-            default:
-                break;
-        }
         TypeSymbol typeSymbol = new TypeSymbol(mDeclaredType);
         if (!currentAbstractScope.isTypeDefined(typeSymbol)) {
             throw new UndefinedTypeException("Type " + mDeclaredType + " is not defined in current scope on " + mLocation);

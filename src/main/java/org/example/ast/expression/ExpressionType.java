@@ -27,7 +27,7 @@ public enum ExpressionType {
     IDENTIFIER,
     LITERAL, EMPTY, AND("&&"), OR("||"), NOT_EQUAL_TO("!="), PLUS_EQUALS("+="),
         MINUS_EQUALS("-="), MULTIPLY_EQUALS("*="), DIVIDE_EQUALS("/="),
-        MODULO_EQUALS("%="), ARRAY_CREATION, INDEX; // TODO: doplnit chybejici typy
+        MODULO_EQUALS("%="), ARRAY_CREATION, INDEX;
 
     public final String mOperator;
 

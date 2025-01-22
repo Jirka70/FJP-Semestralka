@@ -15,7 +15,7 @@ public class CodeGenerator {
     public final IGeneratable mGeneratableNode;
     private long mInstructionCounter;
     private final Map<String, Long> mCodeLabels = new HashMap<>();
-    public final Map<String, Integer> mCurrentStackFrameMappings = new HashMap<>(); // TODO: public only for debug
+    public final Map<String, Integer> mCurrentStackFrameMappings = new HashMap<>();
     private int mCurrentStackFrameSize;
 
     private final List<String> instructions = new ArrayList<>();
@@ -31,8 +31,6 @@ public class CodeGenerator {
         mGeneratableNode.generate(rootScope, this);
         System.out.println(mCodeLabels);
 
-        // TODO - zatím provizorně
-        System.out.println();
 
         List<String> labeledInstructions = new ArrayList<>();
 
@@ -41,14 +39,17 @@ public class CodeGenerator {
             labeledInstructions.add(labeledInstruction);
         }
 
-        /*instructions.stream().forEach(s -> {
+        /* print for debug purposes
+        System.out.println();
+        instructions.stream().forEach(s -> {
             for (Map.Entry<String, Long> entry : mCodeLabels.entrySet()) {
                 if (s.contains(entry.getKey())) s = s.replace(entry.getKey(), entry.getValue().toString());
             }
             System.out.println(s);
-        } );*/
-//        instructions.forEach(System.out::println);
+        } );
+        */
 
+        System.out.println("Code generation finished");
         return labeledInstructions;
     }
 
