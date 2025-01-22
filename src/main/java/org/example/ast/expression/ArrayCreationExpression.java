@@ -77,9 +77,9 @@ public class ArrayCreationExpression extends AbstractExpression {
             generator.addInstruction("INT 0 1");
         } else if (mInitializer != null) {
             // size = baseTypeSize * elements + 1(for length)
-            int size = generator.typeSize(mCreatedName) * mInitializer.size() + 1;
+            int size = generator.typeSize(mCreatedName) * mInitializer.size();
             generator.addInstruction("LIT 0 0");
-            generator.addInstruction("LIT 0 " + size);
+            generator.addInstruction("LIT 0 " + (size + 1));
             generator.addInstruction("NEW 0 0");
             generator.addInstruction("OPR 0 2");
             generator.addInstruction("INT 0 1");

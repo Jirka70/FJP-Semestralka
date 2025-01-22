@@ -117,7 +117,7 @@ public class LiteralExpression extends PrimaryExpression {
 
     private int toInt() {
         if (mType.equals(LiteralType.BINARY_LITERAL))
-            return Integer.parseInt(mLiteral, 2);
+            return Integer.parseInt(mLiteral.replace("b", "").replace("B", ""), 2);
         return Integer.decode(mLiteral.replace("_", ""));
     }
 
