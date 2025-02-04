@@ -36,7 +36,7 @@ public class ArrayExpression extends AbstractExpression {
         AbstractType indexType = mIndex.evaluateType(abstractScope);
 
        if (!(indexType instanceof IntType) && !(indexType instanceof CharType)) {
-           throw new TypeMismatchException("Index has to be integer on location " + mLocation);
+           throw new TypeMismatchException("Index has to be integer or char on location " + mLocation);
        }
     }
 

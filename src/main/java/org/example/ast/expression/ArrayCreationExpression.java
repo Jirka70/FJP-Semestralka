@@ -2,9 +2,11 @@ package org.example.ast.expression;
 
 import org.example.codeGeneration.CodeGenerator;
 import org.example.semantic.exception.SemanticException;
+import org.example.semantic.exception.symbolTableException.TypeMismatchException;
 import org.example.semantic.symbolTable.scope.AbstractScope;
 import org.example.semantic.type.AbstractType;
 import org.example.semantic.type.ObjectType;
+import org.example.semantic.type.TypeFactory;
 import org.example.util.Location;
 
 import java.util.List;
@@ -51,7 +53,18 @@ public class ArrayCreationExpression extends AbstractExpression {
 
     @Override
     public void analyze(AbstractScope abstractScope) throws SemanticException {
+        AbstractType declaredType = TypeFactory.fromString(mCreatedName);
+        if (mInitializer == null) {
+            return;
+        }
 
+        for (AbstractExpression expression : mInitializer) {
+            AbstractType type = expression.evaluateType(abstractScope);
+            if (!type.canBeAssignedTo(declaredType)) {
+                throw new TypeMismatchException("Declared array type " + declaredType.mName +
+                        " cannot be assigned to " + type.mName + " on location " + mLocation);
+            }
+        }
     }
 
     @Override
