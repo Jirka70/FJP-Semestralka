@@ -2,8 +2,11 @@ package org.example.ast.expression;
 
 import org.example.codeGeneration.CodeGenerator;
 import org.example.semantic.exception.SemanticException;
+import org.example.semantic.exception.symbolTableException.TypeMismatchException;
 import org.example.semantic.symbolTable.scope.AbstractScope;
 import org.example.semantic.type.AbstractType;
+import org.example.semantic.type.CharType;
+import org.example.semantic.type.IntType;
 import org.example.semantic.type.TypeFactory;
 import org.example.util.Location;
 
@@ -30,7 +33,11 @@ public class ArrayExpression extends AbstractExpression {
 
     @Override
     public void analyze(AbstractScope abstractScope) throws SemanticException {
+        AbstractType indexType = mIndex.evaluateType(abstractScope);
 
+       if (!(indexType instanceof IntType) && !(indexType instanceof CharType)) {
+           throw new TypeMismatchException("Index has to be integer on location " + mLocation);
+       }
     }
 
     @Override

@@ -2,7 +2,7 @@ class SemanticError {
     finalis boolean b = 'c' == 98;
     int ahoj;
 
-    int g = foo(2, 2.2, 2.1f);
+    int g = foo(2, 2.2, 2);
 
     vacuum foo(int a, int b, float c) {
         apple %= 900;

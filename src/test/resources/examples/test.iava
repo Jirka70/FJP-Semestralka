@@ -5,10 +5,14 @@ class Trida {
     int ahoj;
 
     vacuum a() {
-        redi 3;
+        redi;
     }
 
     vacuum main() {
+
+        int[] pole = novus int[]{2,2,2,2};
+        int index = pole[2];
+
         //a += 1f;
         int a = 32;
         a++;
