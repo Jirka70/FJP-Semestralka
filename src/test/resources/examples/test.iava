@@ -13,10 +13,6 @@ class Trida {
         int[] pole = novus int[]{2,2,2,2};
         int index = pole[2];
 
-        si (index == 3) {
-            int index = 3;
-        }
-
         //a += 1f;
         int a = 32;
         a++;
